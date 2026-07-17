@@ -1,0 +1,98 @@
+# =========================
+# FRONTEND
+# =========================
+
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/coverage/
+
+# =========================
+# BACKEND
+# =========================
+
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/.pytest_cache/
+
+# Python cache
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# ENV FILES
+# =========================
+
+frontend/.env
+backend/.env
+*.local
+
+# =========================
+# LOGS
+# =========================
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# OS FILES
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / EDITOR
+# =========================
+
+.vscode/*
+!.vscode/extensions.json
+
+.idea/
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =========================
+# GENERATED / CACHE
+# =========================
+
+.cache/
+tmp/
+temp/
+
+# =========================
+# GRAPHIFY / GENERATED
+# =========================
+
+.graphify_detect.json
+.graphify_memory.json
+.graphify_memory_store/
+.graphify_python
+
+# =========================
+# BUILD OUTPUTS
+# =========================
+
+dist/
+build/
+out/
+
+# =========================
+# SENTINEL EXPORTS & ML
+# =========================
+
+*.csv
+backend/export/
+backend/logs/

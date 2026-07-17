@@ -1,0 +1,9002 @@
+[
+  {
+    "amount": 182541.77239738955,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 398032.2290907925,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 134892.90444888466,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 472879.01451947447,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 55991.37562751349,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 228279.0551771897,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 487015.52819164627,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 461728.46958037256,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 168755.09701734455,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 315475.7710456617,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 194243.98415623637,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 426113.2866808372,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 467912.6178163229,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 213822.1214015697,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 230968.3014434888,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 177787.65786409713,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 294183.46081934206,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 416999.60016130755,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 422767.7131648515,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 52538.98497631683,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 76846.24940927884,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 247381.32598111537,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 115337.701652636,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 235678.7059897694,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 229052.6786783443,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 344324.8655991607,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 73760.76856716564,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 470060.856804803,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 471175.00674703193,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 19420.014129453968,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 493388.0295202673,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 296894.9985542208,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 451448.95735509996,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 311104.29231910285,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 245813.62794342963,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 39756.883897860884,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 380819.0613976833,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 56761.07681514271,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 386314.0318740079,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 222085.97529282095,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 237969.7372992737,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 391838.4069161114,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 37292.62441733296,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 68836.52686198082,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 73327.23982931732,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 40570.65149498035,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 102187.7192119629,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 36486.38211675042,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 376600.1789393265,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 152307.69171153294,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 52759.81160347884,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 428551.03992830333,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 401703.8773113562,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 415097.8230013541,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 329627.2348538288,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 103778.79920444169,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 370772.4303510385,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 386453.1533362098,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 248462.90192650614,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 424999.5979754758,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 344140.0662140319,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 391817.950034647,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 17708.109708008964,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 35484.22072462695,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 355293.5913670833,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 45385.76752346129,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 63583.37576751048,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 196373.90694074178,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 41377.59944216646,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 395937.44405098376,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 357459.1784398181,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 160452.2670358199,
+    "hour": 22,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 111056.28431636174,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 152009.90322788717,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 137594.27742648768,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 204076.56065348952,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 481485.8257557094,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 20913.155328779278,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 353100.81197348685,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 489372.58248610504,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 272934.7639849416,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 221765.02959295345,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 348072.7868208568,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 303056.0012667229,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 369687.26777429704,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 455343.2299553823,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 186650.88350131287,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 297764.83838039223,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 414708.7760350244,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 216248.43116812638,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 250190.1183565137,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 478883.9981778229,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 182342.98953283965,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 94150.06285624983,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 224892.81108869452,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 330178.65768050903,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 189553.13463882834,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 135965.53265478794,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 119996.02565237191,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 115464.5616392861,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 499484.51978880994,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 88138.11371779026,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 119735.45152295746,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 275093.0090609425,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 446768.48735069245,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 237278.16808146748,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 426805.1380861288,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 361996.66060811566,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 71021.47635896209,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 449519.635941851,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 212634.30332150686,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 371524.5169751579,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 313077.7460274844,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 7417.377193930838,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 113048.95107585627,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 153769.72983741484,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 91113.89046232577,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 89845.22662484352,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 189114.48322625505,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 352287.5703131187,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 399585.08225121076,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 297587.8045981391,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 460592.3340891409,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 498277.24073227524,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 97744.01038130815,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 202370.61995999955,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 361971.42566029436,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 168444.86580141116,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 364069.95398256514,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 314444.5433612277,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 314150.1033607635,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 54028.473054798254,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 53231.358449986525,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 178178.68585720682,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 168219.75115051595,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 150331.04212141724,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 54843.37403255728,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 429898.2536836471,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 204832.76064230583,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 241795.83487318413,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 329130.50733822485,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 143848.22300225848,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 350911.9080965965,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 194083.88231375534,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 29785.735358685495,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 375818.087861124,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 217840.62301726197,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 295654.3473785996,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 147045.34694987518,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 399429.12952823465,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 318338.20630713564,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 499206.95701749227,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 346665.5856684533,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 317319.7046519045,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 369652.61943045707,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 336488.2767379223,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 114009.1480856802,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 200839.39149161527,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 135331.20141578393,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 95031.76199460517,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 385214.81072778866,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 71007.5493412621,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 123449.6292502058,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 253206.5344733504,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 49956.00816224241,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 241442.5790956401,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 458938.6797496547,
+    "hour": 22,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 26284.131052538076,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 173331.35912669878,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 210915.77113708705,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 202433.91957640427,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 290557.8778544303,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 387774.2491822459,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 395033.10334002896,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 242681.75014487703,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 378090.03111837694,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 474684.86341581924,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 76084.48674815196,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 85052.45582535723,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 177411.57466541312,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 497643.0630386526,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 443879.761611328,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 454671.6322188776,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 323580.041753546,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 42931.3355521739,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 202536.7395134022,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 483241.18789207906,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 484179.22109809396,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 134618.16794661566,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 7800.843990727147,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 203177.6549248144,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 416505.9031955091,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 225689.44426853908,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 274716.9188623935,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 40885.92350390605,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 373600.95940601884,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 493668.63559718087,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 62589.62010952496,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 176657.68050124287,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 349729.4314229007,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 442362.0004088602,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 197928.91529082978,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 268312.7931183344,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 101465.48757391113,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 104501.97326203906,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 468873.7930934407,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 7384.999473571857,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 432375.5246083179,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 239227.08722482415,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 25183.764586488047,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 23466.577223864308,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 263203.0143388909,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 407230.8303448707,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 346586.8893491218,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 50159.898032769655,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 405823.62080197426,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 96945.81861207739,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 379285.25754578103,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 228271.61923418482,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 271601.68511473585,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 349587.0819486342,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 145614.99802631582,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 223350.5874836733,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 481663.5407720777,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 224126.5948436922,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 483316.69282533997,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 198632.99417972192,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 341326.7791931135,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 418670.0617464223,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 484317.58167128585,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 291478.8083563694,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 384865.24680617993,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 56741.46078032708,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 407589.49252294685,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 6519.533730676564,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 81889.95533136452,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 472823.1421689087,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 150124.89084166556,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 221648.63951776284,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 61075.31942297485,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 464918.5117329192,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 89487.62823334808,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 316711.74825917033,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 19630.47940826707,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 442600.83993018663,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 474749.22822464554,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 203881.971414477,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 375181.92389604205,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 443378.2508049632,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 50628.61277712185,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 185647.55387422207,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 171127.38265395828,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 143685.44771162528,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 436985.92156998144,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 186622.41335021716,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 97661.51124164228,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 145543.5989894262,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 153366.2323179333,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 215262.688775156,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 426627.6781266802,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 345248.2421693736,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 139272.40383227207,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 156279.81548564663,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 328240.0798262012,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 240666.77141097427,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 66309.19011820592,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 176727.02189448065,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 150353.45446541958,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 305929.90277824964,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 462926.1591462322,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 418471.2581935839,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 183159.2232024504,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 35314.48344205227,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 349860.24197525583,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 486734.928538993,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 277021.27769995487,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 274902.5027541097,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 355149.05889325816,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 268156.05830599635,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 318710.0802941896,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 74346.32655410857,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 418012.3085995647,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 128816.88205676447,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 445047.7571695573,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 66042.62031121245,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 274058.5959616358,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 358410.1704138832,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 128549.3522364382,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 421894.4645651081,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 344686.00087602704,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 341249.40945643606,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 124834.63051770243,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 402718.4508138342,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 112991.75781195064,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 402668.7686741879,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 422456.03567348747,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 485079.03678764025,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 219986.85070257043,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 397663.3149850464,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 68160.62105466632,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 441304.3049419895,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 334221.24112272006,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 278432.0520448586,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 233475.38602765312,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 156283.05660527144,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 89194.59261577959,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 280795.89781597385,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 188392.01715676233,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 335088.9099216895,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 16946.48009913036,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 116508.08701018996,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 414538.59859879693,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 24287.996606659068,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 85097.31558049649,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 210451.82322907678,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 205037.6505314671,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 408339.56107458076,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 292022.2761308007,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 124407.4424915362,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 387087.2600954742,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 295731.7646772337,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 435973.1331290164,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 186063.46517401462,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 164062.2678527898,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 237205.1084891496,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 153289.34398380812,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 469831.68038401403,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 335047.97812401457,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 367539.07371797913,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 217939.1055018876,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 474751.01424704224,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 313762.98796001263,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 29094.469692510513,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 311003.0289744127,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 332673.99231116154,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 237420.45944162537,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 170975.0491386679,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 146256.91265424588,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 222224.2931194242,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 20233.91473384918,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 99031.86935943986,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 268049.28306214936,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 96098.32180677624,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 299475.57258767926,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 227207.52019071855,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 430523.93536535365,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 429500.3052290507,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 9069.796201502633,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 285879.8138136595,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 36278.491950448464,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 423476.29280475527,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 332296.8764439972,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 199123.12006306992,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 43436.61174360656,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 457571.80786180124,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 301731.20408165833,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 33581.59644803052,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 475821.101964586,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 477090.6054108468,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 426409.09637790103,
+    "hour": 22,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 346946.3073487122,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 163815.9853146845,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 208880.48423599981,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 455713.7510070489,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 28938.9704238648,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 348072.37128035154,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 236188.25497025528,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 454645.36555771786,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 199738.68884914517,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 376905.9178151261,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 398736.34976359986,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 294956.09142133634,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 167032.68447422006,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 43124.832165928965,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 39289.05001032712,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 80378.68701316733,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 190224.4969144282,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 292520.8524295506,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 462578.69014908664,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 53212.65442667737,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 192979.3476542509,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 69947.96410182709,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 127381.18220645748,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 273561.7861744051,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 333752.7525855936,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 173986.21932759794,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 188420.34899795504,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 294683.7244356523,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 344937.1530217554,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 464494.2074388021,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 140175.24526736667,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 288468.1360183554,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 152018.90314370662,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 234760.36324568928,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 379110.8093890036,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 364585.1206434482,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 157224.697951544,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 92474.66379767642,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 4641.263762011133,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 68645.73896801114,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 407238.620029436,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 351901.979120137,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 457253.6533669245,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 12235.680697179941,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 151678.124386905,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 495088.79366237565,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 369043.7890478451,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 327418.989020003,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 60955.8049280954,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 58314.726817371964,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 105127.54949021694,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 379623.1999079453,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 37483.56625724533,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 446340.1064131835,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 311029.14821151056,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 158839.01372220367,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 95554.22010937404,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 326839.39706596325,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 35403.832594458574,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 168844.7059668052,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 237270.26229659485,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 312833.8832809387,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 81362.19049683778,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 102586.3456518022,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 5717.48441465531,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 190328.59422496308,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 30625.212749776478,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 294954.641555055,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 147194.2657946184,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 393553.95086639497,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 439807.11355009506,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 248027.41482203078,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 73894.96764043474,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 52507.78327288985,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 332045.7370426913,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 424237.0876494825,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 215573.1116077204,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 290208.6558394642,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 323579.03748361324,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 218899.80718243652,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 65517.50184149448,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 19423.937346315404,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 41029.67992900244,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 337586.5913696237,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 298320.58783511765,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 2615.599936096721,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 386317.90951126785,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 482171.2067076004,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 317269.4902037231,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 371905.7984280755,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 329890.6307569976,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 265032.2009786631,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 200436.19866703864,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 276207.9385252068,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 119642.06799666215,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 339406.75879257673,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 41887.6797545208,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 3902.5720236172833,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 178171.7076186766,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 40760.42387889541,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 430711.83588612266,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 354235.10983830167,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 352408.36074940016,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 66128.93435248271,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 440122.1679111573,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 142150.89142176512,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 26980.060690762315,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 359139.37174259877,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 181469.75978366027,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 252783.43766932923,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 74895.88847282426,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 57123.34773714572,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 327073.80393519875,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 208401.40006048963,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 434465.3361306589,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 281362.41543419653,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 290805.64076017716,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 308275.40281694906,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 197924.79385898446,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 304494.5256766405,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 294443.15646308206,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 359377.8997202927,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 76836.72140044013,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 208190.157087575,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 350081.2672756451,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 320022.4919847225,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 102932.93714184556,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 325796.6805841193,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 247911.7780078169,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 83790.29670304396,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 438375.3282438175,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 305801.31094991177,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 464195.89475156256,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 149115.24634106332,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 154589.1916803022,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 344527.8009197529,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 483794.72849938634,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 34755.586577644106,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 70216.13862692036,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 438564.07749517675,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 317505.12094497296,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 412312.32629628724,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 456392.7891992802,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 102974.73749639397,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 61276.2268455649,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 209482.563640563,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 250680.23373218696,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 109562.00311715205,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 49424.49331335848,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 402386.604362627,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 118294.05490500933,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 48557.967127470474,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 137679.53605529384,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 152965.2082474901,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 125331.07106852201,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 94837.54614087068,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 493169.9184390944,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 5181.026176524571,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 386647.3524654004,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 408825.1439422933,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 453290.0980294918,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 380212.1694978296,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 386407.19404234434,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 384010.4820357086,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 271788.37141925254,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 45921.37476175812,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 230781.15198628863,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 458179.3620459167,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 283444.4794450654,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 313776.8450156421,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 424013.22640218836,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 168963.97093840278,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 166377.41224273652,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 98486.92569410086,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 16857.459423107997,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 488122.22748516063,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 355732.13669805805,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 465927.45730410307,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 17177.026505278893,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 447824.4787779007,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 319700.86297644855,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 492255.4454430989,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 209650.83432588482,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 283275.2849944531,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 397533.39878084086,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 48762.26434435118,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 71194.18211477152,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 287092.1410880719,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 490988.9841372754,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 379310.5362349497,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 296265.3331084453,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 33364.55490956936,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 356050.9632047066,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 262633.61869580235,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 257565.00664142915,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 251222.251150368,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 340442.72563403886,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 426190.7213479039,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 331951.2942863885,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 160455.38908782706,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 93048.0884066732,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 199787.54801151526,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 204489.61398387162,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 375656.23432433105,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 220510.0085875716,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 378727.3134012567,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 278174.39320668596,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 381415.821846237,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 431469.7703569951,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 117216.1963961953,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 469793.3599606966,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 162436.12912733652,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 357070.7381769838,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 274540.17071313324,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 374243.02957237634,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 324353.2141775063,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 350246.7509984294,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 389290.5206667107,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 22417.76889353968,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 356753.59649326093,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 93630.65607659124,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 101145.76310221078,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 225539.73492666587,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 18494.619806591894,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 40898.61874211414,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 183518.54530751903,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 2146.5198063232183,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 127207.20614347291,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 8706.322860753817,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 338780.9905523302,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 247885.1088037111,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 473471.52041524724,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 83603.8363726374,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 463597.08279435564,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 90716.98133975833,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 112978.70662916097,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 395125.2484972231,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 277433.9747721246,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 273932.8705164475,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 78359.08192450198,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 185991.24743484048,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 69380.2587727633,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 319692.55454905034,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 447711.83166188095,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 74554.04754405578,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 326138.415857411,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 237910.72188511217,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 276821.69715152937,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 491276.2105430533,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 378392.40446356364,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 248644.57768524133,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 224869.47075658728,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 419642.2376240182,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 24007.335147362402,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 94939.4687637125,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 140971.8861897989,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 104699.4856871304,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 12591.875194180653,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 32888.764853389504,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 138115.05617285887,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 191788.4233551612,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 405223.36937961035,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 494669.00102088857,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 97211.54652926051,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 188201.50910948103,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 211148.83246022713,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 281337.659236222,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 116753.04780830797,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 290928.9053543198,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 184615.41666645164,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 167338.67888789336,
+    "hour": 22,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 66569.17279370701,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 286786.1902543489,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 125026.07577114583,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 8223.488864378824,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 463958.01916195336,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 450689.6452054834,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 330855.62238193396,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 466951.6591220791,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 433311.4178279612,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 253676.4629516127,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 421580.0081752503,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 449783.31318704196,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 457569.6854897107,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 425941.3366961843,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 488876.31617524684,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 271154.17977899074,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 480788.974500026,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 90911.37939836866,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 88635.77821836178,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 290702.35584702075,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 116251.57673749416,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 407942.5132194742,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 156654.02559498438,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 244066.06953512557,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 208071.4783031869,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 24110.12887780824,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 137494.97121424184,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 229722.86287823372,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 458239.41301887645,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 84237.83701322766,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 12353.097253320819,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 349148.27654609445,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 420891.52353726624,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 189628.31643390624,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 183299.77761922093,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 418865.37289829575,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 42508.958686102895,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 442288.6532485074,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 401577.8757336544,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 321930.9919394851,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 23181.98298485218,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 196977.72506370954,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 152866.95936772443,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 228486.70453748733,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 141891.5603874568,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 72619.03475463015,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 12979.185910683183,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 323160.9817462153,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 270202.6540827838,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 212884.96354982583,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 188065.36369582778,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 343204.68876649963,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 1257.2181186166003,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 329240.40671768255,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 442511.1388590042,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 226484.12234826217,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 23359.59333366771,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 254606.78961811485,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 199791.73225694202,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 491928.0044558773,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 114226.62102741808,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 267283.95317877125,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 444527.63989836484,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 352196.9860332152,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 30525.29518752781,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 241685.17188443438,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 42342.810809598675,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 163218.07047147056,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 131967.34801673697,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 235453.14889748147,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 80099.07754164786,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 175512.14743902988,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 10447.369356158695,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 112794.17089825303,
+    "hour": 11,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 28571.953131453778,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 32981.606060747254,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 71739.0826152434,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 204512.59577619805,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 141212.5780129471,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 243749.78053965518,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 5538.019106149347,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 212842.7267517037,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 356516.1260972345,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 482845.9030104511,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 359700.9259126761,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 486001.1192857049,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 318411.60120750376,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 152999.22484627386,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 163878.28793967527,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 153322.38126374528,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 396539.8740397702,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 91423.38448206111,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 256365.21477612195,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 391215.68157314503,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 205955.044418265,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 288953.31284579064,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 104195.9152958029,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 188190.92286945117,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 71520.27878959455,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 78573.72042327296,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 298017.7174384151,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 18322.69920192922,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 459113.6305141065,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 90565.22678690462,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 47573.482062530304,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 333661.9261546634,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 105191.90722553815,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 127657.89070650836,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 400582.3890209911,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 377879.43048167974,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 298939.552280439,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 12917.490935079479,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 449968.9384315277,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 291089.8163156956,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 127368.90576235604,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 42368.74710507353,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 268434.949419197,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 429883.76829833974,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 313841.9016584484,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 198798.74726808327,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 170107.23131561774,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 56726.05580773051,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 267168.7722762424,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 330296.4786594396,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 453949.7053354173,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 444038.71227095526,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 362010.7709243145,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 90810.61678933766,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 172483.15449228953,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 279094.00299307855,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 427807.9805169123,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 86084.69392124373,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 488104.8657864425,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 367463.0097069504,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 229711.9616020134,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 499909.56892399694,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 266584.24906458514,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 220201.01907475403,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 323374.34141772526,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 109658.8279809418,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 341198.98858623335,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 121418.43328740807,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 122362.62275736716,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 215715.6958338306,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 89172.961092176,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 246158.60120361144,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 272483.4045421305,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 68741.74436083442,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 220364.70134618823,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 55153.091204181575,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 215452.0005539106,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 123676.77164251135,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 231253.51609922876,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 38049.551375717674,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 353030.6154756239,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 278323.1452364851,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 213152.22186700607,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 372859.75380208873,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 44392.43580800489,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 211485.06622703862,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 87466.68331143564,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 428409.72080908663,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 483957.741773598,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 485429.8041342915,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 170277.043059911,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 275653.5024743017,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 49656.174056131975,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 441164.0020158761,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 146122.0741636167,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 46387.25693154668,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 154943.64074883226,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 351593.4617188464,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 138182.75067459917,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 121481.90873402945,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 479421.93422871,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 338406.44027260615,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 293692.00138661754,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 370657.02199643926,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 369558.8114449275,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 42819.41884478149,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 418074.07589355577,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 443433.0504342983,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 235948.51077632268,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 62542.55707740472,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 332602.81546242454,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 362988.2963806394,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 1484.5547492068733,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 481787.723451767,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 234323.07478783643,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 190919.70323043544,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 274678.2172522048,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 475313.948746298,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 436440.493612539,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 42703.83227285356,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 7068.6449402106455,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 89578.02307950257,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 318318.0751111989,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 318838.7182998597,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 201913.87801861958,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 361406.27037042525,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 225535.22407049843,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 365833.0652528842,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 245347.67779486632,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 431953.9484311655,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 243587.05066018095,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 209607.63471665222,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 429975.1107905121,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 152461.6342881929,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 117850.58082850941,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 128538.42454808197,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 21531.409085948384,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 238925.46352142954,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 273658.1764563415,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 478040.28315045405,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 212705.92689581733,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 142946.22798486555,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 482604.3505898685,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 127169.18304690847,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 265470.3436044726,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 322497.9419663773,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 302244.05803817895,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 284172.1768991816,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 255558.2147821069,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 426366.16755618324,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 479740.72485280765,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 364135.64471365995,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 243571.40046462577,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 71075.97472809904,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 137283.57437116865,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 55057.53442764525,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 26091.1765843938,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 223468.89949337603,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 103074.33734510175,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 231472.38010024454,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 396618.16925104277,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 390265.1842668779,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 85115.57783210103,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 417811.5994209498,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 238560.36691373345,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 463679.43051194964,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 440719.8210801296,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 372123.969825859,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 477838.82580051775,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 291117.10572628834,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 261792.88863913217,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 398287.4077126612,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 216536.35767994367,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 359447.8583021987,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 303730.4924474853,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 295977.40324773337,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 87409.0205795726,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 469453.0401469377,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 302948.9422193751,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 19078.809019629738,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 388879.4294475779,
+    "hour": 13,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 22726.528520122476,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 389795.85555365414,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 239030.82447936258,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 257626.9224541814,
+    "hour": 5,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 109616.25731236688,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 334140.3559920594,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 100542.2891346817,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 142091.1833799777,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 365594.93352951756,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 275902.2314890494,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 85844.72021213314,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 30790.932508296082,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 315982.6746143348,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 194626.56525879668,
+    "hour": 8,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 443057.27508958103,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 168034.8655280245,
+    "hour": 0,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 271419.354921802,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 159922.87224421662,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 367862.1157249878,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 203039.94750334654,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 123701.3411371285,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 390165.1306531277,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 314855.0449070318,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 455782.58406855183,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 102351.53896346362,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 178898.3113998296,
+    "hour": 1,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 382096.3900679621,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 66437.93917666023,
+    "hour": 17,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 446244.69159574475,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 109677.05137050632,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 405876.417382993,
+    "hour": 12,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 129147.34832241831,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 387127.4582257183,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 67522.07212243139,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 332801.5196549414,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 291262.3328924846,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 393511.80247262964,
+    "hour": 9,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 95129.3843728319,
+    "hour": 16,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 316614.52594381315,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 221736.85135842778,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 246531.23934054933,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 160573.6374002804,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 248043.51145893114,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 27616.31305267721,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 361483.88229269756,
+    "hour": 4,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 366666.17570513603,
+    "hour": 11,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 222521.88793488455,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 169604.43082514228,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 61681.62900758668,
+    "hour": 15,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 410131.4947734797,
+    "hour": 14,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 25066.706814240053,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 233772.88708867604,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 19564.19054634483,
+    "hour": 10,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 430315.76416125626,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 454386.21671537013,
+    "hour": 18,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 408560.9093171202,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 310136.3335055777,
+    "hour": 19,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 13289.768370943968,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 243909.80764048753,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 46217.21654908935,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 238050.54035735966,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 494794.0442508105,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 217042.56687998428,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 118736.12656276108,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 322559.94189265976,
+    "hour": 23,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 488467.0623914824,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 188221.6117524882,
+    "hour": 14,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 153864.28578971382,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 38436.46862454867,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 255827.59169978474,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 2,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 357442.36568228237,
+    "hour": 5,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 41890.92414621775,
+    "hour": 8,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 220267.07354989974,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 198983.7562307895,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 472436.26135687984,
+    "hour": 2,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 48255.26158373658,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 227255.05120497284,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 92998.23664979565,
+    "hour": 2,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 450287.4844971617,
+    "hour": 6,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 462796.1863779898,
+    "hour": 6,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 5,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 191564.58128772172,
+    "hour": 7,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 402617.65908969066,
+    "hour": 13,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 427004.3882230489,
+    "hour": 20,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 211625.6371267107,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 445154.551193468,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 186410.65352347528,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 163082.1255188515,
+    "hour": 22,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 330652.73998041835,
+    "hour": 1,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 195.83506890926895,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 140191.86612180405,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 288175.2298382901,
+    "hour": 0,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 208743.26875580393,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 6,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 268496.3871823202,
+    "hour": 17,
+    "is_new_receiver": 1,
+    "velocity": 6,
+    "chain_depth": 3,
+    "call_flag": 1,
+    "label": 1
+  },
+  {
+    "amount": 341490.4535024662,
+    "hour": 23,
+    "is_new_receiver": 1,
+    "velocity": 5,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 425853.60517316515,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 448445.95863540465,
+    "hour": 3,
+    "is_new_receiver": 0,
+    "velocity": 10,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 469042.4711514455,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 3,
+    "chain_depth": 0,
+    "call_flag": 1,
+    "label": 0
+  },
+  {
+    "amount": 474695.6955281919,
+    "hour": 4,
+    "is_new_receiver": 1,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 389349.72570503154,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 4,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 193577.6899940011,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 7,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 29320.038452899156,
+    "hour": 15,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 335476.55702240893,
+    "hour": 12,
+    "is_new_receiver": 0,
+    "velocity": 2,
+    "chain_depth": 3,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 179616.07801168173,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 53361.33394707855,
+    "hour": 7,
+    "is_new_receiver": 0,
+    "velocity": 9,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 83318.21241658823,
+    "hour": 21,
+    "is_new_receiver": 0,
+    "velocity": 5,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 486545.4445974482,
+    "hour": 20,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 408729.63130351395,
+    "hour": 16,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 1,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 418179.3487939644,
+    "hour": 10,
+    "is_new_receiver": 1,
+    "velocity": 1,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 248208.38416819894,
+    "hour": 19,
+    "is_new_receiver": 1,
+    "velocity": 9,
+    "chain_depth": 5,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 230218.71116568294,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 7,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 409507.6863935734,
+    "hour": 21,
+    "is_new_receiver": 1,
+    "velocity": 4,
+    "chain_depth": 2,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 303306.32206235145,
+    "hour": 3,
+    "is_new_receiver": 1,
+    "velocity": 10,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  },
+  {
+    "amount": 460736.06666392763,
+    "hour": 18,
+    "is_new_receiver": 0,
+    "velocity": 8,
+    "chain_depth": 0,
+    "call_flag": 0,
+    "label": 0
+  },
+  {
+    "amount": 262054.75384486053,
+    "hour": 9,
+    "is_new_receiver": 1,
+    "velocity": 3,
+    "chain_depth": 4,
+    "call_flag": 0,
+    "label": 1
+  }
+]

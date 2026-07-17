@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+# Optional: install for real GNN inference (large ~300MB, hackathon-optional)
+torch
+torch-geometric
+# torch-scatter
+# torch-sparse
