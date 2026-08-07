@@ -2,6 +2,7 @@ fastapi
 uvicorn
 pydantic
 sqlalchemy
+httpx
 # Optional: install for real GNN inference (large ~300MB, hackathon-optional)
 torch
 torch-geometric

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 from datetime import datetime, timezone
 from typing import Any
@@ -9,10 +10,12 @@ load_dotenv()
 
 import uvicorn
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from app.core.data_store import data_store
 from app.core.database import init_db
+from app.core.models.transaction import Transaction
 from app.core.persistence import save_transaction, save_case, save_action, load_all_into_store
 from app.services.mock_apis import mock_bank_freeze, mock_police_alert, mock_telecom_flag, mock_monitor_account, mock_close_case
 from app.services.orchestrator import run_pipeline
@@ -21,7 +24,24 @@ from app.core.config import WITHDRAWAL_DELAY_SECONDS
 
 from fastapi.middleware.cors import CORSMiddleware
 
+logger = logging.getLogger("sentinel")
+
 app = FastAPI(title="SENTINEL - Real-Time Fraud Response System")
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """
+    Catch-all safety net: any exception that isn't an intentional HTTPException
+    (those are handled separately by FastAPI's default handler) is logged
+    server-side and reported to the client as a generic 500 — never leaking
+    stack traces, file paths, or internal state.
+    """
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error. Please try again or contact support."},
+    )
 
 @app.on_event("startup")
 async def on_startup() -> None:
@@ -33,9 +53,18 @@ async def on_startup() -> None:
     from app.services.global_graph_analyzer import run_global_graph_analyzer
     asyncio.create_task(run_global_graph_analyzer(manager, data_store))
 
+# CORS_ORIGINS: comma-separated list of allowed frontend origins.
+# Defaults to the local Vite dev server. Wildcard ("*") is intentionally
+# NOT supported together with allow_credentials=True — browsers reject
+# that combination, and permitting it would expose the API to any origin.
+_cors_origins = [
+    o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+    if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -192,8 +221,12 @@ def health_check() -> dict[str, str]:
 
 
 @app.post("/transaction")
-async def process_tx(request: Request) -> dict[str, Any]:
-    tx = await request.json()
+async def process_tx(tx_in: Transaction) -> dict[str, Any]:
+    # FastAPI validates the body against Transaction before this runs — bad
+    # payloads (missing tx_id/amount, non-positive amount, wrong types) are
+    # rejected with a 422 automatically, instead of reaching the pipeline
+    # and failing deep inside with an opaque error.
+    tx = tx_in.model_dump(mode="json", exclude_none=True)
     result = run_pipeline(tx, data_store)
 
     transaction = result.get("transaction") or {}
@@ -259,6 +292,12 @@ async def process_tx(request: Request) -> dict[str, Any]:
                     )
                 )
                 _pending_withdrawals[_key] = _task
+                # Evict the entry once the timer fires (success, cancellation,
+                # or error) — otherwise this dict grows for the life of the
+                # process, one entry per suspect node ever seen.
+                _task.add_done_callback(
+                    lambda _t, _k=_key: _pending_withdrawals.pop(_k, None)
+                )
                 print(f"  [EC-03] Withdrawal timer started for node {suspect_id} "
                       f"(fires in {WITHDRAWAL_DELAY_SECONDS}s)")
     else:
@@ -621,22 +660,25 @@ async def copilot_chat(req: CopilotRequest) -> dict[str, Any]:
         
         if hf_api_key:
             try:
-                import urllib.request
-                import json
-                # Use the Hugging Face serverless inference API with standard Chat Completions
+                import httpx
+                # Use the Hugging Face serverless inference API with standard Chat Completions.
+                # NOTE: this must stay a non-blocking async call — an earlier version used
+                # urllib.request.urlopen (synchronous), which froze the entire event loop
+                # (including WebSocket broadcasts to every connected dashboard) for up to
+                # 5 seconds on every copilot request.
                 url = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct/v1/chat/completions"
                 headers = {
                     "Authorization": f"Bearer {hf_api_key}",
                     "Content-Type": "application/json"
                 }
-                
+
                 system_prompt = (
                     "You are 'Sentinel AI', an elite, highly professional enterprise fraud intelligence assistant. "
                     "Your goal is to provide concise, data-driven, and highly actionable insights to fraud analysts. "
                     "Use Markdown formatting (bolding, bullet points) to make your responses extremely engaging and easy to read. "
                     "Always maintain a confident, professional, and analytical tone. Keep responses under 150 words."
                 )
-                
+
                 payload = {
                     "model": "Qwen/Qwen2.5-7B-Instruct",
                     "messages": [
@@ -647,10 +689,11 @@ async def copilot_chat(req: CopilotRequest) -> dict[str, Any]:
                     "temperature": 0.3,
                     "top_p": 0.9
                 }
-                
-                req_obj = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-                with urllib.request.urlopen(req_obj, timeout=5.0) as response:
-                    result = json.loads(response.read().decode('utf-8'))
+
+                async with httpx.AsyncClient(timeout=5.0) as client:
+                    response = await client.post(url, headers=headers, json=payload)
+                    response.raise_for_status()
+                    result = response.json()
                     if "choices" in result and len(result["choices"]) > 0:
                         reply = result["choices"][0]["message"]["content"].strip()
                         hf_success = True

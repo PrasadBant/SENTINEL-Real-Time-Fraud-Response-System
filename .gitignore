@@ -96,3 +96,15 @@ out/
 *.csv
 backend/export/
 backend/logs/
+
+# =========================
+# SENTINEL DEV/DEBUG ARTIFACTS
+# =========================
+
+backend/*.db
+backend/*.sqlite3
+backend/backend/
+backend/scratch/
+backend/cases_debug.json
+backend/cases_complex_verify.json
+backend/verify_phase4.py

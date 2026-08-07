@@ -4,14 +4,27 @@ from datetime import datetime, timezone
 import networkx as nx
 from app.core.persistence import save_action
 
-# Track already alerted bridge nodes to prevent spamming
+# Track already alerted bridge nodes to prevent spamming repeat alerts for
+# the same node on every 15s cycle. Reset periodically (see
+# _BRIDGE_ALERT_RESET_CYCLES below) rather than growing forever, and capped
+# defensively so a pathological run can't turn this into an unbounded leak.
 _alerted_bridge_nodes = set()
+_BRIDGE_ALERT_RESET_CYCLES = 240  # ~1 hour at 15s/cycle
+_BRIDGE_ALERT_MAX_SIZE = 5000
 
 async def run_global_graph_analyzer(manager, store: dict):
     print("  [Global Graph] Background analyzer started (15s loop)")
+    cycle = 0
     while True:
         await asyncio.sleep(15)
-        
+        cycle += 1
+
+        # Periodically forget prior alerts so a node's risk can be
+        # re-evaluated (e.g. it went quiet then became a bridge again),
+        # and so the set doesn't grow unbounded over a long-running process.
+        if cycle % _BRIDGE_ALERT_RESET_CYCLES == 0 or len(_alerted_bridge_nodes) > _BRIDGE_ALERT_MAX_SIZE:
+            _alerted_bridge_nodes.clear()
+
         try:
             transactions = store.get("transactions", {})
             if not transactions:
