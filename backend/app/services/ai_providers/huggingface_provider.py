@@ -12,7 +12,7 @@ import os
 
 import httpx
 
-from app.services.ai_providers.base import AIProvider
+from app.services.ai_providers.base import AIProvider, format_user_content
 
 _HF_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct/v1/chat/completions"
 
@@ -34,10 +34,7 @@ class HuggingFaceProvider(AIProvider):
             "model": "Qwen/Qwen2.5-7B-Instruct",
             "messages": [
                 {"role": "system", "content": system_prompt},
-                {
-                    "role": "user",
-                    "content": f"User Request: '{user_message}'\n\nContext Data:\n{context}\n\nPlease provide your professional analysis.",
-                },
+                {"role": "user", "content": format_user_content(context, user_message)},
             ],
             "max_tokens": 300,
             "temperature": 0.3,

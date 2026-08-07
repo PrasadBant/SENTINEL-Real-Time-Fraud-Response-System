@@ -14,7 +14,7 @@ here — we also run at "low" effort for latency.
 
 import os
 
-from app.services.ai_providers.base import AIProvider
+from app.services.ai_providers.base import AIProvider, format_user_content
 
 DEFAULT_MODEL = "claude-opus-5"
 MAX_TOKENS = 1024
@@ -34,12 +34,7 @@ class AnthropicProvider(AIProvider):
         self.model = model or os.getenv("ANTHROPIC_MODEL", DEFAULT_MODEL)
 
     def _build_messages(self, context: str, user_message: str) -> list[dict]:
-        return [
-            {
-                "role": "user",
-                "content": f"Context:\n{context}\n\nInvestigator's question: {user_message}",
-            }
-        ]
+        return [{"role": "user", "content": format_user_content(context, user_message)}]
 
     async def generate(self, *, system_prompt: str, user_message: str, context: str) -> str:
         response = await self._client.messages.create(
