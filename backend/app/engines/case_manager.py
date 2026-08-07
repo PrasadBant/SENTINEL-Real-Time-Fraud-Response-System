@@ -1,7 +1,8 @@
 import uuid
 import random
 from datetime import datetime, timezone
-from app.core.config import GOLDEN_WINDOW_MINUTES
+from app.core.config import GOLDEN_WINDOW_MINUTES, HIGH_RISK_THRESHOLD
+from app.core.constants import CaseStatus
 
 def _timeline_event(event_text: str) -> dict:
     return {
@@ -31,7 +32,7 @@ def process_scored_tx(tx: dict, score_output: dict, store: dict) -> dict:
         # Check if we should link to an existing case, respecting its specific max_nodes
         existing_case = next((c for c in store["cases"].values() 
                               if (c["origin_account"] == sender or sender in c["chain"] or receiver in c["chain"]) 
-                              and c["status"] in ["NEW", "HIGH_RISK"]
+                              and c["status"] in [CaseStatus.NEW, CaseStatus.HIGH_RISK]
                               and len(c["chain"]) < c.get("max_nodes", 5)), None)
         
         if existing_case:
@@ -46,7 +47,7 @@ def process_scored_tx(tx: dict, score_output: dict, store: dict) -> dict:
             store["cases"][case_id] = {
                 "case_id": case_id,
                 "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                "status": "NEW",
+                "status": CaseStatus.NEW,
                 "risk_level": score,
                 "primary_tx_id": tx.get("tx_id", ""), # Link to the starting transaction
                 "max_nodes": max_nodes,
@@ -83,9 +84,9 @@ def process_scored_tx(tx: dict, score_output: dict, store: dict) -> dict:
     case["risk_level"] = max(case["risk_level"], score)
     
     # Escalation to HIGH_RISK
-    if score >= 60 or hop_number > 0: # Using new threshold from config
-        if case["status"] == "NEW":
-            case["status"] = "HIGH_RISK"
+    if score >= HIGH_RISK_THRESHOLD or hop_number > 0:
+        if case["status"] == CaseStatus.NEW:
+            case["status"] = CaseStatus.HIGH_RISK
             case["timeline"].append(_timeline_event("escalated_to_high_risk"))
             
     case["urgency_score"] = case["risk_level"] * (1 + 1 / max(case["golden_window_minutes"], 1))

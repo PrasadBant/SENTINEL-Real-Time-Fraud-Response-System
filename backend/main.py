@@ -13,6 +13,7 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from app.core.constants import AccountStatus, ActionStatus, ActionTypes, CaseStatus
 from app.core.data_store import data_store
 from app.core.database import init_db
 from app.core.models.transaction import Transaction
@@ -20,7 +21,7 @@ from app.core.persistence import save_transaction, save_case, save_action, load_
 from app.services.mock_apis import mock_bank_freeze, mock_police_alert, mock_telecom_flag, mock_monitor_account, mock_close_case
 from app.services.orchestrator import run_pipeline
 from app.services.withdrawal_simulator import schedule_withdrawal
-from app.core.config import WITHDRAWAL_DELAY_SECONDS
+from app.core.config import HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD, WITHDRAWAL_DELAY_SECONDS
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -118,7 +119,7 @@ def _normalize_nodes(nodes: Any) -> list[dict[str, Any]]:
                 "account_id": str(account_id),
                 "accountId": str(account_id),
                 "id": str(account_id),
-                "status": node.get("status", "active"),
+                "status": node.get("status", AccountStatus.ACTIVE),
                 "balance": float(node.get("balance", 0.0)),
             }
         )
@@ -172,7 +173,7 @@ def _normalize_action_log(case: dict[str, Any]) -> list[dict[str, Any]]:
                 "action": str(entry.get("action") or entry.get("action_type") or "").lower(),
                 "target_id": target_id,
                 "target": target_id,
-                "status": entry.get("status", "ACK"),
+                "status": entry.get("status", ActionStatus.ACK),
                 "timestamp": entry.get("timestamp") or _now_iso(),
                 "reason": entry.get("reason", "System Action"),
                 "latency": int(entry.get("latency", 0)),
@@ -193,7 +194,7 @@ def _case_payload(case: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "case_id": case_id,
-        "status": case.get("status", "NEW"),
+        "status": case.get("status", CaseStatus.NEW),
         "primary_tx_id": case.get("primary_tx_id", ""), # Expose primary TX
         "nodes": nodes,
         "edges": edges,
@@ -265,14 +266,14 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
             print(f"  [Persistence] Write error: {_pe}")
 
         # ── EC-03: Schedule mule withdrawal for new HIGH_RISK cases ──────
-        if case.get("status") == "HIGH_RISK":
+        if case.get("status") == CaseStatus.HIGH_RISK:
             graph = data_store.get("graphs", {}).get(case.get("case_id", ""), {})
             receiver_nodes = [
                 str(n.get("account_id") or n.get("id") or n.get("accountId", ""))
                 for n in graph.get("nodes", [])
                 if str(n.get("account_id") or n.get("id") or n.get("accountId", ""))
                    != str(transaction.get("sender_account", ""))
-                   and n.get("status", "active") == "active"
+                   and n.get("status", AccountStatus.ACTIVE) == AccountStatus.ACTIVE
             ]
             for suspect_id in receiver_nodes:
                 _key = f"{case['case_id']}:{suspect_id}"
@@ -344,7 +345,11 @@ def export_csv():
     tx_store = data_store.get("transactions", {})
     for tx in tx_store.values():
         score = float(tx.get("risk_score", 0))
-        level = "HIGH_RISK" if score >= 70 else "MEDIUM" if score >= 40 else "LOW"
+        level = (
+            "HIGH_RISK" if score >= HIGH_RISK_THRESHOLD
+            else "MEDIUM" if score >= MEDIUM_THRESHOLD
+            else "LOW"
+        )
         writer.writerow([
             tx.get("tx_id", ""),
             tx.get("timestamp", ""),
@@ -375,7 +380,7 @@ def export_csv():
                 a.get("case_id", ""),
                 a.get("action_type", ""),
                 a.get("target", a.get("target_id", "GLOBAL")),
-                a.get("status", "ACK"),
+                a.get("status", ActionStatus.ACK),
                 a.get("reason", "System Action"),
                 a.get("latency", ""),
                 a.get("timestamp", "")
@@ -402,7 +407,7 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
         "action_type": action_type,
         "target_id": target_id,
         "target": target_id,
-        "status": "ACK" if status == "SUCCESS" else "NACK",
+        "status": ActionStatus.ACK if status == "SUCCESS" else ActionStatus.NACK,
         "timestamp": _now_iso(),
         "reason": reason or "Operator decision",
         "latency": 0,
@@ -418,15 +423,15 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
         print(f"  [Persistence] Action write error: {_pe}")
     
     # Status Mapping based on actions
-    if entry["status"] == "ACK":
-        if action_type in ["FREEZE", "FLAG", "ALERT"]:
-            case["status"] = "ACTIONED"
-        elif action_type == "MONITOR":
-            case["status"] = "MONITORING"
-        elif action_type == "CLOSE":
-            case["status"] = "CLOSED"
-        elif action_type == "CLOSE_FP":
-            case["status"] = "CLOSED_FP"
+    if entry["status"] == ActionStatus.ACK:
+        if action_type in [ActionTypes.FREEZE, ActionTypes.FLAG, ActionTypes.ALERT]:
+            case["status"] = CaseStatus.ACTIONED
+        elif action_type == ActionTypes.MONITOR:
+            case["status"] = CaseStatus.MONITORING
+        elif action_type == ActionTypes.CLOSE:
+            case["status"] = CaseStatus.CLOSED
+        elif action_type == ActionTypes.CLOSE_FP:
+            case["status"] = CaseStatus.CLOSED_FP
             
     return entry
 
@@ -441,7 +446,7 @@ async def _handle_action(action_name: str, payload: ActionRequest) -> dict[str, 
             "case_id": payload.case_id,
             "action": action_name,
             "target_id": target_id,
-            "status": "NACK",
+            "status": ActionStatus.NACK,
             "error": "case_not_found",
         }
 
@@ -471,7 +476,7 @@ async def _handle_action(action_name: str, payload: ActionRequest) -> dict[str, 
         for node in graph.get("nodes", []):
             acc_id = str(node.get("account_id") or node.get("id") or node.get("accountId"))
             if acc_id in to_freeze:
-                node["status"] = "frozen"
+                node["status"] = AccountStatus.FROZEN
                 # EC-03: cancel any pending withdrawal timer for this now-frozen node
                 _key = f"{payload.case_id}:{acc_id}"
                 _task = _pending_withdrawals.get(_key)
@@ -497,7 +502,7 @@ async def _handle_action(action_name: str, payload: ActionRequest) -> dict[str, 
         "case_id": payload.case_id,
         "action": action_name,
         "target_id": target_id,
-        "status": action_entry.get("status", "NACK"),
+        "status": action_entry.get("status", ActionStatus.NACK),
         "action_id": action_entry.get("action_id"),
         "timestamp": action_entry.get("timestamp", _now_iso()),
     }

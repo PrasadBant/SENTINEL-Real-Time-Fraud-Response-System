@@ -5,6 +5,8 @@ Optimized with O(1) duplicate detection using parallel node_ids / edge_ids sets.
 The lists (nodes, edges) remain for serialization; sets are the index.
 """
 
+from app.core.constants import AccountStatus
+
 
 def get_graph(case_id: str, store: dict) -> dict:
     if "graphs" not in store:
@@ -50,7 +52,7 @@ def add_node(case_id: str, account: dict, store: dict) -> None:
     graph["node_ids"].add(account_id)
     graph["nodes"].append({
         "account_id": account_id,
-        "status":     account.get("status", "active"),
+        "status":     account.get("status", AccountStatus.ACTIVE),
         "balance":    float(account.get("current_balance_sim", 0.0)),
     })
 

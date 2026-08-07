@@ -16,6 +16,7 @@ Usage (called from main.py):
 import asyncio
 from datetime import datetime, timezone
 
+from app.core.constants import AccountStatus
 from app.engines.recovery_engine import recalculate
 
 
@@ -60,10 +61,10 @@ async def schedule_withdrawal(
         # Node removed or case cleaned up — nothing to do
         return
 
-    current_status = target_node.get("status", "active")
+    current_status = target_node.get("status", AccountStatus.ACTIVE)
 
     # ── Guard: investigator already froze this node ───────────────────────
-    if current_status in ("frozen", "withdrawn"):
+    if current_status in (AccountStatus.FROZEN, AccountStatus.WITHDRAWN):
         print(
             f"  [EC-03] Withdrawal ABORTED — node {suspect_node_id} "
             f"already {current_status} (investigator acted in time!)"
@@ -82,7 +83,7 @@ async def schedule_withdrawal(
 
     # ── Execute the withdrawal ────────────────────────────────────────────
     prev_balance = float(target_node.get("balance", 0.0))
-    target_node["status"]  = "withdrawn"
+    target_node["status"]  = AccountStatus.WITHDRAWN
     target_node["balance"] = 0.0
 
     print(

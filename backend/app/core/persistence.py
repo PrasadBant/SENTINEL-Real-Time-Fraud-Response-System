@@ -9,6 +9,7 @@ state survives backend restarts.
 """
 
 import json
+from app.core.constants import ActionStatus, CaseStatus
 from app.core.database import SessionLocal
 from app.core.db_models import TransactionRecord, CaseRecord, ActionRecord
 
@@ -115,7 +116,7 @@ def _do_save_case(case: dict) -> None:
         else:
             record = CaseRecord(
                 case_id               = case_id,
-                status                = case.get("status", "NEW"),
+                status                = case.get("status", CaseStatus.NEW),
                 risk_level            = float(case.get("risk_level", 0)),
                 total_fraud_amount    = float(case.get("total_fraud_amount", 0)),
                 recoverable_amount    = float(case.get("recoverable_amount", 0)),
@@ -149,7 +150,7 @@ def _do_save_action(action: dict) -> None:
                 case_id     = action.get("case_id"),
                 action_type = action.get("action_type"),
                 target_id   = action.get("target_id") or action.get("target"),
-                status      = action.get("status", "ACK"),
+                status      = action.get("status", ActionStatus.ACK),
                 reason      = action.get("reason"),
                 timestamp   = action.get("timestamp"),
                 payload     = _to_json(action),

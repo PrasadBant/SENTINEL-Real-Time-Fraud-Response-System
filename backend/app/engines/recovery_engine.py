@@ -1,3 +1,6 @@
+from app.core.constants import AccountStatus
+
+
 def recalculate(case_id: str, store: dict) -> dict:
     case = store["cases"].get(case_id)
     if not case:
@@ -7,9 +10,9 @@ def recalculate(case_id: str, store: dict) -> dict:
     recoverable_amount = 0.0
     
     for node in graph["nodes"]:
-        status = node.get("status", "active")
+        status = node.get("status", AccountStatus.ACTIVE)
         # Withdrawn -> 0 recoverable. Frozen or active -> recoverable.
-        if status != "withdrawn":
+        if status != AccountStatus.WITHDRAWN:
             # FIX 3: RECOVERY CAP
             node_balance = node.get("balance", 0.0)
             total_fraud_amount = case.get("total_fraud_amount", 0.0)

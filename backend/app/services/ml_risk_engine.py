@@ -14,6 +14,8 @@ Graph-level risk = mean sigmoid score across all nodes, scaled to [0, 100].
 import random
 import os
 
+from app.core.constants import AccountStatus
+
 XGB_MODEL_AVAILABLE = False
 _xgb_model = None
 
@@ -109,11 +111,11 @@ def predict_gnn_score(graph_nodes: list, graph_edges: list, rule_score: float) -
         rows = []
         for node in graph_nodes:
             balance   = float(node.get("balance", 0.0))
-            status    = node.get("status", "active")
+            status    = node.get("status", AccountStatus.ACTIVE)
             # Features derived from node metadata (best-effort)
             feat_amount   = min(balance / 500_000.0, 1.0)
             feat_hour     = 0.5          # not stored per-node; use neutral
-            feat_new_recv = 1.0 if status == "active" else 0.1
+            feat_new_recv = 1.0 if status == AccountStatus.ACTIVE else 0.1
             feat_velocity = 0.5          # neutral default
             feat_depth    = 0.3          # neutral default
             feat_call     = 0.0

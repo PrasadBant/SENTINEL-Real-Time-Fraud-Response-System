@@ -1,4 +1,6 @@
 import random
+from app.core.config import HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD
+from app.core.constants import CaseStatus
 from app.engines.scoring_engine import score_transaction
 from app.engines.case_manager import process_scored_tx
 from app.engines.graph_engine import add_node, add_edge, get_graph
@@ -100,7 +102,7 @@ def run_pipeline(tx: dict, store: dict) -> dict:
         receiver_id = tx.get("receiver_account")
         case = next((c for c in store.get("cases", {}).values() 
                      if (c["origin_account"] == sender_id or sender_id in c["chain"] or receiver_id in c["chain"]) 
-                     and c["status"] in ["NEW", "HIGH_RISK"]
+                     and c["status"] in [CaseStatus.NEW, CaseStatus.HIGH_RISK]
                      and len(c["chain"]) < c.get("max_nodes", 5)), None)
         if case:
             tx["case_id"] = case["case_id"]
@@ -204,10 +206,16 @@ def run_pipeline(tx: dict, store: dict) -> dict:
         sorted(importance.items(), key=lambda x: x[1], reverse=True)
     )
 
-    # Update threshold based on final hybrid score
-    if final_score >= 70:
+    # Update threshold based on final hybrid score.
+    # BUGFIX: this used to hardcode 70/40 independently of
+    # config.HIGH_RISK_THRESHOLD (60) / MEDIUM_THRESHOLD (40), which
+    # scoring_engine.py already uses correctly. That meant a transaction
+    # scoring 60-69 was escalated internally as HIGH_RISK (case status,
+    # EC-03 withdrawal timer) but displayed/exported to investigators as
+    # "MEDIUM" — now unified on the single config source of truth.
+    if final_score >= HIGH_RISK_THRESHOLD:
         score_output["threshold"] = "HIGH_RISK"
-    elif final_score >= 40:
+    elif final_score >= MEDIUM_THRESHOLD:
         score_output["threshold"] = "MEDIUM"
     else:
         score_output["threshold"] = "LOW"
@@ -288,6 +296,23 @@ def run_pipeline(tx: dict, store: dict) -> dict:
                     score_output["ml_score"] = int(ml_score)
                     tx["risk_score"] = final_score
                     tx["ml_score"] = int(ml_score)
+
+                    # BUGFIX: threshold/confidence were computed once from the
+                    # pre-GNN hybrid score and never refreshed here, so the
+                    # displayed label could disagree with the displayed score
+                    # (e.g. score 58 shown as "HIGH_RISK"). Recompute both
+                    # from the final, post-GNN score so they stay in sync.
+                    if final_score >= HIGH_RISK_THRESHOLD:
+                        score_output["threshold"] = "HIGH_RISK"
+                    elif final_score >= MEDIUM_THRESHOLD:
+                        score_output["threshold"] = "MEDIUM"
+                    else:
+                        score_output["threshold"] = "LOW"
+                    tx["threshold"] = score_output["threshold"]
+
+                    confidence = "HIGH" if final_score >= 70 else "MEDIUM" if final_score >= 40 else "LOW"
+                    score_output["confidence"] = confidence
+                    tx["confidence"] = confidence
             except Exception as _gnn_err:
                 print(f"  [Orchestrator] GNN re-score skipped: {_gnn_err}")
 
