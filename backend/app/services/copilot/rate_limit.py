@@ -60,3 +60,18 @@ async def rate_limited_user(user: dict = Depends(get_current_user)) -> dict:
     """
     _check_and_record(user.get("username") or "unknown")
     return user
+
+
+def reset() -> None:
+    """
+    Clears every user's recorded request timestamps. The application
+    itself never calls this — it exists for tests. The whole backend
+    test suite reuses the same two demo accounts (admin/viewer) across
+    dozens of copilot tests spread over several files, all executing
+    within the same real-world minute; without a reset between tests,
+    the shared quota exhausts partway through the suite and later,
+    unrelated tests start failing with 429s that have nothing to do with
+    what they're actually testing. See tests/conftest.py's autouse
+    fixture, which calls this before every test.
+    """
+    _hits.clear()

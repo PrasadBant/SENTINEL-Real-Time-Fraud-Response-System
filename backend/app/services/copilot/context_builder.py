@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from app.core.constants import CaseStatus
 from app.core.data_store import data_store
+from app.services.copilot.knowledge import patterns_for_signals
 
 # Hard caps on how much raw data gets stuffed into a single context
 # string — this is a chat copilot, not a data export; keep prompts (and
@@ -76,6 +77,15 @@ def case_context(case_id: str) -> str:
             )
         if len(txs) > MAX_TRANSACTIONS_IN_CONTEXT:
             lines.append(f"- ...and {len(txs) - MAX_TRANSACTIONS_IN_CONTEXT} more.")
+
+        fired_signals = {
+            f["name"] for tx in txs for f in tx.get("risk_factors", []) if f.get("contribution", 0) > 0
+        }
+        matched_patterns = patterns_for_signals(fired_signals)
+        if matched_patterns:
+            lines.append(
+                "\n**Likely Pattern(s):** " + ", ".join(p.name for p in matched_patterns)
+            )
 
     actions = case.get("actions_taken", [])
     if actions:

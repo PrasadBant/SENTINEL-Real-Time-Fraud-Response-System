@@ -34,6 +34,22 @@ def client():
         yield c
 
 
+@pytest.fixture(autouse=True)
+def _reset_copilot_rate_limit():
+    # The whole suite reuses the same two demo accounts (admin/viewer)
+    # across dozens of copilot tests spread over several files, all
+    # running within the same real-world minute — without a per-test
+    # reset, the shared 30-req/60s quota (app/services/copilot/
+    # rate_limit.py) exhausts partway through the suite and later,
+    # unrelated tests start failing with 429s that have nothing to do
+    # with what they're actually testing. The rate limiter itself is
+    # untouched in production; this fixture only exists here.
+    from app.services.copilot import rate_limit
+
+    rate_limit.reset()
+    yield
+
+
 @pytest.fixture
 def admin_token(client):
     r = client.post("/auth/login", json={"username": "admin", "password": "admin123"})

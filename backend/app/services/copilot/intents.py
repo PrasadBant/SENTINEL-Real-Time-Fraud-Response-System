@@ -27,6 +27,12 @@ import re
 from app.core.constants import CaseStatus
 from app.core.data_store import data_store
 from app.services.copilot.context_builder import case_context, dashboard_context, transaction_context
+from app.services.copilot.knowledge import (
+    find_general_concept,
+    find_pattern,
+    format_pattern_reply,
+    patterns_for_signals,
+)
 
 _TX_ID_RE = re.compile(r"\bTX-[A-Za-z0-9]{3,}\b", re.IGNORECASE)
 _CASE_ID_RE = re.compile(r"\bCASE-[A-Za-z0-9]{3,}\b", re.IGNORECASE)
@@ -84,7 +90,16 @@ def _explain_transaction(tx_id: str) -> str:
     context = transaction_context(tx_id)
     if context.startswith("No transaction"):
         return context
-    return f"**Transaction Analysis — `{tx_id}`**\n\n{context}"
+
+    tx = data_store.get("transactions", {}).get(tx_id, {})
+    fired = {f["name"] for f in tx.get("risk_factors", []) if f.get("contribution", 0) > 0}
+    matched = patterns_for_signals(fired)
+    pattern_block = ""
+    if matched:
+        names = ", ".join(p.name for p in matched)
+        pattern_block = f"\n\n**Likely pattern:** {names}. Ask me to explain any of these by name for more detail."
+
+    return f"**Transaction Analysis — `{tx_id}`**\n\n{context}{pattern_block}"
 
 
 def _summarize_case(case_id: str) -> str:
@@ -120,17 +135,45 @@ def _recommend_next() -> str:
     if not active:
         return "No active cases need investigation right now — the queue is clear."
     top = max(active, key=lambda c: c.get("urgency_score", 0))
+
+    # Pull pattern-specific investigation steps for whichever risk factors
+    # actually fired on this case's transactions, instead of always
+    # showing the same four generic steps regardless of what kind of
+    # fraud this looks like (see app.services.copilot.knowledge).
+    tx_ids = top.get("transactions", [])
+    txs = [data_store.get("transactions", {}).get(t) for t in tx_ids if t in data_store.get("transactions", {})]
+    fired_signals = {
+        f["name"] for tx in txs for f in (tx or {}).get("risk_factors", []) if f.get("contribution", 0) > 0
+    }
+    matched_patterns = patterns_for_signals(fired_signals)
+
+    if matched_patterns:
+        pattern_names = ", ".join(p.name for p in matched_patterns)
+        steps: list[str] = []
+        for p in matched_patterns:
+            steps.extend(p.investigate)
+        # de-dupe (patterns can share a step) while preserving order; cap
+        # at 5 so the reply stays readable even with several matched patterns.
+        deduped_steps = list(dict.fromkeys(steps))[:5]
+        pattern_note = f"\n\n**Pattern match:** this case's signals are consistent with {pattern_names}."
+    else:
+        deduped_steps = [
+            "Review the mule chain and identify the current terminal (receiving) account.",
+            "Freeze the destination account if risk is HIGH_RISK and evidence is strong.",
+            "Alert the receiving bank if the account is external.",
+            "Escalate to a human analyst if cross-border or ambiguous.",
+        ]
+        pattern_note = ""
+
+    steps_block = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(deduped_steps))
+
     return (
         f"**Recommended next case: `{top['case_id']}`**\n\n"
         f"This case has the highest urgency score ({top.get('urgency_score', 0):.1f}) in the queue — "
         f"risk {top.get('risk_level', 0)}%, Rs.{top.get('total_fraud_amount', 0):,.2f} at stake, "
         f"~{top.get('golden_window_minutes', 0)} minutes left in the golden window before "
-        "mule-chain withdrawal risk peaks.\n\n"
-        "**Suggested steps:**\n"
-        "1. Review the mule chain and identify the current terminal (receiving) account.\n"
-        "2. Freeze the destination account if risk is HIGH_RISK and evidence is strong.\n"
-        "3. Alert the receiving bank if the account is external.\n"
-        "4. Escalate to a human analyst if cross-border or ambiguous."
+        f"mule-chain withdrawal risk peaks.{pattern_note}\n\n"
+        f"**Suggested steps:**\n{steps_block}"
     )
 
 
@@ -160,6 +203,16 @@ def _highest_risk_account(role: str) -> str:
         f"- Transactions involving this account as {label}: {stats['count']}\n"
         f"- Total amount moved: Rs.{stats['total_amount']:,.2f}"
     )
+
+
+def _explain_fraud_knowledge(message: str) -> str | None:
+    """Deterministic 'what is X / how does X work' answers from the fraud
+    knowledge base (see app.services.copilot.knowledge) — None if message
+    doesn't name a recognized pattern or concept."""
+    pattern = find_pattern(message)
+    if pattern is not None:
+        return format_pattern_reply(pattern)
+    return find_general_concept(message)
 
 
 def _search_transactions(message: str) -> str | None:
@@ -216,6 +269,7 @@ def match_structured_intent(message: str) -> str | None:
     case copilot.py falls through to the freeform LLM path).
 
     Order matters: specific ID lookups first (most unambiguous), then
+    fraud-knowledge questions (specific named patterns/concepts), then
     named aggregate questions, then the search verb (most permissive,
     checked last so it doesn't shadow the others).
     """
@@ -228,6 +282,10 @@ def match_structured_intent(message: str) -> str | None:
     case_id = _find_case_id(message)
     if case_id:
         return _summarize_case(case_id)
+
+    knowledge_reply = _explain_fraud_knowledge(message)
+    if knowledge_reply is not None:
+        return knowledge_reply
 
     if any(p in msg_lower for p in _SENDER_RISK_PHRASES):
         return _highest_risk_account("sender_account")
