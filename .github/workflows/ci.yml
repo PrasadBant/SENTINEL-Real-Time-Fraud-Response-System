@@ -16,7 +16,12 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          # Must match (or exceed) whatever trained/pickled
+          # app/data/xgb_model.joblib — xgboost==3.3.0 (pinned in
+          # requirements.txt) requires Python >=3.12. 3.11 here was an
+          # arbitrary earlier choice that was never actually verified
+          # against a clean install (see git history — CI caught it).
+          python-version: "3.13"
           cache: "pip"
           cache-dependency-path: backend/requirements.txt
 
