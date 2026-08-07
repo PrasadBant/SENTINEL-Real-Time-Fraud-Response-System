@@ -10,6 +10,7 @@ const AICopilot = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState(null);
   const messagesEndRef = useRef(null);
   const location = useLocation();
 
@@ -36,18 +37,21 @@ const AICopilot = () => {
         caseId = location.pathname.split('/').pop();
       }
 
-      const response = await apiFetch('/api/copilot', {
+      const response = await apiFetch('/api/copilot/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage, context_case_id: caseId })
+        body: JSON.stringify({ message: userMessage, context_case_id: caseId, conversation_id: conversationId })
       });
 
       const data = await response.json();
-      
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
+
+      if (data.conversation_id) {
+        setConversationId(data.conversation_id);
+      }
+      setMessages(prev => [...prev, {
+        role: 'assistant',
         content: data.reply,
-        action: data.action 
+        action: data.action
       }]);
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: '⚠️ Connection to AI engine failed.' }]);

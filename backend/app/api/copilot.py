@@ -1,9 +1,17 @@
 """
-SENTINEL — AI Copilot Route
-==============================
-POST /api/copilot: RAG + intent-parsing chatbot for investigators.
+SENTINEL — AI Copilot Routes
+================================
+POST /api/copilot/chat: RAG + intent-parsing chatbot for investigators.
+GET /api/copilot/history: list the caller's conversations, or fetch one
+    conversation's messages (?conversation_id=...).
+DELETE /api/copilot/history: clear the caller's history — all of it, or
+    one conversation (?conversation_id=...).
 
-Three tiers, checked in order:
+Every chat turn persists to SQLite (app.services.copilot.history),
+scoped per logged-in user, so conversations survive a reload/restart and
+one investigator never sees another's.
+
+POST /api/copilot/chat resolves three tiers, checked in order:
   1. Admin-gated action intents (freeze/close) — execute directly via
      handle_action(), same as before.
   2. Structured, data-exact intents (explain a transaction/case, list
@@ -21,14 +29,23 @@ Three tiers, checked in order:
 
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.actions import handle_action
 from app.api.schemas import ActionRequest, CopilotRequest
 from app.core.data_store import data_store
 from app.core.deps import get_current_user
 from app.services.ai_providers import get_provider
-from app.services.copilot import build_for_request, match_structured_intent
+from app.services.copilot import (
+    add_message,
+    build_for_request,
+    delete_all_conversations,
+    delete_conversation,
+    get_messages,
+    list_conversations,
+    match_structured_intent,
+    resolve_conversation,
+)
 
 router = APIRouter()
 
@@ -40,12 +57,17 @@ _SYSTEM_PROMPT = (
 )
 
 
-@router.post("/api/copilot")
+@router.post("/api/copilot/chat")
 async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_user)) -> dict[str, Any]:
+    username = user.get("username") or "unknown"
+    conversation_id = resolve_conversation(username, req.conversation_id)
+    add_message(conversation_id, "user", req.message)
+
     # 2. Check Intent for Tool Calling
     user_msg = req.message.lower()
     action_taken = None
     reply = ""
+    provider_used = None
 
     # Simple intent parsing for Hackathon demo.
     # SECURITY: these intents execute real investigative actions (freeze/close)
@@ -54,6 +76,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
     # or a viewer could freeze/close a case just by asking the chatbot to.
     is_admin = user.get("role") == "admin"
     if "freeze" in user_msg and req.context_case_id:
+        provider_used = "action"
         if not is_admin:
             reply = "🔒 **Access denied.** Freezing accounts requires admin privileges — you're logged in as a viewer."
         else:
@@ -63,6 +86,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
             reply = f"✅ **Action Executed:** I have applied a **FREEZE** on all accounts associated with Case `{req.context_case_id}` to prevent further fund movement."
             action_taken = {"type": "FREEZE_ACCOUNTS", "case_id": req.context_case_id}
     elif "close" in user_msg and req.context_case_id:
+        provider_used = "action"
         if not is_admin:
             reply = "🔒 **Access denied.** Closing a case requires admin privileges — you're logged in as a viewer."
         else:
@@ -80,6 +104,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
         structured_reply = match_structured_intent(req.message)
         if structured_reply is not None:
             reply = structured_reply
+            provider_used = "structured"
         else:
             # 4. Freeform: delegate to the configured AIProvider, fed context
             # built from SENTINEL's own case/transaction/dashboard data
@@ -94,6 +119,8 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
                     context=context_data,
                 )
                 provider_success = bool(reply)
+                if provider_success:
+                    provider_used = provider.name
             except Exception as e:
                 # Fallback on failure (e.g., DNS error, proxy block, timeout,
                 # rate limit, bad/missing API key, or an unimplemented stub
@@ -102,6 +129,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
                 provider_success = False
 
             if not provider_success:
+                provider_used = "offline_fallback"
                 # High-quality dynamic simulator for offline fallback/missing token
                 case_id = req.context_case_id or "UNKNOWN"
                 if req.context_case_id and req.context_case_id in data_store.get("cases", {}):
@@ -169,4 +197,38 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
                             "HuggingFace AI engine for full dynamic capabilities."
                         )
 
-    return {"reply": reply, "action": action_taken}
+    add_message(conversation_id, "assistant", reply, action=action_taken, provider=provider_used)
+    return {"reply": reply, "action": action_taken, "conversation_id": conversation_id}
+
+
+@router.get("/api/copilot/history")
+async def copilot_get_history(
+    conversation_id: str | None = None, user: dict = Depends(get_current_user)
+) -> dict[str, Any]:
+    """No conversation_id: list the caller's conversations (summaries,
+    newest first). With conversation_id: return that conversation's full
+    message list — 404 if it doesn't exist or belongs to someone else."""
+    username = user.get("username") or "unknown"
+    if conversation_id:
+        messages = get_messages(username, conversation_id)
+        if messages is None:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        return {"conversation_id": conversation_id, "messages": messages}
+    return {"conversations": list_conversations(username)}
+
+
+@router.delete("/api/copilot/history")
+async def copilot_clear_history(
+    conversation_id: str | None = None, user: dict = Depends(get_current_user)
+) -> dict[str, Any]:
+    """No conversation_id: delete all of the caller's conversations. With
+    conversation_id: delete just that one — 404 if it doesn't exist or
+    belongs to someone else."""
+    username = user.get("username") or "unknown"
+    if conversation_id:
+        deleted = delete_conversation(username, conversation_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        return {"ok": True, "deleted": 1}
+    count = delete_all_conversations(username)
+    return {"ok": True, "deleted": count}

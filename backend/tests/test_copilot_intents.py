@@ -21,7 +21,7 @@ def test_explain_transaction_by_id_returns_exact_scoring_breakdown(client, admin
     tx_id = tx["tx_id"]
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": f"why was {tx_id} flagged?", "context_case_id": None},
         headers=admin_headers,
     )
@@ -34,7 +34,7 @@ def test_explain_transaction_by_id_returns_exact_scoring_breakdown(client, admin
 
 def test_explain_unknown_transaction_id_reports_not_found(client, admin_headers):
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "explain TX-DOESNOTEXIST", "context_case_id": None},
         headers=admin_headers,
     )
@@ -47,7 +47,7 @@ def test_summarize_case_by_id_returns_case_details(client, admin_headers):
     case_id = case["case_id"]
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": f"summarize {case_id}", "context_case_id": None},
         headers=admin_headers,
     )
@@ -61,7 +61,7 @@ def test_list_high_risk_cases_intent(client, admin_headers):
     _create_high_risk_case(client)
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "show me open high-risk cases", "context_case_id": None},
         headers=admin_headers,
     )
@@ -74,7 +74,7 @@ def test_recommend_next_case_intent(client, admin_headers):
     _create_high_risk_case(client)
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "what should I investigate next?", "context_case_id": None},
         headers=admin_headers,
     )
@@ -87,7 +87,7 @@ def test_dashboard_stats_intent_matches_live_data(client, admin_headers):
     _create_high_risk_case(client)
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "what is the total exposure?", "context_case_id": None},
         headers=admin_headers,
     )
@@ -101,7 +101,7 @@ def test_transaction_search_by_channel(client, admin_headers):
     _create_high_risk_case(client)  # NEFT channel
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "show me NEFT transactions", "context_case_id": None},
         headers=admin_headers,
     )
@@ -119,7 +119,7 @@ def test_freeze_intent_still_takes_priority_over_structured_intents(client, admi
     case, _tx = _create_high_risk_case(client)
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "please freeze this case", "context_case_id": case["case_id"]},
         headers=admin_headers,
     )
@@ -134,7 +134,7 @@ def test_freeform_question_without_structured_match_falls_through_to_llm_path(cl
     Mock/offline fallback path — this is the existing test_copilot.py
     contract, re-verified now that Phase B sits in front of it."""
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "hello there", "context_case_id": None},
         headers=admin_headers,
     )

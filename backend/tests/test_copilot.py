@@ -17,7 +17,7 @@ def _create_high_risk_case(client):
 
 
 def test_copilot_requires_auth(client):
-    r = client.post("/api/copilot", json={"message": "hello", "context_case_id": None})
+    r = client.post("/api/copilot/chat", json={"message": "hello", "context_case_id": None})
     assert r.status_code == 401
 
 
@@ -25,7 +25,7 @@ def test_viewer_freeze_intent_is_denied_and_not_executed(client, viewer_headers,
     case = _create_high_risk_case(client)
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "please freeze this case", "context_case_id": case["case_id"]},
         headers=viewer_headers,
     )
@@ -43,7 +43,7 @@ def test_admin_freeze_intent_executes(client, admin_headers):
     case = _create_high_risk_case(client)
 
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "please freeze this case", "context_case_id": case["case_id"]},
         headers=admin_headers,
     )
@@ -58,7 +58,7 @@ def test_admin_freeze_intent_executes(client, admin_headers):
 
 def test_copilot_offline_fallback_answers_without_case(client, admin_headers):
     r = client.post(
-        "/api/copilot",
+        "/api/copilot/chat",
         json={"message": "hello", "context_case_id": None},
         headers=admin_headers,
     )
