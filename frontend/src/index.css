@@ -93,4 +93,50 @@
     font-weight: 600;
     color: hsl(var(--primary));
   }
+  .markdown-content code {
+    background: hsl(var(--background) / 0.5);
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .markdown-content pre {
+    background: hsl(var(--background) / 0.5);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 0.5rem;
+  }
+  .markdown-content pre code {
+    background: transparent;
+    padding: 0;
+  }
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3 {
+    font-weight: 700;
+    margin: 0.5rem 0 0.25rem;
+  }
+  .markdown-content blockquote {
+    border-left: 2px solid hsl(var(--border));
+    padding-left: 0.75rem;
+    opacity: 0.85;
+  }
+  .markdown-content a {
+    color: hsl(var(--primary));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.5rem;
+    font-size: 0.85em;
+  }
+  .markdown-content th,
+  .markdown-content td {
+    border: 1px solid hsl(var(--border));
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+  }
 }
