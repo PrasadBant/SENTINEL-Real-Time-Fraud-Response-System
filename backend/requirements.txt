@@ -4,13 +4,21 @@ pydantic
 sqlalchemy
 httpx
 pyjwt
+python-dotenv
+networkx
 
 # --- ML scoring (app/services/ml_risk_engine.py) ---
 # Trained XGBoost model for fraud-probability inference. If any of these
 # are missing, or app/data/xgb_model.joblib doesn't exist, the app falls
 # back to a rule-guided noise emulator automatically — it won't crash,
 # but you won't get real trained-model scoring.
-xgboost
+# xgboost is pinned to match the version app/data/xgb_model.joblib was
+# trained with — an unpinned/newer xgboost loading an older serialized
+# model prints a version-mismatch warning (harmless today, but XGBoost
+# doesn't guarantee pickle compatibility across major versions, so a
+# future release could break loading outright). Re-run
+# scripts/train_xgb_model.py and bump this pin together if you upgrade.
+xgboost==3.3.0
 joblib
 numpy
 
