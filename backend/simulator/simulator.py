@@ -1,3 +1,4 @@
+import os
 import requests
 import time
 import random
@@ -6,6 +7,12 @@ import uuid
 from datetime import datetime, timezone
 
 API_URL = "http://127.0.0.1:8000/transaction"
+
+# POST /transaction now requires this shared-secret header (see
+# backend/app/core/deps.py:verify_simulator_key). Must match
+# SIMULATOR_API_KEY in the backend's environment.
+API_KEY = os.getenv("SENTINEL_API_KEY", "sentinel-dev-simulator-key")
+API_HEADERS = {"X-API-Key": API_KEY}
 
 # ─── Channel Amount Caps ───────────────────────────────────────────────────────
 CHANNEL_CAPS = {
@@ -71,7 +78,7 @@ def _run_forked_scenario(name, start_prefix, amount_range, extra_flags=None):
                 tx.update(extra_flags)
 
             try:
-                resp = requests.post(API_URL, json=tx)
+                resp = requests.post(API_URL, json=tx, headers=API_HEADERS)
                 data = resp.json()
                 res_tx = data.get("transaction") or {}
                 res_case = data.get("case") or {}
@@ -110,7 +117,7 @@ def run_sc02_sim_swap():
         "on_active_call": True, "is_scripted": True
     }
     try:
-        resp = requests.post(API_URL, json=tx)
+        resp = requests.post(API_URL, json=tx, headers=API_HEADERS)
         data = resp.json().get("transaction") or {}
         print(f"  SIM Swap Alert | Amount: {tx['amount']} | Score: {data.get('risk_score', 0)}")
     except: pass
@@ -130,7 +137,7 @@ def run_sc11_aggregation_mule():
             "case_id": case_id, "bulk_transfer_flag": True
         }
         try:
-            resp = requests.post(API_URL, json=tx)
+            resp = requests.post(API_URL, json=tx, headers=API_HEADERS)
             case_id = resp.json().get("transaction", {}).get("case_id")
         except: pass
         time.sleep(0.5)
@@ -146,7 +153,7 @@ def run_sc03_low_risk():
         "amount": amount, "currency": "INR", "channel": channel
     }
     try:
-        requests.post(API_URL, json=tx)
+        requests.post(API_URL, json=tx, headers=API_HEADERS)
         print(f"  Routine TX | Amount: {tx['amount']} | Ch: {channel}")
     except: pass
 
@@ -160,7 +167,7 @@ def run_sc07_small_payment():
         "amount": amount, "currency": "INR", "channel": channel
     }
     try:
-        requests.post(API_URL, json=tx)
+        requests.post(API_URL, json=tx, headers=API_HEADERS)
         print(f"  Small Payment | Amount: {tx['amount']} | Ch: {channel}")
     except: pass
 
@@ -177,7 +184,7 @@ def run_sc04_velocity_attack():
             "amount": amount, "channel": channel, "velocity_flag": True
         }
         try:
-            requests.post(API_URL, json=tx)
+            requests.post(API_URL, json=tx, headers=API_HEADERS)
         except: pass
         time.sleep(0.5)
 

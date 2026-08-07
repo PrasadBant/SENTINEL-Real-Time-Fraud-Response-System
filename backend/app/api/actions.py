@@ -10,12 +10,13 @@ case" / "close this case" intents.
 from typing import Any
 from uuid import uuid4
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.api.presenters import case_payload, now_iso
 from app.api.schemas import ActionRequest
 from app.core.constants import AccountStatus, ActionStatus, ActionTypes, CaseStatus
 from app.core.data_store import data_store
+from app.core.deps import require_role
 from app.core.persistence import save_action
 from app.services import withdrawal_tracker
 from app.services.mock_apis import (
@@ -143,31 +144,37 @@ async def handle_action(action_name: str, payload: ActionRequest) -> dict[str, A
     return response
 
 
+# All investigative actions are admin-only, matching the frontend's existing
+# role gate (ActionButton/ActionPanel disable these for viewers) — now
+# actually enforced server-side instead of only cosmetically in the UI.
+_require_admin = require_role("admin")
+
+
 @router.post("/action/freeze")
-async def freeze_action(payload: ActionRequest) -> dict[str, Any]:
+async def freeze_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
     return await handle_action("freeze", payload)
 
 
 @router.post("/action/flag")
-async def flag_action(payload: ActionRequest) -> dict[str, Any]:
+async def flag_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
     return await handle_action("flag", payload)
 
 
 @router.post("/action/alert")
-async def alert_action(payload: ActionRequest) -> dict[str, Any]:
+async def alert_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
     return await handle_action("alert", payload)
 
 
 @router.post("/action/monitor")
-async def monitor_action(payload: ActionRequest) -> dict[str, Any]:
+async def monitor_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
     return await handle_action("monitor", payload)
 
 
 @router.post("/action/close")
-async def close_action(payload: ActionRequest) -> dict[str, Any]:
+async def close_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
     return await handle_action("close", payload)
 
 
 @router.post("/action/close_fp")
-async def close_fp_action(payload: ActionRequest) -> dict[str, Any]:
+async def close_fp_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
     return await handle_action("close_fp", payload)

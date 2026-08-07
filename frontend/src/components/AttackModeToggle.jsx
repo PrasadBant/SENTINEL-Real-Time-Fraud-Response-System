@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getRole } from '../roleStore';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+import { apiFetch } from '../services/api';
 
 const AttackModeToggle = () => {
   const [isAttack, setIsAttack] = useState(window.__SENTINEL_ATTACK_MODE__ || false);
@@ -11,7 +10,7 @@ const AttackModeToggle = () => {
 
   const fireBurst = async () => {
     try {
-      await fetch(`${API_BASE}/attack-mode`, { method: 'POST' });
+      await apiFetch('/attack-mode', { method: 'POST' });
     } catch (e) {
       console.error('[SENTINEL] Attack mode burst failed:', e);
     }

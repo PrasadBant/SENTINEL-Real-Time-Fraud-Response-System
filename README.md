@@ -352,6 +352,11 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Copy the env template and (optionally) set SECRET_KEY / demo credentials.
+# Without this the app still runs — SECRET_KEY falls back to a random key
+# generated at startup — but login tokens won't survive a server restart.
+cp .env.example .env
 ```
 
 ### Frontend Setup
@@ -430,12 +435,46 @@ You should see:
 
 ## 📡 API Reference
 
+### Authentication
+
+Two demo accounts ship out of the box (override via `backend/.env` — see
+`.env.example`):
+
+| Username | Password    | Role   | Can execute actions? |
+|----------|-------------|--------|-----------------------|
+| `admin`  | `admin123`  | admin  | Yes                   |
+| `viewer` | `viewer123` | viewer | No (read-only)        |
+
+```http
+POST /auth/login
+Content-Type: application/json
+
+{ "username": "admin", "password": "admin123" }
+```
+
+**Response**:
+```json
+{ "access_token": "eyJ...", "token_type": "bearer", "role": "admin", "username": "admin" }
+```
+
+Send the token on every protected request:
+```http
+Authorization: Bearer <access_token>
+```
+
+- `GET /cases`, `GET /export/sentinel_audit.csv`, `POST /api/copilot` — any logged-in role.
+- `POST /action/*`, `POST /attack-mode` — **admin only** (403 for viewer tokens).
+- `POST /transaction` — not user auth; instead requires a static `X-API-Key` header (see below). This is a machine-to-machine ingestion endpoint (the simulator), not something a logged-in investigator calls directly.
+- `GET /health` — public, no auth required.
+- WebSocket `/ws` — pass the token as a query param, since browsers can't set custom headers on a WS handshake: `ws://localhost:8000/ws?token=<access_token>`.
+
 ### REST Endpoints
 
 #### Get All Cases
 
 ```http
 GET /cases
+Authorization: Bearer <access_token>
 ```
 
 **Response**:
@@ -466,6 +505,7 @@ GET /cases
 ```http
 POST /transaction
 Content-Type: application/json
+X-API-Key: sentinel-dev-simulator-key
 
 {
   "tx_id": "TX-001",
@@ -499,11 +539,12 @@ Content-Type: application/json
 }
 ```
 
-#### Freeze Account
+#### Freeze Account (admin only)
 
 ```http
 POST /action/freeze
 Content-Type: application/json
+Authorization: Bearer <access_token>
 
 {
   "case_id": "CASE-ABC12345",
@@ -512,11 +553,12 @@ Content-Type: application/json
 }
 ```
 
-#### Flag Phone Number
+#### Flag Phone Number (admin only)
 
 ```http
 POST /action/flag
 Content-Type: application/json
+Authorization: Bearer <access_token>
 
 {
   "case_id": "CASE-ABC12345",
@@ -525,11 +567,12 @@ Content-Type: application/json
 }
 ```
 
-#### Alert Police
+#### Alert Police (admin only)
 
 ```http
 POST /action/alert
 Content-Type: application/json
+Authorization: Bearer <access_token>
 
 {
   "case_id": "CASE-ABC12345",
@@ -541,6 +584,7 @@ Content-Type: application/json
 
 ```http
 GET /export/sentinel_audit.csv
+Authorization: Bearer <access_token>
 ```
 
 Returns CSV file with complete audit trail.

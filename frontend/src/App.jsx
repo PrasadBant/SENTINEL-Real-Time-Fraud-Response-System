@@ -13,7 +13,7 @@ import AttackModeToggle from './components/AttackModeToggle';
 import LiveAlertToast from './components/LiveAlertToast';
 import ErrorBoundary from './components/ErrorBoundary';
 import Login from './components/Login';
-import { getRole } from './roleStore';
+import { clearAuthGlobal, getRole } from './roleStore';
 import AICopilot from './components/AICopilot';
 import { RoleProvider } from './RoleContext';
 
@@ -33,8 +33,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("sentinel_role");
-    window.location.reload();
+    clearAuthGlobal();
   };
 
   return (

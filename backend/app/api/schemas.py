@@ -3,6 +3,11 @@
 from pydantic import BaseModel
 
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
 class ActionRequest(BaseModel):
     case_id: str
     account_id: str | None = None

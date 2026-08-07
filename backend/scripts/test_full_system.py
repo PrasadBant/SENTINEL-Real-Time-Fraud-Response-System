@@ -2,12 +2,26 @@
 SENTINEL Full Backend Integration Test
 Tests every major backend feature against the live API at port 8000.
 """
+import os
 import requests
 import time
 import uuid
 from datetime import datetime, timezone
 
 BASE = "http://127.0.0.1:8000"
+
+# POST /transaction requires this shared-secret header (see
+# backend/app/core/deps.py:verify_simulator_key).
+TX_HEADERS = {"X-API-Key": os.getenv("SENTINEL_API_KEY", "sentinel-dev-simulator-key")}
+
+# Everything else (cases, actions, attack-mode, export) requires a logged-in
+# admin JWT — see backend/app/api/auth.py.
+_login = requests.post(f"{BASE}/auth/login", json={
+    "username": os.getenv("ADMIN_USERNAME", "admin"),
+    "password": os.getenv("ADMIN_PASSWORD", "admin123"),
+})
+_login.raise_for_status()
+AUTH_HEADERS = {"Authorization": f"Bearer {_login.json()['access_token']}"}
 
 PASS = 0
 FAIL = 0
@@ -46,7 +60,7 @@ tx_normal = {
     "amount": 1500, "currency": "INR", "channel": "UPI", "hop_number": 0,
     "simulator_meta": {"is_new_receiver": False, "tx_velocity": 1}
 }
-r = requests.post(f"{BASE}/transaction", json=tx_normal)
+r = requests.post(f"{BASE}/transaction", json=tx_normal, headers=TX_HEADERS)
 check("Normal TX returns 200", r.status_code == 200)
 data = r.json()
 tx = data.get("transaction", {})
@@ -67,7 +81,7 @@ tx_high = {
     "on_active_call": True, "is_cross_border": True,
     "simulator_meta": {"is_new_receiver": True, "tx_velocity": 8}
 }
-r = requests.post(f"{BASE}/transaction", json=tx_high)
+r = requests.post(f"{BASE}/transaction", json=tx_high, headers=TX_HEADERS)
 check("High Risk TX returns 200", r.status_code == 200)
 data = r.json()
 tx_h = data.get("transaction", {})
@@ -98,7 +112,7 @@ if case_id:
         "hop_number": 1, "case_id": case_id,
         "simulator_meta": {"is_new_receiver": True, "tx_velocity": 1}
     }
-    r = requests.post(f"{BASE}/transaction", json=tx_hop1)
+    r = requests.post(f"{BASE}/transaction", json=tx_hop1, headers=TX_HEADERS)
     check("Hop 1 TX returns 200", r.status_code == 200)
     hop1_tx = r.json().get("transaction", {})
     hop1_rule = hop1_tx.get("rule_score", 0)
@@ -116,7 +130,7 @@ else:
 
 # ─── Test 5: GET /cases ───────────────────────────────────────────────────────
 section("TEST 5: GET /cases — Case listing")
-r = requests.get(f"{BASE}/cases")
+r = requests.get(f"{BASE}/cases", headers=AUTH_HEADERS)
 check("GET /cases returns 200", r.status_code == 200)
 cases = r.json()
 check("Cases is a list", isinstance(cases, list))
@@ -135,7 +149,7 @@ section("TEST 6: POST /action/freeze — Investigator Action")
 if case_id:
     payload = {"case_id": case_id, "account_id": "ACC-TEST-MULE-001",
                "reason": "Confirmed mule from automated test"}
-    r = requests.post(f"{BASE}/action/freeze", json=payload)
+    r = requests.post(f"{BASE}/action/freeze", json=payload, headers=AUTH_HEADERS)
     check("Freeze action returns 200", r.status_code == 200)
     res = r.json()
     check("ok=True in freeze response", res.get("ok") == True,
@@ -143,7 +157,7 @@ if case_id:
     check("action_id in freeze response", bool(res.get("action_id")))
 
     # Verify it was recorded
-    r2 = requests.get(f"{BASE}/cases")
+    r2 = requests.get(f"{BASE}/cases", headers=AUTH_HEADERS)
     found = next((c for c in r2.json() if c["case_id"] == case_id), None)
     if found:
         actions = found.get("actionLog", [])
@@ -157,13 +171,13 @@ else:
 section("TEST 7: POST /action/alert — Police Alert")
 if case_id:
     r = requests.post(f"{BASE}/action/alert",
-                      json={"case_id": case_id, "reason": "Automated test escalation"})
+                      json={"case_id": case_id, "reason": "Automated test escalation"}, headers=AUTH_HEADERS)
     check("Alert action returns 200", r.status_code == 200)
     check("Alert ok=True", r.json().get("ok") == True)
 
 # ─── Test 8: Attack Mode Burst ───────────────────────────────────────────────
 section("TEST 8: POST /attack-mode — Fraud Burst Injection")
-r = requests.post(f"{BASE}/attack-mode")
+r = requests.post(f"{BASE}/attack-mode", headers=AUTH_HEADERS)
 check("Attack mode returns 200", r.status_code == 200)
 check("Attack mode ok=True", r.json().get("ok") == True)
 time.sleep(5)  # Let burst complete
@@ -180,7 +194,7 @@ for _ in range(5):
         "hop_number": 0, "is_cross_border": True,
         "simulator_meta": {"is_new_receiver": True, "tx_velocity": 5}
     }
-    r = requests.post(f"{BASE}/transaction", json=tx)
+    r = requests.post(f"{BASE}/transaction", json=tx, headers=TX_HEADERS)
     if r.status_code == 200:
         t = r.json().get("transaction", {})
         dev = abs(t.get("rule_score", 0) - t.get("ml_score", 0))
@@ -192,7 +206,7 @@ print(f"    Individual deviations: {deviations} | Avg: {avg_dev:.1f}")
 
 # ─── Test 10: Export CSV ────────────────────────────────────────────────────
 section("TEST 10: GET /export/sentinel_audit.csv — Audit Export")
-r = requests.get(f"{BASE}/export/sentinel_audit.csv")
+r = requests.get(f"{BASE}/export/sentinel_audit.csv", headers=AUTH_HEADERS)
 check("CSV export returns 200", r.status_code == 200)
 check("Content-Type is text/csv",
       "text/csv" in r.headers.get("Content-Type", ""))

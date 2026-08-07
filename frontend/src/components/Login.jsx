@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { setRoleGlobal } from '../roleStore';
+import { setAuthGlobal } from '../roleStore';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -7,26 +9,39 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const doLogin = async (loginUsername, loginPassword) => {
     setError('');
     setLoading(true);
-
-    // Simulated validation delay for premium feel
-    setTimeout(() => {
-      if (username === 'admin' && password === 'admin123') {
-        setRoleGlobal('admin');
-      } else if (username === 'viewer' && password === 'viewer123') {
-        setRoleGlobal('viewer');
-      } else {
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: loginUsername, password: loginPassword }),
+      });
+      if (!res.ok) {
         setError('Invalid credentials. Access denied.');
         setLoading(false);
+        return;
       }
-    }, 800);
+      const data = await res.json();
+      // setAuthGlobal reloads the page once the session is stored.
+      setAuthGlobal(data.access_token, data.role);
+    } catch (err) {
+      setError('Unable to reach the server. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    doLogin(username, password);
   };
 
   const handleQuickViewer = () => {
-    setRoleGlobal('viewer');
+    // The "public viewer" account is intentionally a known, low-privilege
+    // demo credential — same trust model as before, just now actually
+    // verified against the backend instead of bypassing login entirely.
+    doLogin('viewer', 'viewer123');
   };
 
   return (

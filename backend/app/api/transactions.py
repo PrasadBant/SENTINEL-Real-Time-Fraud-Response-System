@@ -9,12 +9,13 @@ withdrawal countdown for each newly-linked suspect node.
 import asyncio
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.api.presenters import build_tx_event, case_payload
 from app.core.constants import AccountStatus, CaseStatus
 from app.core.config import WITHDRAWAL_DELAY_SECONDS
 from app.core.data_store import data_store
+from app.core.deps import verify_simulator_key
 from app.core.models.transaction import Transaction
 from app.core.persistence import save_case, save_transaction
 from app.services import withdrawal_tracker
@@ -25,7 +26,7 @@ from app.websocket.connection_manager import manager
 router = APIRouter()
 
 
-@router.post("/transaction")
+@router.post("/transaction", dependencies=[Depends(verify_simulator_key)])
 async def process_tx(tx_in: Transaction) -> dict[str, Any]:
     # FastAPI validates the body against Transaction before this runs — bad
     # payloads (missing tx_id/amount, non-positive amount, wrong types) are

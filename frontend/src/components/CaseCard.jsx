@@ -4,6 +4,7 @@ import GoldenTimer from './GoldenTimer';
 import ActionButton from './ActionButton';
 import FactorBreakdown from './FactorBreakdown';
 import { maskAccount } from '../utils/maskAccount';
+import { apiFetch } from '../services/api';
 
 const CaseCard = ({ caseData, onAnalyze, transactions = [], role }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,8 +24,7 @@ const CaseCard = ({ caseData, onAnalyze, transactions = [], role }) => {
     e.stopPropagation();
     if (isViewer) return;
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-      await fetch(`${API_BASE}/action/${actionEndpoint}`, {
+      await apiFetch(`/action/${actionEndpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

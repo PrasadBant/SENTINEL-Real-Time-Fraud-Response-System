@@ -1,5 +1,8 @@
-import requests, json, uuid
+import os, requests, json, uuid
 from datetime import datetime, timezone
+
+# POST /transaction requires this header — see backend/app/core/deps.py.
+API_HEADERS = {"X-API-Key": os.getenv("SENTINEL_API_KEY", "sentinel-dev-simulator-key")}
 
 def make_tx(amount, call=False, is_new=True, hop=0, velocity=1):
     return {
@@ -19,7 +22,7 @@ scenarios = [
 ]
 
 for name, t in scenarios:
-    r = requests.post("http://127.0.0.1:8000/transaction", json=t)
+    r = requests.post("http://127.0.0.1:8000/transaction", json=t, headers=API_HEADERS)
     d = r.json().get("transaction", {})
     imp = d.get("ml_feature_importance", {})
     print(f"[{name}] Rule={d['rule_score']} ML={d['ml_score']} Hybrid={d['risk_score']}")

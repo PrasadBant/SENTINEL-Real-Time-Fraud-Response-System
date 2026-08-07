@@ -19,7 +19,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import actions, attack_mode, cases, copilot, health, transactions, ws_routes
+from app.api import actions, attack_mode, auth, cases, copilot, health, transactions, ws_routes
 from app.core.data_store import data_store
 from app.core.database import init_db
 from app.core.persistence import load_all_into_store
@@ -75,6 +75,7 @@ app.add_middleware(
 
 # ── Routes ──────────────────────────────────────────────────────────────────
 app.include_router(health.router)
+app.include_router(auth.router)
 app.include_router(transactions.router)
 app.include_router(cases.router)
 app.include_router(actions.router)

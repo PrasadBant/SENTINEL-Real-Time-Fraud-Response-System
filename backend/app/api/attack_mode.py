@@ -12,10 +12,11 @@ import uuid as _uuid
 from datetime import datetime, timezone as _tz
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.api.presenters import build_tx_event, case_payload
 from app.core.data_store import data_store
+from app.core.deps import require_role
 from app.services.orchestrator import run_pipeline
 from app.websocket.connection_manager import manager
 
@@ -71,10 +72,11 @@ async def _fire_burst() -> None:
 
 
 @router.post("/attack-mode")
-async def trigger_attack_mode() -> dict[str, Any]:
+async def trigger_attack_mode(user: dict = Depends(require_role("admin"))) -> dict[str, Any]:
     """
     Triggers a burst of 5 high-risk transactions to simulate an active fraud attack.
     Each transaction is injected directly into the pipeline and broadcast via WebSocket.
+    Admin-only, matching the frontend's AttackModeToggle (disabled for viewers).
     """
     asyncio.create_task(_fire_burst())
     return {"ok": True, "message": "Attack mode burst initiated — 5 high-risk transactions injected"}

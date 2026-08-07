@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { EVENT_TYPES } from '../types/events';
+import { clearAuthGlobal, getToken } from '../roleStore';
 
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws';
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -118,7 +119,17 @@ const startPolling = () => {
   useStore.getState().setConnectionStatus('POLLING');
   pollingTimer = setInterval(async () => {
     try {
-      const res = await fetch(`${API_BASE}/cases`);
+      const token = getToken();
+      const res = await fetch(`${API_BASE}/cases`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res.status === 401) {
+        // Session expired/invalid — stop polling and bounce to login rather
+        // than retrying forever against an endpoint that will never succeed.
+        stopPolling();
+        clearAuthGlobal();
+        return;
+      }
       if (!res.ok) {
         pollingFailures += 1;
         if (pollingFailures >= 3) {
@@ -190,7 +201,19 @@ const handleEvent = (payload = {}) => {
 
 const connectWS = () => {
   if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
-  ws = new WebSocket(WS_URL);
+
+  // Browsers can't set custom headers on a WebSocket handshake, so the JWT
+  // travels as a query param instead — the backend's get_ws_user dependency
+  // reads it from there (see backend/app/core/deps.py).
+  const token = getToken();
+  if (!token) {
+    // No session yet (shouldn't normally happen — App.jsx gates the whole
+    // app behind login — but stay defensive rather than opening an
+    // unauthenticated connection the server will just reject anyway).
+    return;
+  }
+  const separator = WS_URL.includes('?') ? '&' : '?';
+  ws = new WebSocket(`${WS_URL}${separator}token=${encodeURIComponent(token)}`);
 
   ws.onopen = () => {
     reconnectDelay = 1500;

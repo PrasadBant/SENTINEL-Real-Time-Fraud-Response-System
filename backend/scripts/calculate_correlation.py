@@ -1,3 +1,4 @@
+import os
 import requests
 import time
 import random
@@ -6,6 +7,8 @@ from datetime import datetime, timezone
 import numpy as np
 
 API_URL = "http://127.0.0.1:8000/transaction"
+# POST /transaction requires this header — see backend/app/core/deps.py.
+API_HEADERS = {"X-API-Key": os.getenv("SENTINEL_API_KEY", "sentinel-dev-simulator-key")}
 
 
 def generate_sample_tx():
@@ -68,7 +71,7 @@ def run_correlation_test(n=10):
     for i in range(n):
         tx, scenario = generate_sample_tx()
         try:
-            resp = requests.post(API_URL, json=tx)
+            resp = requests.post(API_URL, json=tx, headers=API_HEADERS)
             data = resp.json()
             tx_data = data.get("transaction", {})
             r_score = tx_data.get("rule_score", 0)

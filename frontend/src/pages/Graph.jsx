@@ -4,6 +4,7 @@ import { useStore } from '../hooks/useWebSocket';
 import { getRole } from '../roleStore';
 import ErrorBoundary from '../components/ErrorBoundary';
 import GraphModule from '../modules/GraphModule';
+import { apiFetch } from '../services/api';
 
 const Graph = () => {
   const { caseId } = useParams();
@@ -39,8 +40,7 @@ const Graph = () => {
     
     let res;
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-      res = await fetch(`${API_BASE}${endpoint}`, {
+      res = await apiFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(actionPayload),

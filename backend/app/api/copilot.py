@@ -10,17 +10,18 @@ to a canned offline analysis.
 import os
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.api.actions import handle_action
 from app.api.schemas import ActionRequest, CopilotRequest
 from app.core.data_store import data_store
+from app.core.deps import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/api/copilot")
-async def copilot_chat(req: CopilotRequest) -> dict[str, Any]:
+async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_user)) -> dict[str, Any]:
     # 1. Gather Context (RAG)
     context_data = "No specific case selected. The user is asking a general question."
     if req.context_case_id:
@@ -44,18 +45,29 @@ async def copilot_chat(req: CopilotRequest) -> dict[str, Any]:
     action_taken = None
     reply = ""
 
-    # Simple intent parsing for Hackathon demo
+    # Simple intent parsing for Hackathon demo.
+    # SECURITY: these intents execute real investigative actions (freeze/close)
+    # via handle_action() directly, bypassing the /action/* routes' own
+    # require_role("admin") dependency — so the same check must happen here,
+    # or a viewer could freeze/close a case just by asking the chatbot to.
+    is_admin = user.get("role") == "admin"
     if "freeze" in user_msg and req.context_case_id:
-        # Execute FREEZE Tool
-        action_payload = ActionRequest(case_id=req.context_case_id, target_id="GLOBAL", reason="AI Copilot Action")
-        await handle_action("freeze", action_payload)
-        reply = f"✅ **Action Executed:** I have applied a **FREEZE** on all accounts associated with Case `{req.context_case_id}` to prevent further fund movement."
-        action_taken = {"type": "FREEZE_ACCOUNTS", "case_id": req.context_case_id}
+        if not is_admin:
+            reply = "🔒 **Access denied.** Freezing accounts requires admin privileges — you're logged in as a viewer."
+        else:
+            # Execute FREEZE Tool
+            action_payload = ActionRequest(case_id=req.context_case_id, target_id="GLOBAL", reason="AI Copilot Action")
+            await handle_action("freeze", action_payload)
+            reply = f"✅ **Action Executed:** I have applied a **FREEZE** on all accounts associated with Case `{req.context_case_id}` to prevent further fund movement."
+            action_taken = {"type": "FREEZE_ACCOUNTS", "case_id": req.context_case_id}
     elif "close" in user_msg and req.context_case_id:
-        action_payload = ActionRequest(case_id=req.context_case_id, reason="AI Copilot closed")
-        await handle_action("close", action_payload)
-        reply = f"✅ **Action Executed:** Case `{req.context_case_id}` has been **closed** and marked as resolved."
-        action_taken = {"type": "CLOSE_CASE", "case_id": req.context_case_id}
+        if not is_admin:
+            reply = "🔒 **Access denied.** Closing a case requires admin privileges — you're logged in as a viewer."
+        else:
+            action_payload = ActionRequest(case_id=req.context_case_id, reason="AI Copilot closed")
+            await handle_action("close", action_payload)
+            reply = f"✅ **Action Executed:** Case `{req.context_case_id}` has been **closed** and marked as resolved."
+            action_taken = {"type": "CLOSE_CASE", "case_id": req.context_case_id}
     else:
         hf_api_key = os.getenv("HF_API_KEY")
         hf_success = False

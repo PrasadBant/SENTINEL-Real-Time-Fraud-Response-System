@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { apiFetch } from '../services/api';
 
 const AICopilot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,7 @@ const AICopilot = () => {
         caseId = location.pathname.split('/').pop();
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/copilot', {
+      const response = await apiFetch('/api/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, context_case_id: caseId })

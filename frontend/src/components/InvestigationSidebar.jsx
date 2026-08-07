@@ -6,6 +6,7 @@ import ActionButton from './ActionButton';
 import { maskAccount } from '../utils/maskAccount';
 import { twMerge } from 'tailwind-merge';
 import { useRole } from '../RoleContext';
+import { apiFetch } from '../services/api';
 
 const InvestigationSidebar = ({ 
   isOpen, 
@@ -43,8 +44,7 @@ const InvestigationSidebar = ({
     const targetAccount = selectedTransaction?.receiver_account || "GLOBAL";
     
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-      const response = await fetch(`${API_BASE}/action/${actionEndpoint}`, {
+      const response = await apiFetch(`/action/${actionEndpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -11,24 +11,25 @@ import io
 from datetime import datetime, timezone as _tz
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
 from app.api.presenters import case_payload
 from app.core.config import HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD
 from app.core.constants import ActionStatus
 from app.core.data_store import data_store
+from app.core.deps import get_current_user
 
 router = APIRouter()
 
 
 @router.get("/cases")
-def get_cases() -> list[dict[str, Any]]:
+def get_cases(user: dict = Depends(get_current_user)) -> list[dict[str, Any]]:
     return [case_payload(case) for case in data_store.get("cases", {}).values()]
 
 
 @router.get("/export/sentinel_audit.csv")
-def export_csv():
+def export_csv(user: dict = Depends(get_current_user)):
     """
     Generates and streams a CSV audit log from the in-memory store.
     Includes all transactions and investigative actions.
