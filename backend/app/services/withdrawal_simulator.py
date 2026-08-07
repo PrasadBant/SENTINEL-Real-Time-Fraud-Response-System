@@ -6,7 +6,7 @@ suspect node within the Golden Window, the mule automatically withdraws
 the funds — setting balance to 0, status to 'withdrawn', and dropping
 the recoverable amount.
 
-Usage (called from main.py):
+Usage (called from app/api/transactions.py):
     asyncio.create_task(
         schedule_withdrawal(case_id, suspect_node_id, store, manager,
                             delay_seconds=WITHDRAWAL_DELAY_SECONDS)
@@ -16,6 +16,7 @@ Usage (called from main.py):
 import asyncio
 from datetime import datetime, timezone
 
+from app.api.presenters import case_payload
 from app.core.constants import AccountStatus
 from app.engines.recovery_engine import recalculate
 
@@ -126,9 +127,7 @@ async def schedule_withdrawal(
         })
 
         # Also push a case_updated event so the UI graph refreshes
-        from app.core.data_store import data_store as _ds
-        from main import _case_payload  # late import to avoid circular
         try:
-            await manager.broadcast({"event": "case_updated", **_case_payload(case)})
+            await manager.broadcast({"event": "case_updated", **case_payload(case)})
         except Exception:
             pass  # non-critical — next TX will refresh anyway
