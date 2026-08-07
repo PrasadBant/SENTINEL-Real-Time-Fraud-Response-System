@@ -10,6 +10,7 @@ connections) lives under app/websocket/.
 import asyncio
 import logging
 import os
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -27,7 +28,23 @@ from app.websocket.connection_manager import manager
 
 logger = logging.getLogger("sentinel")
 
-app = FastAPI(title="SENTINEL - Real-Time Fraud Response System")
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Initialize the database and restore in-memory state from SQLite on startup."""
+    init_db()
+    load_all_into_store(data_store)
+
+    # Spawn Phase 4: Global Graph Analytics background task
+    from app.services.global_graph_analyzer import run_global_graph_analyzer
+    analyzer_task = asyncio.create_task(run_global_graph_analyzer(manager, data_store))
+
+    yield
+
+    analyzer_task.cancel()
+
+
+app = FastAPI(title="SENTINEL - Real-Time Fraud Response System", lifespan=lifespan)
 
 
 @app.exception_handler(Exception)
@@ -43,17 +60,6 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
         status_code=500,
         content={"detail": "Internal server error. Please try again or contact support."},
     )
-
-
-@app.on_event("startup")
-async def on_startup() -> None:
-    """Initialize the database and restore in-memory state from SQLite."""
-    init_db()
-    load_all_into_store(data_store)
-
-    # Spawn Phase 4: Global Graph Analytics background task
-    from app.services.global_graph_analyzer import run_global_graph_analyzer
-    asyncio.create_task(run_global_graph_analyzer(manager, data_store))
 
 
 # CORS_ORIGINS: comma-separated list of allowed frontend origins.

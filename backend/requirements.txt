@@ -4,6 +4,9 @@ pydantic
 sqlalchemy
 httpx
 pyjwt
+
+# --- Testing ---
+pytest
 # Optional: install for real GNN inference (large ~300MB, hackathon-optional)
 torch
 torch-geometric

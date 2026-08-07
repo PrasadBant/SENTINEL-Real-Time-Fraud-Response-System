@@ -959,12 +959,33 @@ GOLDEN_WINDOW_MINUTES = 20  # Time to act before withdrawal
 
 ## 🧪 Testing
 
+### Automated Test Suite
+
+```bash
+cd backend
+pip install -r requirements.txt   # includes pytest
+pytest -v
+```
+
+37 tests cover auth (login, role gating, token validation), the scoring
+pipeline (input validation, case creation, threshold/score consistency),
+investigative actions (freeze/close status transitions, EC-03 timer
+tracking), the AI copilot's role gate, and WebSocket auth. Runs
+automatically on every push/PR via GitHub Actions (`.github/workflows/ci.yml`),
+alongside a frontend lint + build check.
+
 ### Test with Curl
 
 ```bash
-# Score a normal transaction
+# Log in to get a token
+TOKEN=$(curl -s -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin123"}' | python -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+
+# Score a normal transaction (requires the simulator's shared API key, not a user token)
 curl -X POST http://localhost:8000/transaction \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: sentinel-dev-simulator-key" \
   -d '{
     "tx_id": "TEST-001",
     "timestamp": "2024-04-30T14:30:00Z",
@@ -977,15 +998,15 @@ curl -X POST http://localhost:8000/transaction \
   }'
 
 # Get all cases
-curl http://localhost:8000/cases
+curl http://localhost:8000/cases -H "Authorization: Bearer $TOKEN"
 ```
 
 ### Test with Attack Mode
 
-The frontend has an "Attack Mode" button that injects 5 high-risk transactions:
+The frontend has an "Attack Mode" button that injects 5 high-risk transactions (admin only):
 
 ```bash
-curl -X POST http://localhost:8000/attack-mode
+curl -X POST http://localhost:8000/attack-mode -H "Authorization: Bearer $TOKEN"
 ```
 
 ---
