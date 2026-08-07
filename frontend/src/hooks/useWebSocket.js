@@ -124,10 +124,18 @@ const startPolling = () => {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (res.status === 401) {
-        // Session expired/invalid — stop polling and bounce to login rather
-        // than retrying forever against an endpoint that will never succeed.
         stopPolling();
-        clearAuthGlobal();
+        // BUGFIX: this used to call clearAuthGlobal() (which reloads the
+        // page) on ANY 401 — including the pre-login state, where there's
+        // no token yet and a 401 is completely expected. Since App.jsx
+        // starts polling on mount regardless of login state, that turned
+        // into an infinite reload loop on the login screen itself: 401 ->
+        // reload -> remount -> poll -> 401 -> reload... Only a 401 with a
+        // token attached is a real "session expired" — the token we sent
+        // was rejected — and only then should we bounce back to login.
+        if (token) {
+          clearAuthGlobal();
+        }
         return;
       }
       if (!res.ok) {
