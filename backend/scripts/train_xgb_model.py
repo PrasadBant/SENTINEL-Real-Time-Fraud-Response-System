@@ -69,11 +69,10 @@ if __name__ == "__main__":
     
     print("Training XGBoost Classifier...")
     model = XGBClassifier(
-        n_estimators=100, 
-        max_depth=5, 
-        learning_rate=0.1, 
-        random_state=42, 
-        use_label_encoder=False,
+        n_estimators=100,
+        max_depth=5,
+        learning_rate=0.1,
+        random_state=42,
         eval_metric='logloss'
     )
     model.fit(X_train, y_train)

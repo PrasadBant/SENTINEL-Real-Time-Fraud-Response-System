@@ -93,9 +93,10 @@ check("Threshold is HIGH_RISK", tx_h.get("threshold") == "HIGH_RISK",
 check("Case was created", bool(case and case.get("case_id")),
       f"Case: {case}")
 check("ml_feature_importance is populated", len(tx_h.get("ml_feature_importance", {})) > 0)
-check("ML score within 15 pts of Rule score",
-      abs(tx_h.get("ml_score", 0) - tx_h.get("rule_score", 0)) <= 15,
-      f"Rule={tx_h.get('rule_score')}, ML={tx_h.get('ml_score')}")
+# Rule and ML scores are independent signals from a trained model now (see
+# Test 9's note below) — not asserting a tight deviation bound here either.
+print(f"    Rule={tx_h.get('rule_score')}, ML={tx_h.get('ml_score')} "
+      f"(independent signals — not asserted close together)")
 case_id = case.get("case_id") if case else None
 hop0_hybrid = tx_h.get("risk_score", 0)
 hop0_rule   = tx_h.get("rule_score", 0)
@@ -182,8 +183,17 @@ check("Attack mode returns 200", r.status_code == 200)
 check("Attack mode ok=True", r.json().get("ok") == True)
 time.sleep(5)  # Let burst complete
 
-# ─── Test 9: Correlation — ML closely tracks Rule score ─────────────────────
-section("TEST 9: Rule-ML Correlation Spot Check (5 transactions)")
+# ─── Test 9: Rule vs ML score spread (informational) ─────────────────────────
+# NOTE: this used to assert the two scores stay within 15 points of each
+# other. That assumption only held when the "ML" score was a hand-set,
+# untrained network whose output was effectively noise around the rule
+# score — i.e. artificially correlated with it. Now that ml_score comes
+# from an actually-trained XGBoost model making independent predictions
+# from a different feature representation, meaningful disagreement with
+# the rule engine on any given transaction is expected and healthy (that's
+# the point of a hybrid rule+ML system — two independent signals, not one
+# restating the other). This is reported for visibility, not asserted.
+section("TEST 9: Rule vs ML Score Spread (5 transactions, informational)")
 deviations = []
 for _ in range(5):
     tx = {
@@ -201,8 +211,8 @@ for _ in range(5):
         deviations.append(dev)
 
 avg_dev = sum(deviations) / len(deviations) if deviations else 999
-check("Average Rule-ML deviation <= 15 pts", avg_dev <= 15, f"Avg dev: {avg_dev:.1f}")
-print(f"    Individual deviations: {deviations} | Avg: {avg_dev:.1f}")
+check("Rule and ML scores were both computed for all 5 transactions", len(deviations) == 5)
+print(f"    Individual deviations: {deviations} | Avg: {avg_dev:.1f} (informational — no pass/fail threshold)")
 
 # ─── Test 10: Export CSV ────────────────────────────────────────────────────
 section("TEST 10: GET /export/sentinel_audit.csv — Audit Export")

@@ -3,7 +3,6 @@ from app.core.config import (
     W_NEW_RECEIVER, W_AMOUNT_DEV, W_TIME_ANOMALY, W_CALL_FLAG,
     HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD, DECAY_FACTOR
 )
-from app.engines.ml_model import predict as ml_predict
 
 def _amount_deviation(amount: float, avg_amount: float) -> int:
     if avg_amount <= 0:
@@ -111,22 +110,20 @@ def score_transaction(tx: dict, account: dict) -> dict:
         risk_factors.append({"name": "first_time_payee", "weight": 0.3, "value": 100, "contribution": 30})
 
     hop_number = tx.get("hop_number", 0)
-    
-    # Calculate real ML score
-    try:
-        real_ml_score = int(ml_predict(tx))
-    except Exception as e:
-        print(f"  [ML Engine] Failed to predict: {e}")
-        real_ml_score = 0
-        
+
     if hop_number > 0:
         origin_score = tx.get("origin_score", 0)
         risk_score = int(origin_score * (DECAY_FACTOR ** hop_number))
     else:
-        # Blend Rule-based score and ML score (e.g. 70% rules, 30% ML)
-        rule_score = min(100, sum(f["contribution"] for f in risk_factors))
-        risk_score = int((rule_score * 0.7) + (real_ml_score * 0.3))
-        
+        # Pure rule-engine score. The ML layer (a trained XGBoost model —
+        # see app/services/ml_risk_engine.py) is applied on top of this in
+        # orchestrator.py's hybrid blend, not mixed in here. This used to
+        # also blend in a hand-initialized, never-trained PyTorch network
+        # (app/engines/ml_model.py, retired) whose output had nothing to
+        # do with training data — it just added unlabeled noise to what
+        # the UI displays as the "Rule Engine" score.
+        risk_score = min(100, sum(f["contribution"] for f in risk_factors))
+
     # Proportional Amount Scaler:
     critical_flags = ["on_active_call", "velocity_flag", "is_cross_border", "is_crypto_related", "device_changed", "is_remote_access_active", "is_scripted"]
     has_critical_flag = any(tx.get(flag) for flag in critical_flags)
@@ -158,9 +155,11 @@ def score_transaction(tx: dict, account: dict) -> dict:
     return {
         "risk_score": risk_score,
         "rule_score": min(100, sum(f["contribution"] for f in risk_factors)) if hop_number == 0 else risk_score,
-        "ml_score": real_ml_score,
+        # Placeholder — orchestrator.py always overwrites this with the real
+        # ML score (predict_ml_score, the trained XGBoost model).
+        "ml_score": risk_score,
         "risk_factors": risk_factors,
         "threshold": threshold,
         "top_reason": top_reason,
-        "gnn_available": True
+        "gnn_available": False,  # GNN path retired — see ml_risk_engine.py
     }

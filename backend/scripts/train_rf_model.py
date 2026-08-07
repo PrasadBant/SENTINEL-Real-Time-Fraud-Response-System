@@ -1,3 +1,9 @@
+# NOTE: this produces app/data/rf_model.joblib as an alternative to
+# train_xgb_model.py, but nothing in app/services/ml_risk_engine.py loads
+# it — XGBoost is the model actually wired into the scoring pipeline.
+# Kept as a reference/experiment; run train_xgb_model.py for the model
+# that's actually used at runtime.
+
 import os
 import random
 import numpy as np

@@ -6,7 +6,7 @@ from app.engines.case_manager import process_scored_tx
 from app.engines.graph_engine import add_node, add_edge, get_graph
 from app.engines.recovery_engine import recalculate
 from app.services.reasoning_engine import generate_reasoning
-from app.services.ml_risk_engine import predict_ml_score, predict_gnn_score, GNN_AVAILABLE, feature_names
+from app.services.ml_risk_engine import predict_ml_score, feature_names
 
 def run_pipeline(tx: dict, store: dict) -> dict:
     """
@@ -283,41 +283,13 @@ def run_pipeline(tx: dict, store: dict) -> dict:
         # Fetch finalized graph
         graph = get_graph(case_id, store)
 
-        # 4b. GNN Re-score using real graph topology (overrides emulator if available)
-        if GNN_AVAILABLE:
-            try:
-                gnn_nodes = graph.get("nodes", [])
-                gnn_edges = graph.get("edges", [])
-                if len(gnn_nodes) >= 2:  # Need at least 2 nodes for meaningful GNN
-                    gnn_score = predict_gnn_score(gnn_nodes, gnn_edges, float(rule_score))
-                    ml_score = gnn_score
-                    final_score = int(gnn_score)
-                    score_output["risk_score"] = final_score
-                    score_output["ml_score"] = int(ml_score)
-                    tx["risk_score"] = final_score
-                    tx["ml_score"] = int(ml_score)
-
-                    # BUGFIX: threshold/confidence were computed once from the
-                    # pre-GNN hybrid score and never refreshed here, so the
-                    # displayed label could disagree with the displayed score
-                    # (e.g. score 58 shown as "HIGH_RISK"). Recompute both
-                    # from the final, post-GNN score so they stay in sync.
-                    if final_score >= HIGH_RISK_THRESHOLD:
-                        score_output["threshold"] = "HIGH_RISK"
-                    elif final_score >= MEDIUM_THRESHOLD:
-                        score_output["threshold"] = "MEDIUM"
-                    else:
-                        score_output["threshold"] = "LOW"
-                    tx["threshold"] = score_output["threshold"]
-
-                    confidence = "HIGH" if final_score >= 70 else "MEDIUM" if final_score >= 40 else "LOW"
-                    score_output["confidence"] = confidence
-                    tx["confidence"] = confidence
-            except Exception as _gnn_err:
-                print(f"  [Orchestrator] GNN re-score skipped: {_gnn_err}")
-
-        score_output["gnn_available"] = GNN_AVAILABLE
-        tx["gnn_available"] = GNN_AVAILABLE
+        # GNN re-scoring was removed: it ran a randomly-initialized,
+        # never-trained PyTorch Geometric network (FraudGraphSAGE) and
+        # blended its output into the displayed score — indistinguishable
+        # from noise, not real graph-based inference. The XGBoost-based
+        # hybrid score computed above (predict_ml_score) is what's shown.
+        score_output["gnn_available"] = False
+        tx["gnn_available"] = False
 
         # 6. Call recovery_engine
         recovery = recalculate(case_id, store)

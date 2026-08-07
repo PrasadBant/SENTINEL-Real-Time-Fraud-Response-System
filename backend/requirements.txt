@@ -5,10 +5,26 @@ sqlalchemy
 httpx
 pyjwt
 
+# --- ML scoring (app/services/ml_risk_engine.py) ---
+# Trained XGBoost model for fraud-probability inference. If any of these
+# are missing, or app/data/xgb_model.joblib doesn't exist, the app falls
+# back to a rule-guided noise emulator automatically — it won't crash,
+# but you won't get real trained-model scoring.
+xgboost
+joblib
+numpy
+
 # --- Testing ---
 pytest
-# Optional: install for real GNN inference (large ~300MB, hackathon-optional)
-torch
-torch-geometric
-# torch-scatter
-# torch-sparse
+
+# --- Optional: retraining the XGBoost model (scripts/train_xgb_model.py) ---
+# Not needed at runtime, only to regenerate app/data/xgb_model.joblib.
+# pandas
+# scikit-learn
+
+# --- Optional: GNN inference was removed (see ml_risk_engine.py) — the
+# model was never trained, just randomly initialized. torch/torch-geometric
+# are no longer used by the app at all; left commented in case real
+# graph-based scoring is built properly in the future.
+# torch
+# torch-geometric

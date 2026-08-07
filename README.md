@@ -225,6 +225,8 @@ recovery_percentage = (recovered + recoverable) / total_fraud * 100
 | **FastAPI** | Modern async Python web framework |
 | **Uvicorn** | ASGI server (high-performance) |
 | **Pydantic** | Data validation & serialization |
+| **XGBoost** | Trained fraud-probability classifier |
+| **PyJWT** | Authentication tokens |
 | **Python 3.10+** | Core language |
 | **asyncio** | Async/await concurrency |
 | **WebSockets** | Real-time bidirectional communication |
@@ -698,11 +700,23 @@ RISK_SCORE = (new_receiver × 0.35) + (amount_deviation × 0.30) +
 
 ### ML Component
 
-The ML engine provides **feature importance** scoring:
-- Analyzes transaction characteristics
-- Assigns importance weights to each feature
-- Contributes to final hybrid score
-- Transparent feature breakdown for investigators
+Fraud probability is predicted by a **trained XGBoost classifier**
+(`backend/app/data/xgb_model.joblib`), blended 60% ML / 40% rule engine into
+the final hybrid score. The model is trained on 15,000 synthetic
+transactions labeled by an independent set of fraud heuristics (distinct
+from the rule engine's own weighting — see `scripts/train_xgb_model.py`),
+reaching ~96% accuracy on a held-out test split.
+
+- Feature importance is computed per-transaction for investigator transparency
+- If `xgboost`/`joblib`/`numpy` aren't installed, or the model file is
+  missing, scoring falls back to a rule-guided noise emulator automatically
+  (never crashes, but isn't a trained model)
+- Retrain with `cd backend && python scripts/train_xgb_model.py`
+
+An earlier version of this project also had a "GNN" scoring path
+(PyTorch Geometric GraphSAGE) — it was never trained, just a
+randomly-initialized network, and has been removed rather than left in
+place implying real graph-based inference it wasn't doing.
 
 ---
 
