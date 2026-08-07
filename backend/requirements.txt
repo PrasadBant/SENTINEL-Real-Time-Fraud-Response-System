@@ -7,6 +7,13 @@ pyjwt
 python-dotenv
 networkx
 
+# --- AI Copilot (app/services/ai_providers/) ---
+# Official Anthropic SDK for the Claude provider. Only imported lazily
+# inside AnthropicProvider.__init__, so the app still runs fine without
+# it as long as AI_PROVIDER isn't set to "anthropic" — but CI/production
+# installs should always have it available.
+anthropic
+
 # --- ML scoring (app/services/ml_risk_engine.py) ---
 # Trained XGBoost model for fraud-probability inference. If any of these
 # are missing, or app/data/xgb_model.joblib doesn't exist, the app falls

@@ -3,11 +3,13 @@ SENTINEL — AI Copilot Route
 ==============================
 POST /api/copilot: simple RAG + intent-parsing chatbot for investigators.
 Executes FREEZE/CLOSE actions directly for matching intents; otherwise
-calls the Hugging Face Inference API (if HF_API_KEY is set) or falls back
-to a canned offline analysis.
+delegates to whichever AIProvider app.services.ai_providers.get_provider()
+selects (Anthropic/Hugging Face/Mock/... — see AI_PROVIDER in
+.env.example), falling back to a canned offline analysis if the live
+provider call fails for any reason (missing/invalid key, network error,
+rate limit, timeout).
 """
 
-import os
 from typing import Any
 
 from fastapi import APIRouter, Depends
@@ -16,8 +18,16 @@ from app.api.actions import handle_action
 from app.api.schemas import ActionRequest, CopilotRequest
 from app.core.data_store import data_store
 from app.core.deps import get_current_user
+from app.services.ai_providers import get_provider
 
 router = APIRouter()
+
+_SYSTEM_PROMPT = (
+    "You are 'Sentinel AI', an elite, highly professional enterprise fraud intelligence assistant. "
+    "Your goal is to provide concise, data-driven, and highly actionable insights to fraud analysts. "
+    "Use Markdown formatting (bolding, bullet points) to make your responses extremely engaging and easy to read. "
+    "Always maintain a confident, professional, and analytical tone. Keep responses under 150 words."
+)
 
 
 @router.post("/api/copilot")
@@ -69,55 +79,22 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(get_current_use
             reply = f"✅ **Action Executed:** Case `{req.context_case_id}` has been **closed** and marked as resolved."
             action_taken = {"type": "CLOSE_CASE", "case_id": req.context_case_id}
     else:
-        hf_api_key = os.getenv("HF_API_KEY")
-        hf_success = False
+        provider_success = False
+        try:
+            provider = get_provider()
+            reply = await provider.generate(
+                system_prompt=_SYSTEM_PROMPT,
+                user_message=req.message,
+                context=context_data,
+            )
+            provider_success = bool(reply)
+        except Exception as e:
+            # Fallback on failure (e.g., DNS error, proxy block, timeout, rate
+            # limit, bad/missing API key, or an unimplemented stub provider).
+            print(f"[Copilot Warning] AI provider failed: {e}. Falling back to local AI.")
+            provider_success = False
 
-        if hf_api_key:
-            try:
-                import httpx
-                # Use the Hugging Face serverless inference API with standard Chat Completions.
-                # NOTE: this must stay a non-blocking async call — an earlier version used
-                # urllib.request.urlopen (synchronous), which froze the entire event loop
-                # (including WebSocket broadcasts to every connected dashboard) for up to
-                # 5 seconds on every copilot request.
-                url = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct/v1/chat/completions"
-                headers = {
-                    "Authorization": f"Bearer {hf_api_key}",
-                    "Content-Type": "application/json"
-                }
-
-                system_prompt = (
-                    "You are 'Sentinel AI', an elite, highly professional enterprise fraud intelligence assistant. "
-                    "Your goal is to provide concise, data-driven, and highly actionable insights to fraud analysts. "
-                    "Use Markdown formatting (bolding, bullet points) to make your responses extremely engaging and easy to read. "
-                    "Always maintain a confident, professional, and analytical tone. Keep responses under 150 words."
-                )
-
-                payload = {
-                    "model": "Qwen/Qwen2.5-7B-Instruct",
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": f"User Request: '{req.message}'\n\nContext Data:\n{context_data}\n\nPlease provide your professional analysis."}
-                    ],
-                    "max_tokens": 300,
-                    "temperature": 0.3,
-                    "top_p": 0.9
-                }
-
-                async with httpx.AsyncClient(timeout=5.0) as client:
-                    response = await client.post(url, headers=headers, json=payload)
-                    response.raise_for_status()
-                    result = response.json()
-                    if "choices" in result and len(result["choices"]) > 0:
-                        reply = result["choices"][0]["message"]["content"].strip()
-                        hf_success = True
-            except Exception as e:
-                # Fallback on failure (e.g., DNS error, proxy block, timeout, or rate limit)
-                print(f"[Copilot Warning] Hugging Face API failed: {e}. Falling back to local AI.")
-                # Force hf_success to False explicitly to trigger offline fallback
-                hf_success = False
-
-        if not hf_success:
+        if not provider_success:
             # High-quality dynamic simulator for offline fallback/missing token
             case_id = req.context_case_id or "UNKNOWN"
             if req.context_case_id and req.context_case_id in data_store.get("cases", {}):
