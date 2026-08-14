@@ -32,6 +32,7 @@ Both chat endpoints resolve three tiers, checked in order:
 """
 
 import json
+import re
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -56,6 +57,25 @@ from app.services.copilot import (
 from app.services.copilot.rate_limit import rate_limited_user
 
 router = APIRouter()
+
+# Word-anchored triggers for the freeze/close action intents below — NOT a
+# bare `"freeze" in user_msg` substring check. That original version had two
+# real false-positive holes: (1) "close" is a common English word, so
+# "how close are we to resolving this?" or "take a closer look" would
+# silently CLOSE the case; (2) "freeze" is a substring of "unfreeze", so
+# "please unfreeze this account" would actually FREEZE it — the literal
+# opposite of what was asked. Anchoring the verb to the start of the message
+# (optionally after "please") or to a direct object ("this"/"the"/"it"/
+# "all") keeps the natural phrasings ("freeze this case", "please close
+# this case") working while rejecting the false positives above. Word
+# boundaries (`\b`) additionally rule out "closely"/"disclose"/"enclose".
+_FREEZE_RE = re.compile(r"^\s*(?:please\s+)?freeze\b|\bfreeze\s+(?:this|the|it|all)\b")
+_CLOSE_RE = re.compile(r"^\s*(?:please\s+)?close\b|\bclose\s+(?:this|the|it)\b")
+# Checked before _FREEZE_RE since "unfreeze" would otherwise never match
+# _FREEZE_RE anyway (no word-boundary match of "freeze" inside "unfreeze")
+# and would fall through to the LLM/structured path with no explanation —
+# an explicit reply is more honest than silence for a request this specific.
+_UNFREEZE_RE = re.compile(r"\bun-?freeze\b")
 
 _SYSTEM_PROMPT = (
     "You are 'Sentinel AI', an elite, highly professional enterprise fraud intelligence assistant. "
@@ -83,11 +103,19 @@ async def _resolve_action_intent(
     handle_action() directly, bypassing the /action/* routes' own
     require_role("admin") dependency — so the same check must happen
     here, or a viewer could freeze/close a case just by asking the
-    chatbot to. This is plain Python string matching against the
-    investigator's own raw message, decided before either endpoint ever
-    calls an LLM — the model has no say in whether an action fires.
+    chatbot to. This is plain Python regex matching against the
+    investigator's own raw message (see _FREEZE_RE/_CLOSE_RE/_UNFREEZE_RE
+    above), decided before either endpoint ever calls an LLM — the model
+    has no say in whether an action fires.
     """
-    if "freeze" in user_msg and req.context_case_id:
+    if _UNFREEZE_RE.search(user_msg) and req.context_case_id:
+        return (
+            "ℹ️ There's no automated **unfreeze** action yet — a frozen account is reviewed and "
+            "released manually by an admin outside the copilot. I haven't taken any action.",
+            None,
+        )
+
+    if _FREEZE_RE.search(user_msg) and req.context_case_id:
         if not is_admin:
             return (
                 "🔒 **Access denied.** Freezing accounts requires admin privileges — you're logged in as a viewer.",
@@ -101,7 +129,7 @@ async def _resolve_action_intent(
         )
         return (reply, {"type": "FREEZE_ACCOUNTS", "case_id": req.context_case_id})
 
-    if "close" in user_msg and req.context_case_id:
+    if _CLOSE_RE.search(user_msg) and req.context_case_id:
         if not is_admin:
             return (
                 "🔒 **Access denied.** Closing a case requires admin privileges — you're logged in as a viewer.",
