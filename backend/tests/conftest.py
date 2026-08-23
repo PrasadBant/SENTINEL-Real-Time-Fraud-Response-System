@@ -4,17 +4,31 @@ Shared pytest fixtures for the SENTINEL backend test suite.
 Uses FastAPI's TestClient against the real `main.app` — no mocking of the
 scoring pipeline, persistence layer, or auth stack. Tests use randomly
 generated tx_id/account_id values (see `unique_id`/`make_tx`) so they don't
-collide with each other or with pre-existing data in sentinel.db across
-runs.
+collide with each other within the shared in-memory data_store over the
+course of a session (see `client` below).
+
+The suite used to run against the real backend/sentinel.db, which meant
+every local run permanently wrote rows like the rate-limit fixtures'
+synthetic usernames into it. It now runs against a throwaway SQLite file
+per session instead (see the DATABASE_URL override below) — set
+TEST_DATABASE_URL to point it at something else (e.g. a Postgres test
+instance in CI).
 """
 
 import os
 import sys
+import tempfile
 import uuid
 
 import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Must happen before `import main`: app.core.database reads DATABASE_URL
+# and binds its engine at import time, so setting this any later would be
+# a no-op and tests would silently fall through to the real sentinel.db.
+_TEST_DB_PATH = os.path.join(tempfile.gettempdir(), f"sentinel_test_{uuid.uuid4().hex}.db")
+os.environ["DATABASE_URL"] = os.getenv("TEST_DATABASE_URL", f"sqlite:///{_TEST_DB_PATH}")
 
 from fastapi.testclient import TestClient
 
@@ -32,6 +46,20 @@ def client():
     # test session — a plain `TestClient(main.app)` skips lifespan entirely.
     with TestClient(main.app) as c:
         yield c
+    # Best-effort cleanup of the throwaway DB file created above. Skipped
+    # when TEST_DATABASE_URL was supplied — that DB is the caller's to manage.
+    if "TEST_DATABASE_URL" not in os.environ:
+        from app.core.database import engine
+
+        # SQLAlchemy's connection pool keeps the sqlite file handle open
+        # even after every individual session is closed; on Windows that
+        # makes os.remove() fail silently (a PermissionError, which is an
+        # OSError) unless the pool's connections are disposed first.
+        engine.dispose()
+        try:
+            os.remove(_TEST_DB_PATH)
+        except OSError:
+            pass
 
 
 @pytest.fixture(autouse=True)
