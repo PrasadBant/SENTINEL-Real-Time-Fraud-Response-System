@@ -26,3 +26,12 @@ class ActionTypes:
 class ActionStatus:
     ACK = "ACK"
     NACK = "NACK"
+
+
+# Single-tenant placeholder (see app/core/db_models.py's tenant_id columns).
+# There is exactly one tenant today, but every domain table carries this
+# column from day one — retrofitting tenant_id onto live tables later is
+# far more expensive than shipping it unused now. Real multi-tenancy
+# (per-tenant provisioning, auth scoping, tenant-scoped queries) is
+# Phase 2+ work; for now every row is just stamped with this fixed value.
+DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
