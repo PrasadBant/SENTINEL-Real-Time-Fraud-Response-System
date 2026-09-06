@@ -36,6 +36,11 @@ async def lifespan(_app: FastAPI):
     run_migrations()
     repository.load_all(data_store)
 
+    # Redis pub/sub fanout listener (see app/websocket/connection_manager.py)
+    # — must be running before any client connects, so it's started here
+    # rather than lazily on first broadcast.
+    listener_task = asyncio.create_task(manager.listen())
+
     # Spawn Phase 4: Global Graph Analytics background task
     from app.services.global_graph_analyzer import run_global_graph_analyzer
     analyzer_task = asyncio.create_task(run_global_graph_analyzer(manager, data_store))
@@ -43,6 +48,7 @@ async def lifespan(_app: FastAPI):
     yield
 
     analyzer_task.cancel()
+    listener_task.cancel()
 
 
 app = FastAPI(title="SENTINEL - Real-Time Fraud Response System", lifespan=lifespan)
