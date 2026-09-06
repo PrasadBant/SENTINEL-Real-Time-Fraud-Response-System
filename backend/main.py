@@ -22,8 +22,8 @@ from fastapi.responses import JSONResponse
 
 from app.api import actions, attack_mode, auth, cases, copilot, health, transactions, ws_routes
 from app.core.data_store import data_store
-from app.core.database import init_db
-from app.core.persistence import load_all_into_store
+from app.core.database import run_migrations
+from app.core.repository import repository
 from app.websocket.connection_manager import manager
 
 logger = logging.getLogger("sentinel")
@@ -31,9 +31,10 @@ logger = logging.getLogger("sentinel")
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    """Initialize the database and restore in-memory state from SQLite on startup."""
-    init_db()
-    load_all_into_store(data_store)
+    """Bring the schema up to date (Alembic) and restore in-memory state
+    from the database on startup."""
+    run_migrations()
+    repository.load_all(data_store)
 
     # Spawn Phase 4: Global Graph Analytics background task
     from app.services.global_graph_analyzer import run_global_graph_analyzer
