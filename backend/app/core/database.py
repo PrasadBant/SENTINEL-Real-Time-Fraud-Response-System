@@ -9,9 +9,12 @@ Usage:
     from app.core.database import engine, SessionLocal, Base, run_migrations
 """
 
+import logging
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+
+logger = logging.getLogger("sentinel.database")
 
 # Allow override via environment variable for PostgreSQL in production
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sentinel.db")
@@ -55,4 +58,4 @@ def run_migrations() -> None:
     cfg = Config(os.path.join(_BACKEND_DIR, "alembic.ini"))
     cfg.set_main_option("script_location", os.path.join(_BACKEND_DIR, "alembic"))
     command.upgrade(cfg, "head")
-    print(f"  [Database] Migrations applied (alembic upgrade head) — {DATABASE_URL}")
+    logger.info("Migrations applied (alembic upgrade head) — %s", DATABASE_URL)

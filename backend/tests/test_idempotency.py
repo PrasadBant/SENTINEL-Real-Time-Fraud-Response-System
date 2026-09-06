@@ -33,19 +33,20 @@ def test_duplicate_idempotency_key_returns_original_result(client):
 
 
 def test_duplicate_idempotency_key_skips_broadcast_and_ec03(client, monkeypatch):
-    from app.services import withdrawal_tracker
+    from app.services import withdrawal_queue
     from app.websocket.connection_manager import manager
 
-    calls = {"broadcast": 0, "register": 0}
+    calls = {"broadcast": 0, "schedule": 0}
 
     async def fake_broadcast(_event):
         calls["broadcast"] += 1
 
-    def fake_register(key, task):
-        calls["register"] += 1
+    async def fake_schedule(key, case_id, suspect_node_id, delay_seconds, correlation_id):
+        calls["schedule"] += 1
+        return True
 
     monkeypatch.setattr(manager, "broadcast", fake_broadcast)
-    monkeypatch.setattr(withdrawal_tracker, "register", fake_register)
+    monkeypatch.setattr(withdrawal_queue, "schedule", fake_schedule)
 
     key = unique_id("RAIL-REF")
     tx = make_tx(amount=350000, channel="IMPS", is_cross_border=True, on_active_call=True, idempotency_key=key)
@@ -53,9 +54,9 @@ def test_duplicate_idempotency_key_skips_broadcast_and_ec03(client, monkeypatch)
     assert r1.status_code == 200
     assert r1.json()["case"] is not None  # sanity: this really is a HIGH_RISK case
     assert calls["broadcast"] > 0, "first-time POST should broadcast as usual"
-    assert calls["register"] > 0, "first-time HIGH_RISK case should arm an EC-03 timer"
+    assert calls["schedule"] > 0, "first-time HIGH_RISK case should arm an EC-03 timer"
     broadcasts_after_first = calls["broadcast"]
-    registers_after_first = calls["register"]
+    schedules_after_first = calls["schedule"]
 
     retry = make_tx(amount=350000, channel="IMPS", is_cross_border=True, on_active_call=True, idempotency_key=key)
     r2 = client.post("/transaction", json=retry, headers=TX_HEADERS)
@@ -63,7 +64,7 @@ def test_duplicate_idempotency_key_skips_broadcast_and_ec03(client, monkeypatch)
 
     # The duplicate must not add any further broadcasts or timers.
     assert calls["broadcast"] == broadcasts_after_first
-    assert calls["register"] == registers_after_first
+    assert calls["schedule"] == schedules_after_first
 
 
 def test_missing_idempotency_key_never_collides(client):

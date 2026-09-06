@@ -13,6 +13,12 @@ synthetic usernames into it. It now runs against a throwaway SQLite file
 per session instead (see the DATABASE_URL override below) — set
 TEST_DATABASE_URL to point it at something else (e.g. a Postgres test
 instance in CI).
+
+Same "container-free by default" posture for Redis: unless TEST_REDIS_URL
+is set, app.core.redis_client's accessors are swapped for fakeredis
+in-memory instances below, so velocity-cache/account/WS-pub-sub/EC-03
+code paths run without a real Redis. See tests/test_redis_integration.py
+for the narrow opt-in suite that runs against a real one instead.
 """
 
 import os
@@ -39,6 +45,52 @@ os.environ.setdefault("ADMIN_USERNAME", "admin")
 os.environ.setdefault("ADMIN_PASSWORD", "admin123")
 os.environ.setdefault("VIEWER_USERNAME", "viewer")
 os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
+
+# app/services/withdrawal_queue.py talks to Arq's own Redis pool
+# directly, which fakeredis can't stand in for — without this, every
+# HIGH_RISK-case test would hit Arq's real connection-retry backoff
+# against a Redis that isn't there, measurably slowing the whole suite
+# down (schedule()/cancel() already degrade safely, just slowly).
+# tests/test_redis_integration.py re-enables this against a real Redis.
+os.environ.setdefault("EC03_QUEUE_ENABLED", "false")
+
+# Redis: same escape hatch shape as TEST_DATABASE_URL above, and same
+# "must happen before the first import that reads it" reasoning —
+# app.core.config reads REDIS_URL at import time (a plain module-level
+# `os.getenv(...)` call), and app.core.redis_client imports that name
+# from config at ITS OWN import time, so setting this env var any later
+# than the `import redis_client` below would be a no-op. If a real Redis
+# instance is supplied via TEST_REDIS_URL, point REDIS_URL at it and let
+# app.core.redis_client connect for real (this is also how
+# tests/test_redis_integration.py is meant to be run for a full-suite
+# pass). Otherwise, substitute fakeredis instances by replacing
+# get_redis()/get_async_redis() themselves — not their return values —
+# since app code calls these via the `redis_client` module reference
+# (e.g. `redis_client.get_redis()`), never via a `from ... import
+# get_redis` binding, specifically so this kind of module-level
+# monkeypatch reaches every call site.
+if "TEST_REDIS_URL" in os.environ:
+    os.environ["REDIS_URL"] = os.environ["TEST_REDIS_URL"]
+
+# Also before any app.core.config import (see the comment above): main.py
+# normally calls this first, before importing anything that transitively
+# imports app.core.config (whose SECRET_KEY-fallback warning fires at
+# import time) — but here `import redis_client` on the very next line
+# does exactly that, ahead of `import main` below, so call it here too
+# rather than let that one line fall back to unconfigured plain-text
+# logging during tests.
+from app.core.logging_config import configure_logging  # noqa: E402
+configure_logging()
+
+from app.core import redis_client  # noqa: E402
+
+if "TEST_REDIS_URL" not in os.environ:
+    import fakeredis  # noqa: E402
+
+    _fake_sync_redis = fakeredis.FakeRedis(decode_responses=True)
+    _fake_async_redis = fakeredis.FakeAsyncRedis(decode_responses=True)
+    redis_client.get_redis = lambda: _fake_sync_redis
+    redis_client.get_async_redis = lambda: _fake_async_redis
 
 from fastapi.testclient import TestClient
 

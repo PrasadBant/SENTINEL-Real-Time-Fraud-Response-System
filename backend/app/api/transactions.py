@@ -7,6 +7,7 @@ withdrawal countdown for each newly-linked suspect node.
 """
 
 import asyncio
+import logging
 from typing import Any
 from uuid import uuid4
 
@@ -17,18 +18,26 @@ from app.core.constants import AccountStatus, CaseStatus
 from app.core.config import WITHDRAWAL_DELAY_SECONDS
 from app.core.data_store import data_store
 from app.core.deps import verify_simulator_key
+from app.core.logging_config import CORRELATION_ID
 from app.core.models.transaction import Transaction
 from app.core.repository import repository
-from app.services import withdrawal_tracker
+from app.services import withdrawal_queue
 from app.services.orchestrator import run_pipeline
-from app.services.withdrawal_simulator import schedule_withdrawal
 from app.websocket.connection_manager import manager
+
+logger = logging.getLogger("sentinel.transactions")
 
 router = APIRouter()
 
 
 @router.post("/transaction", dependencies=[Depends(verify_simulator_key)])
 async def process_tx(tx_in: Transaction) -> dict[str, Any]:
+    # One correlation ID per request, threaded through every log line this
+    # transaction touches (scoring, persistence, EC-03 scheduling) via the
+    # CORRELATION_ID contextvar — see app/core/logging_config.py. Set
+    # before anything else runs so even an early failure is traceable.
+    CORRELATION_ID.set(str(uuid4()))
+
     # FastAPI validates the body against Transaction before this runs — bad
     # payloads (missing tx_id/amount, non-positive amount, wrong types) are
     # rejected with a 422 automatically, instead of reaching the pipeline
@@ -80,7 +89,7 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
             await _loop.run_in_executor(None, repository.save_transaction, transaction)
             await _loop.run_in_executor(None, repository.save_case, case)
         except Exception as _pe:
-            print(f"  [Persistence] Write error: {_pe}")
+            logger.warning("Write error: %s", _pe)
 
         # ── EC-03: Schedule mule withdrawal for new HIGH_RISK cases ──────
         if case.get("status") == CaseStatus.HIGH_RISK:
@@ -94,29 +103,23 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
             ]
             for suspect_id in receiver_nodes:
                 _key = f"{case['case_id']}:{suspect_id}"
-                # Deduplicate: skip if an active timer already exists for this node
-                if withdrawal_tracker.is_active(_key):
-                    print(f"  [EC-03] Withdrawal timer already running for node {suspect_id} — skipping duplicate")
-                    continue
-                _task = asyncio.create_task(
-                    schedule_withdrawal(
-                        case_id=case["case_id"],
-                        suspect_node_id=suspect_id,
-                        store=data_store,
-                        manager=manager,
-                        delay_seconds=WITHDRAWAL_DELAY_SECONDS,
-                        persist_fn=repository.save_case,
-                    )
+                scheduled = await withdrawal_queue.schedule(
+                    _key, case["case_id"], suspect_id, WITHDRAWAL_DELAY_SECONDS, CORRELATION_ID.get(),
                 )
-                withdrawal_tracker.register(_key, _task)
-                print(f"  [EC-03] Withdrawal timer started for node {suspect_id} "
-                      f"(fires in {WITHDRAWAL_DELAY_SECONDS}s)")
+                if scheduled:
+                    logger.info("Withdrawal timer started for node %s (fires in %ss)", suspect_id, WITHDRAWAL_DELAY_SECONDS)
+                else:
+                    # Either Arq's own _job_id dedup rejected it (a timer
+                    # for this node is already scheduled/running) or Redis
+                    # was briefly unreachable — either way, not fatal to
+                    # this request.
+                    logger.info("Withdrawal timer already running for node %s — skipping duplicate", suspect_id)
     else:
         # Persist transaction even without a case (thread-pool, non-blocking)
         try:
             _loop = asyncio.get_event_loop()
             await _loop.run_in_executor(None, repository.save_transaction, transaction)
         except Exception as _pe:
-            print(f"  [Persistence] TX write error: {_pe}")
+            logger.warning("TX write error: %s", _pe)
 
     return result

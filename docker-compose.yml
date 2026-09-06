@@ -23,13 +23,50 @@ services:
     # app/core/repository.py. Its own durability is Postgres's problem
     # (WAL + this named volume), not something compose needs to manage.
 
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel_redis
+    # AOF persistence matters specifically because Phase 1's durability
+    # goal is "the EC-03 withdrawal schedule survives a restart" — that
+    # requires Redis itself to persist across a `docker compose down &&
+    # up`, not just an API-container-only restart. Redis is still
+    # cache/queue here, never a second source of truth: velocity_cache/
+    # accounts are fully rebuildable from Postgres (see
+    # repository.load_all()), and a lost EC-03 schedule just means a
+    # missed simulated countdown, not lost financial data.
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   api:
     build: ./backend
-    container_name: sentinel_api
+    # No container_name and no fixed host port here (unlike postgres/
+    # redis, which stay singletons): this service is meant to scale —
+    # `docker compose up -d --scale api=N`. A `container_name` forces a
+    # single, fixed container identity, which docker-compose refuses to
+    # reconcile with more than one replica (confirmed directly: `--scale
+    # api=2` errors outright with a fixed container_name and/or a fixed
+    # host port, since two replicas can't both claim the same name or
+    # bind the same host port). Exposing "8000" (container port only,
+    # no host mapping) lets Docker assign each replica its own ephemeral
+    # host port — `docker compose port api 8000` (or `docker ps`) shows
+    # which host port a given replica landed on. A real multi-replica
+    # deployment would put a load balancer in front of these instead of
+    # relying on ad hoc host ports; that's out of scope here (see the
+    # build plan's explicit scope cuts — no Kubernetes/reverse-proxy
+    # infra added for this).
     ports:
-      - "8000:8000"
+      - "8000"
     environment:
       - DATABASE_URL=postgresql+psycopg://sentinel:sentinel@postgres:5432/sentinel
+      - REDIS_URL=redis://redis:6379/0
       - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in a repo-root .env — see .env.example}
       - VIEWER_USERNAME=${VIEWER_USERNAME:-viewer}
@@ -43,6 +80,8 @@ services:
       - HF_API_KEY=${HF_API_KEY:-}
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     restart: unless-stopped
     # No wait/retry logic for the Postgres connection beyond compose's
@@ -77,4 +116,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   # neo4j_data:

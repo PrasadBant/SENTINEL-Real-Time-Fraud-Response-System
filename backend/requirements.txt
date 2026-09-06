@@ -1,5 +1,16 @@
 fastapi
 uvicorn
+# Bare `uvicorn` has no WebSocket protocol implementation of its own — it
+# needs websockets or wsproto installed to serve /ws at all (app/api/
+# ws_routes.py). Without it uvicorn silently 404s every WS handshake.
+# Found via Phase 1's real-container WS-fanout verification: TestClient
+# (used by the whole pytest suite) exercises WS routes through FastAPI's
+# in-process ASGI transport, which doesn't need this — so the test suite
+# passing was never proof the *deployed* container could serve /ws at
+# all. It happened to work when run directly on a dev machine that
+# already had `websockets` installed some other way; the Docker image
+# (built from a clean requirements.txt) never had it.
+websockets
 pydantic
 httpx
 pyjwt
@@ -16,6 +27,19 @@ alembic>=1.13,<2.0
 # the Python 3.13 this project already standardizes on (see xgboost note
 # below and .github/workflows/ci.yml).
 psycopg[binary]>=3.1,<4.0
+
+# --- Shared state + background jobs (Phase 1) ---
+# redis-py's unified client: `redis.Redis` (sync — used by
+# app/services/orchestrator.py, which stays a synchronous function) and
+# `redis.asyncio.Redis` (async — used by connection_manager.py's pub/sub
+# fanout). One package, both APIs; no separate aioredis needed.
+redis>=5.0,<6.0
+# Asyncio-native Redis job queue. Runs embedded in the API process (see
+# main.py's lifespan) as the EC-03 withdrawal-timer scheduler — not yet a
+# separate worker process/container (see app/services/withdrawal_queue.py
+# for why). Native `_defer_by`/`_job_id` dedup, no separate scheduler
+# process needed (unlike RQ's delayed jobs).
+arq>=0.26,<0.27
 
 # --- AI Copilot (app/services/ai_providers/) ---
 # Official Anthropic SDK for the Claude provider. Only imported lazily
@@ -41,6 +65,13 @@ numpy
 
 # --- Testing ---
 pytest
+# In-memory drop-in mock of the redis-py client API — lets the default
+# test suite exercise Redis-backed code (velocity cache, accounts,
+# WS pub/sub, EC-03 scheduling) without a real Redis container, the same
+# "container-free by default" posture Phase 0 established for Postgres
+# via SQLite (see tests/conftest.py and tests/test_redis_integration.py,
+# the narrow opt-in module that runs against a real Redis instead).
+fakeredis>=2.20,<3.0
 
 # --- Optional: retraining the XGBoost model (scripts/train_xgb_model.py) ---
 # Not needed at runtime, only to regenerate app/data/xgb_model.joblib.
