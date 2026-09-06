@@ -8,6 +8,7 @@ withdrawal countdown for each newly-linked suspect node.
 
 import asyncio
 from typing import Any
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends
 
@@ -33,6 +34,35 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
     # rejected with a 422 automatically, instead of reaching the pipeline
     # and failing deep inside with an opaque error.
     tx = tx_in.model_dump(mode="json", exclude_none=True)
+
+    # ── Idempotency ───────────────────────────────────────────────────────
+    # Prefer whatever key the caller supplied — ideally the payment rail's
+    # own reference number (UPI/IMPS/NEFT), which lets us detect the *same*
+    # real-world transfer arriving under a *different* tx_id (e.g. a client
+    # retry after a timeout, unaware the first attempt already succeeded).
+    # If none was supplied, generate a placeholder so every row still has
+    # one — but a generated key can never dedupe anything: each retry
+    # mints a fresh one, so this only protects requests where the caller
+    # actually sends a stable reference.
+    idempotency_key = tx.get("idempotency_key") or f"sentinel-{uuid4()}"
+    tx["idempotency_key"] = idempotency_key
+
+    duplicate = repository.get_transaction_by_idempotency_key(idempotency_key)
+    if duplicate is not None:
+        # Already processed — return the original result unchanged. No
+        # re-scoring, no re-broadcast, no new EC-03 timer: a retried
+        # request must not repeat the side effects of the first one.
+        dup_case_id = duplicate.get("case_id")
+        dup_case = data_store.get("cases", {}).get(dup_case_id) if dup_case_id else None
+        if dup_case is None and dup_case_id:
+            dup_case = repository.get_case(dup_case_id)
+        # data_store["graphs"] is never persisted (a pre-existing gap, not
+        # introduced here — see repository.load_all()'s docstring), so a
+        # replay after a process restart won't have the original graph
+        # available even though the first response did.
+        dup_graph = data_store.get("graphs", {}).get(dup_case_id) if dup_case_id else None
+        return {"transaction": duplicate, "case": dup_case, "graph": dup_graph, "recovery": None}
+
     result = run_pipeline(tx, data_store)
 
     transaction = result.get("transaction") or {}
