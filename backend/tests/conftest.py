@@ -46,6 +46,14 @@ os.environ.setdefault("ADMIN_PASSWORD", "admin123")
 os.environ.setdefault("VIEWER_USERNAME", "viewer")
 os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
 
+# app/services/withdrawal_queue.py talks to Arq's own Redis pool
+# directly, which fakeredis can't stand in for — without this, every
+# HIGH_RISK-case test would hit Arq's real connection-retry backoff
+# against a Redis that isn't there, measurably slowing the whole suite
+# down (schedule()/cancel() already degrade safely, just slowly).
+# tests/test_redis_integration.py re-enables this against a real Redis.
+os.environ.setdefault("EC03_QUEUE_ENABLED", "false")
+
 # Redis: same escape hatch shape as TEST_DATABASE_URL above, and same
 # "must happen before the first import that reads it" reasoning —
 # app.core.config reads REDIS_URL at import time (a plain module-level

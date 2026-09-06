@@ -21,9 +21,8 @@ from app.core.deps import verify_simulator_key
 from app.core.logging_config import CORRELATION_ID
 from app.core.models.transaction import Transaction
 from app.core.repository import repository
-from app.services import withdrawal_tracker
+from app.services import withdrawal_queue
 from app.services.orchestrator import run_pipeline
-from app.services.withdrawal_simulator import schedule_withdrawal
 from app.websocket.connection_manager import manager
 
 logger = logging.getLogger("sentinel.transactions")
@@ -104,22 +103,17 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
             ]
             for suspect_id in receiver_nodes:
                 _key = f"{case['case_id']}:{suspect_id}"
-                # Deduplicate: skip if an active timer already exists for this node
-                if withdrawal_tracker.is_active(_key):
-                    logger.info("Withdrawal timer already running for node %s — skipping duplicate", suspect_id)
-                    continue
-                _task = asyncio.create_task(
-                    schedule_withdrawal(
-                        case_id=case["case_id"],
-                        suspect_node_id=suspect_id,
-                        store=data_store,
-                        manager=manager,
-                        delay_seconds=WITHDRAWAL_DELAY_SECONDS,
-                        persist_fn=repository.save_case,
-                    )
+                scheduled = await withdrawal_queue.schedule(
+                    _key, case["case_id"], suspect_id, WITHDRAWAL_DELAY_SECONDS, CORRELATION_ID.get(),
                 )
-                withdrawal_tracker.register(_key, _task)
-                logger.info("Withdrawal timer started for node %s (fires in %ss)", suspect_id, WITHDRAWAL_DELAY_SECONDS)
+                if scheduled:
+                    logger.info("Withdrawal timer started for node %s (fires in %ss)", suspect_id, WITHDRAWAL_DELAY_SECONDS)
+                else:
+                    # Either Arq's own _job_id dedup rejected it (a timer
+                    # for this node is already scheduled/running) or Redis
+                    # was briefly unreachable — either way, not fatal to
+                    # this request.
+                    logger.info("Withdrawal timer already running for node %s — skipping duplicate", suspect_id)
     else:
         # Persist transaction even without a case (thread-pool, non-blocking)
         try:

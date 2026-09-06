@@ -1,11 +1,11 @@
 """
-Investigative actions: freeze/monitor/close status transitions, admin-only
-enforcement, and the EC-03 withdrawal-timer register/cancel wiring across
-the transactions.py <-> actions.py module boundary (regression coverage
-for the Phase 2 router split).
+Investigative actions: freeze/monitor/close status transitions and
+admin-only enforcement. EC-03 withdrawal-timer scheduling/cancellation
+(app/services/withdrawal_queue.py, Arq/Redis-backed as of Phase 1) has
+its own coverage in tests/test_redis_integration.py, since it now
+behaves differently enough against real Redis to be worth testing there
+specifically rather than as a bare in-process unit test.
 """
-
-import asyncio
 
 from conftest import TX_HEADERS, make_tx
 
@@ -52,33 +52,3 @@ def test_close_and_close_fp_set_expected_status(client, admin_headers):
     cases = client.get("/cases", headers=admin_headers).json()
     updated = next(c for c in cases if c["case_id"] == case["case_id"])
     assert updated["status"] == "CLOSED"
-
-
-def test_ec03_withdrawal_tracker_register_and_cancel_roundtrip():
-    """
-    Direct unit test of the shared withdrawal_tracker module (moved out of
-    main.py's module-global dict during the Phase 2 router split, and
-    fixed for unbounded growth in Phase 1) — verifies register() marks a
-    key active, and cancel() deactivates + evicts it.
-    """
-    from app.services import withdrawal_tracker
-
-    async def _run():
-        async def slow():
-            await asyncio.sleep(10)
-
-        key = f"test-key-{id(object())}"
-        task = asyncio.create_task(slow())
-        withdrawal_tracker.register(key, task)
-        await asyncio.sleep(0)
-        assert withdrawal_tracker.is_active(key) is True
-
-        cancelled = withdrawal_tracker.cancel(key)
-        assert cancelled is True
-        # allow the cancellation + done-callback to propagate
-        await asyncio.sleep(0)
-        await asyncio.sleep(0)
-        assert withdrawal_tracker.is_active(key) is False
-        assert key not in withdrawal_tracker._pending
-
-    asyncio.run(_run())

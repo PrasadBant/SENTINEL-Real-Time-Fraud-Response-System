@@ -28,6 +28,21 @@ WITHDRAWAL_DELAY_SECONDS = int(os.getenv("WITHDRAWAL_DELAY_SECONDS", "40"))
 # app/services/withdrawal_queue.py) ---
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
+# Gates both withdrawal_queue.schedule()/cancel() and the embedded Arq
+# worker started in main.py's lifespan. Unlike velocity_cache/accounts/
+# WS pub/sub (which go through app.core.redis_client, itself
+# monkeypatched to fakeredis in tests — see tests/conftest.py),
+# withdrawal_queue.py talks to Arq's own Redis pool directly, which
+# fakeredis can't stand in for (Arq needs real atomic dequeue semantics).
+# Without this flag, the default test suite would hit Arq's real
+# connection-retry backoff (RedisSettings' default conn_retries=5,
+# conn_retry_delay=1s) against a Redis that isn't there in CI/local test
+# runs, on every HIGH_RISK-case test — schedule()/cancel() already
+# degrade to a safe no-op on failure, but only after ~5s of retrying
+# each time, which measurably slows the whole suite down. Defaulted true
+# for real deployments; tests/conftest.py sets this false.
+EC03_QUEUE_ENABLED = os.getenv("EC03_QUEUE_ENABLED", "true").lower() == "true"
+
 # --- AUTH ---
 # JWT signing key. Falls back to a random key generated at process start if
 # unset — fine for a single dev session, but tokens won't survive a restart

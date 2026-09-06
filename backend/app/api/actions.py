@@ -19,7 +19,7 @@ from app.core.constants import AccountStatus, ActionStatus, ActionTypes, CaseSta
 from app.core.data_store import data_store
 from app.core.deps import require_role
 from app.core.repository import repository
-from app.services import withdrawal_tracker
+from app.services import withdrawal_queue
 from app.services.mock_apis import (
     mock_bank_freeze,
     mock_close_case,
@@ -116,7 +116,7 @@ async def handle_action(action_name: str, payload: ActionRequest) -> dict[str, A
                 node["status"] = AccountStatus.FROZEN
                 # EC-03: cancel any pending withdrawal timer for this now-frozen node
                 _key = f"{payload.case_id}:{acc_id}"
-                if withdrawal_tracker.cancel(_key):
+                if await withdrawal_queue.cancel(_key):
                     logger.info("Withdrawal task cancelled for frozen node %s", acc_id)
     elif action_name == "flag":
         api_response = mock_telecom_flag(target_id)

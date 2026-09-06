@@ -6,13 +6,15 @@ POST /api/copilot/chat — the one copilot route that can trigger a paid
 LLM API call and real investigative actions (freeze/close), so it's the
 one worth protecting against a runaway client or scripted abuse.
 
-No external dependency (Redis, slowapi): this mirrors the rest of the
-app's single-process, in-memory-state style (see
-app.services.withdrawal_tracker for the same pattern applied to
-EC-03's withdrawal timers). Like the ephemeral SECRET_KEY documented in
-app/core/config.py, this is not safe across multiple worker processes
-or a restart — acceptable for this app's current single-process
-deployment model; swap for a Redis-backed limiter (e.g. via slowapi)
+No external dependency (Redis, slowapi) — still purely in-process,
+in-memory state, unlike EC-03's withdrawal timers (app/services/
+withdrawal_queue.py), which moved to Redis-backed scheduling in Phase 1
+specifically because they needed to survive a restart. This limiter
+doesn't have that requirement (losing a rate-limit window on restart is
+harmless), so it stays the simpler in-memory style deliberately, not
+because the pattern was never revisited. Like the ephemeral SECRET_KEY
+documented in app/core/config.py, this is not safe across multiple
+worker processes — swap for a Redis-backed limiter (e.g. via slowapi)
 if SENTINEL is ever run with multiple workers.
 """
 
