@@ -1,22 +1,80 @@
-version: '3.8'
+# Copy .env.example to .env at the repo root first (see that file) —
+# ADMIN_PASSWORD/VIEWER_PASSWORD are required, docker-compose won't
+# start the api service without them.
 
 services:
-  neo4j:
-    image: neo4j:5.18.0
-    container_name: sentinel_neo4j
-    ports:
-      - "7474:7474" # Browser HTTP
-      - "7687:7687" # Bolt port
+  postgres:
+    image: postgres:16-alpine
+    container_name: sentinel_postgres
     environment:
-      - NEO4J_AUTH=neo4j/sentinelpass
-      - NEO4J_PLUGINS=["apoc"]
+      - POSTGRES_USER=sentinel
+      - POSTGRES_PASSWORD=sentinel
+      - POSTGRES_DB=sentinel
+    ports:
+      - "5432:5432"
     volumes:
-      - neo4j_data:/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
+      test: ["CMD-SHELL", "pg_isready -U sentinel"]
       interval: 5s
       timeout: 5s
       retries: 5
+    # Postgres is the one real source of truth here — see
+    # app/core/repository.py. Its own durability is Postgres's problem
+    # (WAL + this named volume), not something compose needs to manage.
+
+  api:
+    build: ./backend
+    container_name: sentinel_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://sentinel:sentinel@postgres:5432/sentinel
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in a repo-root .env — see .env.example}
+      - VIEWER_USERNAME=${VIEWER_USERNAME:-viewer}
+      - VIEWER_PASSWORD=${VIEWER_PASSWORD:?Set VIEWER_PASSWORD in a repo-root .env — see .env.example}
+      - SECRET_KEY=${SECRET_KEY:-}
+      - SIMULATOR_API_KEY=${SIMULATOR_API_KEY:-sentinel-dev-simulator-key}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173}
+      - AI_PROVIDER=${AI_PROVIDER:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
+      - HF_API_KEY=${HF_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    # No wait/retry logic for the Postgres connection beyond compose's
+    # own health-gated `depends_on` above — if Postgres is somehow
+    # unreachable at startup anyway, `alembic upgrade head` fails loudly
+    # and the container exits; `restart: unless-stopped` handles the
+    # retry, deliberately not custom code (see the Phase 0 build plan's
+    # explicit scope cuts).
+
+  # Unused today — no code path imports a neo4j driver; graph state is
+  # plain in-memory dicts (app/engines/graph_engine.py). Revisited in
+  # Phase 5 (Entity Resolution + Graph), which spikes Postgres recursive
+  # CTEs against Apache AGE on realistic data before deciding whether a
+  # dedicated graph store is even justified — don't uncomment this until
+  # that spike says AGE/CTEs can't keep up.
+  # neo4j:
+  #   image: neo4j:5.18.0
+  #   container_name: sentinel_neo4j
+  #   ports:
+  #     - "7474:7474" # Browser HTTP
+  #     - "7687:7687" # Bolt port
+  #   environment:
+  #     - NEO4J_AUTH=neo4j/sentinelpass
+  #     - NEO4J_PLUGINS=["apoc"]
+  #   volumes:
+  #     - neo4j_data:/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
 volumes:
-  neo4j_data:
+  postgres_data:
+  # neo4j_data:
