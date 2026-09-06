@@ -7,7 +7,11 @@ Core tables:
   - actions       (one row per investigative action taken)
 
 JSON payload columns store the full in-memory dict so that
-load_all_into_store() can faithfully restore state after a restart.
+repository.load_all() can faithfully restore state after a restart.
+
+transactions/cases/actions all carry a tenant_id (see
+app/core/constants.DEFAULT_TENANT_ID) — single tenant today, but the
+column exists from the start rather than being retrofitted later.
 
 Copilot history tables (own source of truth — see
 app/services/copilot/history.py, not the write-through data_store
@@ -20,6 +24,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, String, Float, DateTime, Text, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
+from app.core.constants import DEFAULT_TENANT_ID
 from app.core.database import Base
 
 
@@ -32,6 +37,12 @@ class TransactionRecord(Base):
 
     tx_id        = Column(String, primary_key=True, index=True)
     case_id      = Column(String, nullable=True, index=True)
+    tenant_id    = Column(String, nullable=False, default=DEFAULT_TENANT_ID, index=True)
+    # Caller-supplied payment-rail reference (UPI/IMPS/NEFT number) where
+    # available, else a SENTINEL-generated placeholder — see
+    # app/api/transactions.py. Unique so a repeated request with the same
+    # key can be detected and short-circuited instead of re-scored.
+    idempotency_key = Column(String, nullable=True, unique=True, index=True)
     sender       = Column(String, nullable=True)
     receiver     = Column(String, nullable=True)
     amount       = Column(Float, default=0.0)
@@ -51,6 +62,7 @@ class CaseRecord(Base):
     __tablename__ = "cases"
 
     case_id              = Column(String, primary_key=True, index=True)
+    tenant_id            = Column(String, nullable=False, default=DEFAULT_TENANT_ID, index=True)
     status               = Column(String, default="NEW")
     risk_level           = Column(Float, default=0.0)
     total_fraud_amount   = Column(Float, default=0.0)
@@ -63,9 +75,6 @@ class CaseRecord(Base):
     # Full serialized dict (JSON string) for complete restore
     payload              = Column(Text, nullable=True)
 
-    actions              = relationship("ActionRecord", back_populates="case",
-                                        cascade="all, delete-orphan")
-
     def __repr__(self):
         return f"<Case {self.case_id} status={self.status}>"
 
@@ -74,7 +83,16 @@ class ActionRecord(Base):
     __tablename__ = "actions"
 
     action_id   = Column(String, primary_key=True, index=True)
-    case_id     = Column(String, ForeignKey("cases.case_id"), nullable=True, index=True)
+    # No FK to cases.case_id (there was one; it was dropped — see Alembic
+    # migration 0002). app/services/global_graph_analyzer.py writes
+    # proactive-monitor actions with case_id="GLOBAL", which never
+    # corresponds to a real case row. SQLite never enforced the FK so this
+    # "worked" by accident; Postgres does enforce it and would reject
+    # every one of those inserts. The case/action relationship was never
+    # traversed anywhere in the app, so a plain indexed column is correct,
+    # not just a workaround.
+    case_id     = Column(String, nullable=True, index=True)
+    tenant_id   = Column(String, nullable=False, default=DEFAULT_TENANT_ID, index=True)
     action_type = Column(String, nullable=True)
     target_id   = Column(String, nullable=True)
     status      = Column(String, default="ACK")
@@ -83,8 +101,6 @@ class ActionRecord(Base):
     created_at  = Column(DateTime, default=_now)
     # Full serialized dict (JSON string)
     payload     = Column(Text, nullable=True)
-
-    case        = relationship("CaseRecord", back_populates="actions")
 
     def __repr__(self):
         return f"<Action {self.action_id} type={self.action_type}>"

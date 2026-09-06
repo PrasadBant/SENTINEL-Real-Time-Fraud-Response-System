@@ -2,7 +2,7 @@ import asyncio
 import time
 from datetime import datetime, timezone
 import networkx as nx
-from app.core.persistence import save_action
+from app.core.repository import repository
 
 # Track already alerted bridge nodes to prevent spamming repeat alerts for
 # the same node on every 15s cycle. Reset periodically (see
@@ -66,7 +66,7 @@ async def run_global_graph_analyzer(manager, store: dict):
                         "payload": {"betweenness_centrality": score, "node": node}
                     }
                     
-                    save_action(action)
+                    repository.save_action(action)
                     
                     # Ensure websocket can broadcast
                     try:

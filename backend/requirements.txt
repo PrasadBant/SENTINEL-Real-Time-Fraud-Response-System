@@ -1,11 +1,21 @@
 fastapi
 uvicorn
 pydantic
-sqlalchemy
 httpx
 pyjwt
 python-dotenv
 networkx
+
+# --- Persistence (Postgres via SQLAlchemy + Alembic, see app/core/database.py,
+# app/core/repository.py, alembic/) ---
+# sqlalchemy is pinned (not left bare) now that Alembic depends on its schema
+# introspection/migration APIs being stable across the team's installs.
+sqlalchemy>=2.0,<3.0
+alembic>=1.13,<2.0
+# psycopg (v3, not the older psycopg2) — better prebuilt-wheel coverage on
+# the Python 3.13 this project already standardizes on (see xgboost note
+# below and .github/workflows/ci.yml).
+psycopg[binary]>=3.1,<4.0
 
 # --- AI Copilot (app/services/ai_providers/) ---
 # Official Anthropic SDK for the Claude provider. Only imported lazily

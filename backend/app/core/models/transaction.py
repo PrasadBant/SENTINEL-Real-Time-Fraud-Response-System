@@ -27,3 +27,9 @@ class Transaction(BaseModel):
     hop_number: Optional[int] = 0
     risk_score: Optional[float] = None
     case_id: Optional[str] = None
+    # Caller-supplied dedupe key — ideally the payment rail's own reference
+    # number (UPI/IMPS/NEFT), so a retried submission of the *same*
+    # real-world transfer under a *different* tx_id can still be detected.
+    # If omitted, app/api/transactions.py generates a placeholder — see
+    # that module for why a generated key can't provide the same guarantee.
+    idempotency_key: Optional[str] = None

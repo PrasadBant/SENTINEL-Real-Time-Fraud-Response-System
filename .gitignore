@@ -28,6 +28,9 @@ backend/.pytest_cache/
 
 frontend/.env
 backend/.env
+# Root .env: read by `docker compose up` for variable substitution
+# (ADMIN_PASSWORD etc. in docker-compose.yml) — see .env.example.
+/.env
 *.local
 
 # =========================
