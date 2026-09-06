@@ -1,5 +1,8 @@
+import logging
 import os
 import secrets as _secrets
+
+logger = logging.getLogger("sentinel.config")
 
 # --- RISK WEIGHTS (Normalized to sum = 1.0) ---
 W_NEW_RECEIVER = 0.35
@@ -33,9 +36,11 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     SECRET_KEY = _secrets.token_hex(32)
-    print("  [WARNING] SECRET_KEY not set — using an ephemeral key generated at "
-          "startup. Existing login tokens will be invalidated on every restart. "
-          "Set SECRET_KEY in backend/.env for stable sessions.")
+    logger.warning(
+        "SECRET_KEY not set — using an ephemeral key generated at startup. "
+        "Existing login tokens will be invalidated on every restart. "
+        "Set SECRET_KEY in backend/.env for stable sessions."
+    )
 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "480"))  # 8h shift
 

@@ -15,6 +15,14 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
 
+# Must run before any other app.* import: several modules log a line at
+# import time (e.g. app.core.config's SECRET_KEY fallback warning), and
+# those should come out as JSON too, not fall through to Python's
+# default unconfigured-logger stderr output. app.core.logging_config
+# itself doesn't import app.core.config, so this is safe to do first.
+from app.core.logging_config import configure_logging
+configure_logging()
+
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware

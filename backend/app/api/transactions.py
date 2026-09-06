@@ -17,6 +17,7 @@ from app.core.constants import AccountStatus, CaseStatus
 from app.core.config import WITHDRAWAL_DELAY_SECONDS
 from app.core.data_store import data_store
 from app.core.deps import verify_simulator_key
+from app.core.logging_config import CORRELATION_ID
 from app.core.models.transaction import Transaction
 from app.core.repository import repository
 from app.services import withdrawal_tracker
@@ -29,6 +30,12 @@ router = APIRouter()
 
 @router.post("/transaction", dependencies=[Depends(verify_simulator_key)])
 async def process_tx(tx_in: Transaction) -> dict[str, Any]:
+    # One correlation ID per request, threaded through every log line this
+    # transaction touches (scoring, persistence, EC-03 scheduling) via the
+    # CORRELATION_ID contextvar — see app/core/logging_config.py. Set
+    # before anything else runs so even an early failure is traceable.
+    CORRELATION_ID.set(str(uuid4()))
+
     # FastAPI validates the body against Transaction before this runs — bad
     # payloads (missing tx_id/amount, non-positive amount, wrong types) are
     # rejected with a 422 automatically, instead of reaching the pipeline

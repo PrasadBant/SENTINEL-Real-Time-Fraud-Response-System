@@ -22,8 +22,17 @@ from app.core import db_models  # noqa: E402,F401  registers every model on Base
 config = context.config
 
 # Interpret the config file for Python logging.
+# disable_existing_loggers=False is essential here, not optional: this
+# runs every time run_migrations() does (app.core.database, called from
+# main.py's lifespan on every startup, not just once at dev-time) —
+# fileConfig's default (True) silently disables every logger that
+# already exists and isn't explicitly listed in alembic.ini's [loggers]
+# section (root/sqlalchemy/alembic only), which is every "sentinel.*"
+# logger the app itself uses (see app/core/logging_config.py). Found via
+# manual verification: a real POST /transaction's logger.info() calls
+# were silently no-ops after the app started, traced to exactly this.
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 # Autogenerate support: point Alembic at the real ORM metadata instead of
 # hand-diffing schema changes.

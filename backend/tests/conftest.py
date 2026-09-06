@@ -64,6 +64,16 @@ os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
 if "TEST_REDIS_URL" in os.environ:
     os.environ["REDIS_URL"] = os.environ["TEST_REDIS_URL"]
 
+# Also before any app.core.config import (see the comment above): main.py
+# normally calls this first, before importing anything that transitively
+# imports app.core.config (whose SECRET_KEY-fallback warning fires at
+# import time) — but here `import redis_client` on the very next line
+# does exactly that, ahead of `import main` below, so call it here too
+# rather than let that one line fall back to unconfigured plain-text
+# logging during tests.
+from app.core.logging_config import configure_logging  # noqa: E402
+configure_logging()
+
 from app.core import redis_client  # noqa: E402
 
 if "TEST_REDIS_URL" not in os.environ:

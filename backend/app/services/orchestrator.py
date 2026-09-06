@@ -1,3 +1,4 @@
+import logging
 import random
 import time
 
@@ -11,6 +12,8 @@ from app.engines.recovery_engine import recalculate
 from app.services.reasoning_engine import generate_reasoning
 from app.services.ml_risk_engine import predict_ml_score, feature_names
 from app.utils.json_codec import from_json, to_json
+
+logger = logging.getLogger("sentinel.orchestrator")
 
 
 def _velocity_key(sender_id: str) -> str:
@@ -177,12 +180,12 @@ def run_pipeline(tx: dict, store: dict) -> dict:
     try:
         # 4a. Random Forest Inference (or Emulator fallback)
         ml_score = predict_ml_score(float(rule_score), tx, account)
-        print(f"  [DEBUG] Rule: {rule_score}, ML: {round(ml_score, 1)}")
+        logger.info("Rule score %s, ML score %s", rule_score, round(ml_score, 1))
 
         # 5. Hybrid Fusion: 60% ML + 40% Rule (graph GNN will refine later)
         final_score = int(0.6 * ml_score + 0.4 * rule_score)
     except Exception as e:
-        print(f"  [Orchestrator] ML Scoring Failed: {e}")
+        logger.warning("ML scoring failed, falling back to rule score: %s", e)
         final_score = rule_score
         ml_score = rule_score
 
@@ -286,7 +289,10 @@ def run_pipeline(tx: dict, store: dict) -> dict:
     confidence = "HIGH" if score >= 70 else "MEDIUM" if score >= 40 else "LOW"
     score_output["confidence"] = confidence
     
-    print(f"  [Orchestrator] {tx.get('tx_id')} Score: {score} (Rule: {int(rule_score)}, ML: {int(ml_score)}) | Reason: {score_output['reason']}")
+    logger.info(
+        "Scored transaction %s: %s (rule=%s ml=%s) reason=%s",
+        tx.get("tx_id"), score, int(rule_score), int(ml_score), score_output["reason"],
+    )
 
     # 3. Update transaction with score results
     tx["risk_score"] = score_output.get("risk_score")
