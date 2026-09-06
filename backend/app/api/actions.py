@@ -17,7 +17,7 @@ from app.api.schemas import ActionRequest
 from app.core.constants import AccountStatus, ActionStatus, ActionTypes, CaseStatus
 from app.core.data_store import data_store
 from app.core.deps import require_role
-from app.core.persistence import save_action
+from app.core.repository import repository
 from app.services import withdrawal_tracker
 from app.services.mock_apis import (
     mock_bank_freeze,
@@ -48,11 +48,11 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
     }
     case.setdefault("actions_taken", []).insert(0, entry)
 
-    # Persist the action to SQLite (note: _record_action is sync, called from async context
+    # Persist the action (note: _record_action is sync, called from async context
     # via run_in_executor at the call site for heavy traffic; here we keep inline for
     # simplicity since action writes are rare compared to TX ingestion)
     try:
-        save_action(entry)
+        repository.save_action(entry)
     except Exception as _pe:
         print(f"  [Persistence] Action write error: {_pe}")
 

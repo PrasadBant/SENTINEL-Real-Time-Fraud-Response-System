@@ -17,7 +17,7 @@ from app.core.config import WITHDRAWAL_DELAY_SECONDS
 from app.core.data_store import data_store
 from app.core.deps import verify_simulator_key
 from app.core.models.transaction import Transaction
-from app.core.persistence import save_case, save_transaction
+from app.core.repository import repository
 from app.services import withdrawal_tracker
 from app.services.orchestrator import run_pipeline
 from app.services.withdrawal_simulator import schedule_withdrawal
@@ -44,11 +44,11 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
         case_event = {"event": "case_updated", **case_payload(case)}
         await manager.broadcast(case_event)
 
-        # ── Persist to SQLite (thread-pool, non-blocking) ───────────────
+        # ── Persist to Postgres (thread-pool, non-blocking) ─────────────
         try:
             _loop = asyncio.get_event_loop()
-            await _loop.run_in_executor(None, save_transaction, transaction)
-            await _loop.run_in_executor(None, save_case, case)
+            await _loop.run_in_executor(None, repository.save_transaction, transaction)
+            await _loop.run_in_executor(None, repository.save_case, case)
         except Exception as _pe:
             print(f"  [Persistence] Write error: {_pe}")
 
@@ -75,7 +75,7 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
                         store=data_store,
                         manager=manager,
                         delay_seconds=WITHDRAWAL_DELAY_SECONDS,
-                        persist_fn=save_case,
+                        persist_fn=repository.save_case,
                     )
                 )
                 withdrawal_tracker.register(_key, _task)
@@ -85,7 +85,7 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
         # Persist transaction even without a case (thread-pool, non-blocking)
         try:
             _loop = asyncio.get_event_loop()
-            await _loop.run_in_executor(None, save_transaction, transaction)
+            await _loop.run_in_executor(None, repository.save_transaction, transaction)
         except Exception as _pe:
             print(f"  [Persistence] TX write error: {_pe}")
 
