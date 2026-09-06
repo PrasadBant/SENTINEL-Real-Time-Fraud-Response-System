@@ -1,8 +1,11 @@
+import logging
 from datetime import datetime
 from app.core.config import (
     W_NEW_RECEIVER, W_AMOUNT_DEV, W_TIME_ANOMALY, W_CALL_FLAG,
     HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD, DECAY_FACTOR
 )
+
+logger = logging.getLogger("sentinel.scoring")
 
 def _amount_deviation(amount: float, avg_amount: float) -> int:
     if avg_amount <= 0:
@@ -139,7 +142,7 @@ def score_transaction(tx: dict, account: dict) -> dict:
         if has_critical_flag:
             risk_score = max(risk_score, 25) 
         
-        print(f"  [Amount Scaler] Scaling score by {scaling_factor:.2f} for amount {amount}. Final: {risk_score}")
+        logger.info("Scaling score by %.2f for amount %s. Final: %s", scaling_factor, amount, risk_score)
 
     if risk_score >= HIGH_RISK_THRESHOLD:
         threshold = "HIGH_RISK"

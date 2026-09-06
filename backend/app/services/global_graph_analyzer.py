@@ -1,8 +1,11 @@
 import asyncio
+import logging
 import time
 from datetime import datetime, timezone
 import networkx as nx
 from app.core.repository import repository
+
+logger = logging.getLogger("sentinel.global_graph")
 
 # Track already alerted bridge nodes to prevent spamming repeat alerts for
 # the same node on every 15s cycle. Reset periodically (see
@@ -13,7 +16,7 @@ _BRIDGE_ALERT_RESET_CYCLES = 240  # ~1 hour at 15s/cycle
 _BRIDGE_ALERT_MAX_SIZE = 5000
 
 async def run_global_graph_analyzer(manager, store: dict):
-    print("  [Global Graph] Background analyzer started (15s loop)")
+    logger.info("Background analyzer started (15s loop)")
     cycle = 0
     while True:
         await asyncio.sleep(15)
@@ -52,7 +55,7 @@ async def run_global_graph_analyzer(manager, store: dict):
                         continue
                         
                     _alerted_bridge_nodes.add(node)
-                    print(f"  [Global Graph] BRIDGE NODE DETECTED: {node} (Betweenness Centrality: {score:.3f})")
+                    logger.info("BRIDGE NODE DETECTED: %s (Betweenness Centrality: %.3f)", node, score)
                     
                     # Flag proactively via an ACTION_TAKEN
                     action = {
@@ -72,7 +75,7 @@ async def run_global_graph_analyzer(manager, store: dict):
                     try:
                         await manager.broadcast({"event": "ACTION_TAKEN", **action})
                     except Exception as e:
-                        print(f"  [Global Graph] Broadcast failed: {e}")
-                        
+                        logger.warning("Broadcast failed: %s", e)
+
         except Exception as e:
-            print(f"  [Global Graph] Analysis cycle failed: {e}")
+            logger.error("Analysis cycle failed: %s", e)

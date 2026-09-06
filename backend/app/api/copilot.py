@@ -32,6 +32,7 @@ Both chat endpoints resolve three tiers, checked in order:
 """
 
 import json
+import logging
 import re
 from collections.abc import AsyncIterator
 from typing import Any
@@ -55,6 +56,8 @@ from app.services.copilot import (
     resolve_conversation,
 )
 from app.services.copilot.rate_limit import rate_limited_user
+
+logger = logging.getLogger("sentinel.copilot")
 
 router = APIRouter()
 
@@ -254,7 +257,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(rate_limited_us
                 # Fallback on failure (e.g., DNS error, proxy block, timeout,
                 # rate limit, bad/missing API key, or an unimplemented stub
                 # provider).
-                print(f"[Copilot Warning] AI provider failed: {e}. Falling back to local AI.")
+                logger.warning("AI provider failed: %s. Falling back to local AI.", e)
                 provider_success = False
 
             if not provider_success:
@@ -334,7 +337,7 @@ async def copilot_chat_stream(req: CopilotRequest, user: dict = Depends(rate_lim
                         if streamed_any:
                             provider_used = provider.name
                     except Exception as e:
-                        print(f"[Copilot Warning] AI provider stream failed: {e}. Falling back to local AI.")
+                        logger.warning("AI provider stream failed: %s. Falling back to local AI.", e)
                         streamed_any = False
 
                     if not streamed_any:
@@ -350,7 +353,7 @@ async def copilot_chat_stream(req: CopilotRequest, user: dict = Depends(rate_lim
             # Only reachable for a genuine bug in this handler (not a
             # provider failure — that path already degrades to the
             # offline fallback above and still completes normally).
-            print(f"[Copilot Error] Stream handler failed: {e}")
+            logger.error("Stream handler failed: %s", e)
             yield _emit({"type": "error", "message": "The copilot hit an internal error. Please try again."})
 
     return StreamingResponse(

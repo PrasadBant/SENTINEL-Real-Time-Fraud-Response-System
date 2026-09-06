@@ -7,6 +7,7 @@ withdrawal countdown for each newly-linked suspect node.
 """
 
 import asyncio
+import logging
 from typing import Any
 from uuid import uuid4
 
@@ -24,6 +25,8 @@ from app.services import withdrawal_tracker
 from app.services.orchestrator import run_pipeline
 from app.services.withdrawal_simulator import schedule_withdrawal
 from app.websocket.connection_manager import manager
+
+logger = logging.getLogger("sentinel.transactions")
 
 router = APIRouter()
 
@@ -87,7 +90,7 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
             await _loop.run_in_executor(None, repository.save_transaction, transaction)
             await _loop.run_in_executor(None, repository.save_case, case)
         except Exception as _pe:
-            print(f"  [Persistence] Write error: {_pe}")
+            logger.warning("Write error: %s", _pe)
 
         # ── EC-03: Schedule mule withdrawal for new HIGH_RISK cases ──────
         if case.get("status") == CaseStatus.HIGH_RISK:
@@ -103,7 +106,7 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
                 _key = f"{case['case_id']}:{suspect_id}"
                 # Deduplicate: skip if an active timer already exists for this node
                 if withdrawal_tracker.is_active(_key):
-                    print(f"  [EC-03] Withdrawal timer already running for node {suspect_id} — skipping duplicate")
+                    logger.info("Withdrawal timer already running for node %s — skipping duplicate", suspect_id)
                     continue
                 _task = asyncio.create_task(
                     schedule_withdrawal(
@@ -116,14 +119,13 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
                     )
                 )
                 withdrawal_tracker.register(_key, _task)
-                print(f"  [EC-03] Withdrawal timer started for node {suspect_id} "
-                      f"(fires in {WITHDRAWAL_DELAY_SECONDS}s)")
+                logger.info("Withdrawal timer started for node %s (fires in %ss)", suspect_id, WITHDRAWAL_DELAY_SECONDS)
     else:
         # Persist transaction even without a case (thread-pool, non-blocking)
         try:
             _loop = asyncio.get_event_loop()
             await _loop.run_in_executor(None, repository.save_transaction, transaction)
         except Exception as _pe:
-            print(f"  [Persistence] TX write error: {_pe}")
+            logger.warning("TX write error: %s", _pe)
 
     return result

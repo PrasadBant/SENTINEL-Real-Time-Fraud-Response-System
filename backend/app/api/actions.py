@@ -7,6 +7,7 @@ is also reused by the AI copilot (app/api/copilot.py) for its "freeze this
 case" / "close this case" intents.
 """
 
+import logging
 from typing import Any
 from uuid import uuid4
 
@@ -27,6 +28,8 @@ from app.services.mock_apis import (
     mock_telecom_flag,
 )
 from app.websocket.connection_manager import manager
+
+logger = logging.getLogger("sentinel.actions")
 
 router = APIRouter()
 
@@ -54,7 +57,7 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
     try:
         repository.save_action(entry)
     except Exception as _pe:
-        print(f"  [Persistence] Action write error: {_pe}")
+        logger.warning("Action write error: %s", _pe)
 
     # Status Mapping based on actions
     if entry["status"] == ActionStatus.ACK:
@@ -114,7 +117,7 @@ async def handle_action(action_name: str, payload: ActionRequest) -> dict[str, A
                 # EC-03: cancel any pending withdrawal timer for this now-frozen node
                 _key = f"{payload.case_id}:{acc_id}"
                 if withdrawal_tracker.cancel(_key):
-                    print(f"  [EC-03] Withdrawal task cancelled for frozen node {acc_id}")
+                    logger.info("Withdrawal task cancelled for frozen node %s", acc_id)
     elif action_name == "flag":
         api_response = mock_telecom_flag(target_id)
     elif action_name == "monitor":

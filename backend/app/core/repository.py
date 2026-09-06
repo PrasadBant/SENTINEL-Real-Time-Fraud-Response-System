@@ -16,6 +16,7 @@ _do_save_*/load_all_into_store — this is a swap of the storage
 mechanism, not a redesign of what gets stored.
 """
 
+import logging
 import time
 from datetime import datetime as _dt
 
@@ -26,6 +27,8 @@ from app.core.database import SessionLocal
 from app.core.db_models import ActionRecord, CaseRecord, TransactionRecord
 from app.services import orchestrator
 from app.utils.json_codec import from_json as _from_json, to_json as _to_json
+
+logger = logging.getLogger("sentinel.repository")
 
 
 class Repository:
@@ -79,10 +82,10 @@ class Repository:
             # lost, only this particular write is (the row that won the
             # race remains the durable one going forward).
             db.rollback()
-            print(f"  [Repository] save_transaction: idempotency_key race on {tx_id}, discarding this write")
+            logger.warning("save_transaction: idempotency_key race on %s, discarding this write", tx_id)
         except Exception as e:
             db.rollback()
-            print(f"  [Repository] save_transaction failed: {e}")
+            logger.error("save_transaction failed: %s", e)
         finally:
             db.close()
 
@@ -133,7 +136,7 @@ class Repository:
             db.commit()
         except Exception as e:
             db.rollback()
-            print(f"  [Repository] save_case failed: {e}")
+            logger.error("save_case failed: %s", e)
         finally:
             db.close()
 
@@ -176,7 +179,7 @@ class Repository:
                 db.commit()
         except Exception as e:
             db.rollback()
-            print(f"  [Repository] save_action failed: {e}")
+            logger.error("save_action failed: %s", e)
         finally:
             db.close()
 
@@ -231,10 +234,10 @@ class Repository:
                     store.setdefault("cases", {})[case_id] = payload
                     case_count += 1
 
-            print(f"  [Repository] Restored {tx_count} transactions, {case_count} cases from DB [OK]")
+            logger.info("Restored %s transactions, %s cases from DB [OK]", tx_count, case_count)
 
         except Exception as e:
-            print(f"  [Repository] load_all failed: {e}")
+            logger.error("load_all failed: %s", e)
         finally:
             db.close()
 

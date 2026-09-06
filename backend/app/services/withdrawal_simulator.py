@@ -14,11 +14,14 @@ Usage (called from app/api/transactions.py):
 """
 
 import asyncio
+import logging
 from datetime import datetime, timezone
 
 from app.api.presenters import case_payload
 from app.core.constants import AccountStatus
 from app.engines.recovery_engine import recalculate
+
+logger = logging.getLogger("sentinel.ec03")
 
 
 def _now_iso() -> str:
@@ -66,9 +69,9 @@ async def schedule_withdrawal(
 
     # ── Guard: investigator already froze this node ───────────────────────
     if current_status in (AccountStatus.FROZEN, AccountStatus.WITHDRAWN):
-        print(
-            f"  [EC-03] Withdrawal ABORTED — node {suspect_node_id} "
-            f"already {current_status} (investigator acted in time!)"
+        logger.info(
+            "Withdrawal ABORTED — node %s already %s (investigator acted in time!)",
+            suspect_node_id, current_status,
         )
         await manager.broadcast({
             "event": "withdrawal_prevented",
@@ -87,10 +90,9 @@ async def schedule_withdrawal(
     target_node["status"]  = AccountStatus.WITHDRAWN
     target_node["balance"] = 0.0
 
-    print(
-        f"  [EC-03] ⚠  Mule withdrawal executed! "
-        f"Node={suspect_node_id}  Case={case_id}  "
-        f"Lost=₹{prev_balance:,.2f}"
+    logger.warning(
+        "Mule withdrawal executed! Node=%s Case=%s Lost=₹%s",
+        suspect_node_id, case_id, f"{prev_balance:,.2f}",
     )
 
     # Recalculate recovery with the node now zeroed
@@ -110,7 +112,7 @@ async def schedule_withdrawal(
             try:
                 persist_fn(case)
             except Exception as _e:
-                print(f"  [EC-03] Persistence error: {_e}")
+                logger.error("Persistence error: %s", _e)
 
         # Broadcast withdrawal event to all connected dashboards
         await manager.broadcast({

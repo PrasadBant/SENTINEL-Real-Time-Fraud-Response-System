@@ -19,8 +19,11 @@ graph-based inference. If real GNN scoring is wanted later, it needs an
 actual training pipeline over labeled case graphs, not hand-set weights.
 """
 
+import logging
 import random
 import os
+
+logger = logging.getLogger("sentinel.ml_engine")
 
 XGB_MODEL_AVAILABLE = False
 _xgb_model = None
@@ -33,11 +36,11 @@ try:
     if os.path.exists(model_path):
         _xgb_model = joblib.load(model_path)
         XGB_MODEL_AVAILABLE = True
-        print(f"  [ML Engine] XGBoost model loaded from {model_path}")
+        logger.info("XGBoost model loaded from %s", model_path)
 except ImportError:
-    print("  [ML Engine] joblib/numpy/xgboost not found — XGB disabled")
+    logger.warning("joblib/numpy/xgboost not found — XGB disabled")
 except Exception as _e:
-    print(f"  [ML Engine] XGB init error ({_e})")
+    logger.error("XGB init error (%s)", _e)
 
 
 # ── Feature metadata (used by orchestrator for importance display) ────────────
@@ -75,10 +78,10 @@ def predict_ml_score(rule_score: float, tx: dict = None, account: dict = None) -
             prob = _xgb_model.predict_proba(features)[0][1] # Probability of fraud (class 1)
 
             xgb_score = float(prob * 100.0)
-            print(f"  [ML Engine] XGBoost score: {xgb_score:.1f}")
+            logger.info("XGBoost score: %.1f", xgb_score)
             return xgb_score
         except Exception as e:
-            print(f"  [ML Engine] XGB prediction error: {e}")
+            logger.error("XGB prediction error: %s", e)
 
     # Fallback to emulator
     if rule_score >= 80:
