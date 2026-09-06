@@ -84,6 +84,7 @@ def test_recommend_next_case_uses_pattern_specific_steps():
     asserting on 'the' top-urgency case via the real /api/copilot/chat
     endpoint would be at the mercy of tie-breaking across the whole
     accumulated test session rather than testing this function's logic."""
+    from app.core.constants import DEFAULT_TENANT_ID
     from app.core.data_store import data_store
     from app.services.copilot.intents import _recommend_next
 
@@ -118,7 +119,7 @@ def test_recommend_next_case_uses_pattern_specific_steps():
             }
         }
 
-        reply = _recommend_next()
+        reply = _recommend_next(DEFAULT_TENANT_ID)
 
         assert "Pattern match" in reply
         assert "Cross-Border Fraud" in reply
@@ -150,6 +151,7 @@ def test_case_context_includes_likely_pattern_for_llm_path():
     """Direct unit test of the context builder (used by the freeform LLM
     path and Mock/offline fallback, not just the structured intents) --
     confirms pattern cross-referencing reaches that path too."""
+    from app.core.constants import DEFAULT_TENANT_ID
     from app.core.data_store import data_store
     from app.services.copilot.context_builder import case_context
 
@@ -179,7 +181,7 @@ def test_case_context_includes_likely_pattern_for_llm_path():
         "actions_taken": [],
     }
 
-    context = case_context(case_id)
+    context = case_context(case_id, DEFAULT_TENANT_ID)
     assert "Likely Pattern(s):" in context
     assert "Velocity Attacks" in context
 

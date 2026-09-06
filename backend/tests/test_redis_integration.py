@@ -145,7 +145,7 @@ def test_connection_manager_listener_reconnects_after_disconnect(real_redis_url,
     """
     import redis.asyncio as aioredis
     from app.core import redis_client
-    from app.websocket.connection_manager import CHANNEL, ConnectionManager
+    from app.websocket.connection_manager import ConnectionManager
 
     real_async_client = aioredis.Redis.from_url(real_redis_url, decode_responses=True)
     monkeypatch.setattr(redis_client, "get_async_redis", lambda: real_async_client)
@@ -160,7 +160,13 @@ def test_connection_manager_listener_reconnects_after_disconnect(real_redis_url,
             self.received.append(msg)
 
     fake_ws = _FakeWS()
-    test_manager.active_connections.append(fake_ws)
+    _TEST_TENANT = "test-tenant-ws-reconnect"
+    # Pre-populate active_connections (not via connect(), which would try
+    # to accept() a real WebSocket handshake) so listen()'s initial
+    # subscribe-from-active_connections snapshot picks up this tenant the
+    # moment it starts, exactly like a real connection already established
+    # before the listener task boots.
+    test_manager.active_connections[_TEST_TENANT] = [fake_ws]
 
     def _pubsub_addrs(client_list: str) -> set[str]:
         addrs = set()
@@ -180,7 +186,7 @@ def test_connection_manager_listener_reconnects_after_disconnect(real_redis_url,
         listener_task = asyncio.create_task(test_manager.listen())
         await asyncio.sleep(0.3)  # let the subscribe register server-side
 
-        await test_manager.broadcast({"event": "before-kill"})
+        await test_manager.broadcast({"event": "before-kill"}, _TEST_TENANT)
         await asyncio.sleep(0.3)
 
         after = _pubsub_addrs(await admin.execute_command("CLIENT", "LIST", "TYPE", "pubsub"))
@@ -200,7 +206,7 @@ def test_connection_manager_listener_reconnects_after_disconnect(real_redis_url,
 
         await asyncio.sleep(3)  # give the reconnect loop's backoff time to reconnect+resubscribe
 
-        await test_manager.broadcast({"event": "after-kill"})
+        await test_manager.broadcast({"event": "after-kill"}, _TEST_TENANT)
         await asyncio.sleep(1)
 
         listener_task.cancel()

@@ -38,7 +38,7 @@ def test_duplicate_idempotency_key_skips_broadcast_and_ec03(client, monkeypatch)
 
     calls = {"broadcast": 0, "schedule": 0}
 
-    async def fake_broadcast(_event):
+    async def fake_broadcast(_event, _tenant_id):
         calls["broadcast"] += 1
 
     async def fake_schedule(key, case_id, suspect_node_id, delay_seconds, correlation_id):

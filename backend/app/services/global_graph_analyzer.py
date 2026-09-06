@@ -3,6 +3,7 @@ import logging
 import time
 from datetime import datetime, timezone
 import networkx as nx
+from app.core.constants import DEFAULT_TENANT_ID
 from app.core.repository import repository
 
 logger = logging.getLogger("sentinel.global_graph")
@@ -87,11 +88,16 @@ async def run_global_graph_analyzer(manager, store: dict):
                         "payload": {"betweenness_centrality": score, "node": node}
                     }
                     
-                    repository.save_action(action)
-                    
-                    # Ensure websocket can broadcast
+                    repository.save_action(action, tenant_id=DEFAULT_TENANT_ID)
+
+                    # Ensure websocket can broadcast. DEFAULT_TENANT_ID:
+                    # this analyzer scans store["transactions"] (the
+                    # single ingestion tenant's own data — see the
+                    # docstring above), so its alerts belong to that
+                    # tenant, same reasoning as transactions.py's own
+                    # broadcasts.
                     try:
-                        await manager.broadcast({"event": "ACTION_TAKEN", **action})
+                        await manager.broadcast({"event": "ACTION_TAKEN", **action}, DEFAULT_TENANT_ID)
                     except Exception as e:
                         logger.warning("Broadcast failed: %s", e)
 

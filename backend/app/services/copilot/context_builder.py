@@ -13,11 +13,26 @@ in frontend/src/pages/Dashboard.jsx (total exposure, recoverable,
 channel distribution, top risk factors) server-side, so the copilot's
 numbers always match what the investigator sees on screen instead of
 drifting from a second, unrelated implementation.
+
+Phase 2 hostile-review fix (CRITICAL): every function in this module
+(and in app.services.copilot.intents, which shares the same
+cases_for_tenant()/transactions_for_tenant() accessors below rather than
+reading data_store directly) now takes tenant_id and returns only that
+tenant's own cases/transactions. Previously this entire module read
+data_store unfiltered — any authenticated user (even a viewer) could
+have the copilot summarize, list, search, or aggregate ANY tenant's
+case/transaction data, live-verified via "explain case <id>", "show
+high-risk cases", "total fraud exposure", and freeform chat with no
+case selected. cases_for_tenant()/transactions_for_tenant() are the
+ONLY sanctioned way to read data_store["cases"]/["transactions"]
+anywhere in the copilot subsystem now — every other function in both
+modules goes through them, so there is exactly one place a future
+change could reintroduce this bug, not a dozen scattered direct reads.
 """
 
 from __future__ import annotations
 
-from app.core.constants import CaseStatus
+from app.core.constants import CaseStatus, DEFAULT_TENANT_ID
 from app.core.data_store import data_store
 from app.services.copilot.knowledge import patterns_for_signals
 
@@ -29,24 +44,43 @@ MAX_ACTIONS_IN_CONTEXT = 5
 MAX_HIGH_RISK_CASES_IN_CONTEXT = 5
 
 
-def _cases() -> dict:
-    return data_store.get("cases", {})
+def cases_for_tenant(tenant_id: str) -> dict:
+    """The single choke point for reading data_store["cases"] anywhere in
+    the copilot subsystem. `.get("tenant_id", DEFAULT_TENANT_ID)` matches
+    the same fallback app/api/cases.py's local-cache path uses: real
+    ingested cases never carry an explicit "tenant_id" key today
+    (ingestion is single-tenant — see app/api/transactions.py), so they
+    correctly default to DEFAULT_TENANT_ID rather than being invisible to
+    the one tenant that actually owns them."""
+    return {
+        cid: c for cid, c in data_store.get("cases", {}).items()
+        if c.get("tenant_id", DEFAULT_TENANT_ID) == tenant_id
+    }
 
 
-def _transactions() -> dict:
-    return data_store.get("transactions", {})
+def transactions_for_tenant(tenant_id: str) -> dict:
+    """Same as cases_for_tenant, for data_store["transactions"]."""
+    return {
+        tid: t for tid, t in data_store.get("transactions", {}).items()
+        if t.get("tenant_id", DEFAULT_TENANT_ID) == tenant_id
+    }
 
 
-def case_context(case_id: str) -> str:
+def case_context(case_id: str, tenant_id: str) -> str:
     """Full Markdown context for one case: status, risk, mule chain,
     transactions, and actions already taken. Used both as LLM context and
-    as the basis for the deterministic 'summarize case' structured intent."""
-    case = _cases().get(case_id)
+    as the basis for the deterministic 'summarize case' structured intent.
+    Returns the same "not found" message for a case that genuinely
+    doesn't exist and one that exists but belongs to a different tenant —
+    existence isn't leaked, matching app.core.repository.get_case_for_tenant's
+    behavior."""
+    case = cases_for_tenant(tenant_id).get(case_id)
     if not case:
         return f"No case found with ID `{case_id}`."
 
+    txs_by_id = transactions_for_tenant(tenant_id)
     tx_ids = case.get("transactions", [])
-    txs = [_transactions()[t] for t in tx_ids if t in _transactions()]
+    txs = [txs_by_id[t] for t in tx_ids if t in txs_by_id]
 
     lines = [
         f"**Case ID:** {case['case_id']}",
@@ -98,11 +132,11 @@ def case_context(case_id: str) -> str:
     return "\n".join(lines)
 
 
-def transaction_context(tx_id: str) -> str:
+def transaction_context(tx_id: str, tenant_id: str) -> str:
     """Full Markdown context for one transaction, including the scoring
     engine's risk-factor breakdown — this is what backs 'explain this
     transaction'/'why was TX-XXXX flagged' answers."""
-    tx = _transactions().get(tx_id)
+    tx = transactions_for_tenant(tenant_id).get(tx_id)
     if not tx:
         return f"No transaction found with ID `{tx_id}`."
 
@@ -135,12 +169,13 @@ def transaction_context(tx_id: str) -> str:
     )
 
 
-def dashboard_context() -> str:
+def dashboard_context(tenant_id: str) -> str:
     """Server-side mirror of Dashboard.jsx's client-side aggregate
     formulas, so copilot answers about system-wide stats always match
-    what's on screen."""
-    cases = list(_cases().values())
-    txs = list(_transactions().values())
+    what's on screen — "system-wide" meaning this tenant's own system,
+    never another tenant's aggregates folded in."""
+    cases = list(cases_for_tenant(tenant_id).values())
+    txs = list(transactions_for_tenant(tenant_id).values())
 
     total_fraud = sum(c.get("total_fraud_amount", 0.0) for c in cases)
     total_recoverable = sum(c.get("recoverable_amount", 0.0) for c in cases)
@@ -184,12 +219,12 @@ def dashboard_context() -> str:
     return "\n".join(lines)
 
 
-def general_context() -> str:
+def general_context(tenant_id: str) -> str:
     """No specific case selected — summarize the current overall picture
     (dashboard stats + top high-risk cases) instead of a static
     'no context' placeholder, so the copilot stays useful without a
-    selection."""
-    cases = list(_cases().values())
+    selection. Scoped to tenant_id's own cases only."""
+    cases = list(cases_for_tenant(tenant_id).values())
     if not cases:
         return "No cases exist yet. The system has not detected any fraud activity."
 
@@ -200,7 +235,7 @@ def general_context() -> str:
 
     lines = [
         "No specific case is selected. Current overall picture:",
-        dashboard_context(),
+        dashboard_context(tenant_id),
     ]
     if high_risk_sorted:
         lines.append("\n**Top High-Risk Cases by Urgency:**")
@@ -214,10 +249,10 @@ def general_context() -> str:
     return "\n".join(lines)
 
 
-def build_for_request(context_case_id: str | None) -> str:
+def build_for_request(context_case_id: str | None, tenant_id: str) -> str:
     """Entry point for copilot.py's freeform (non-structured-intent) LLM
     path: case-specific context when a case is selected, otherwise a
-    system-wide summary."""
+    system-wide (this tenant's own system) summary."""
     if context_case_id:
-        return case_context(context_case_id)
-    return general_context()
+        return case_context(context_case_id, tenant_id)
+    return general_context(tenant_id)

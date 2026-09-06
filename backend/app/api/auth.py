@@ -23,10 +23,15 @@ router = APIRouter()
 
 @router.post("/auth/login")
 def login(payload: LoginRequest) -> dict[str, Any]:
-    # Checked before touching the password at all: a locked-out username
-    # doesn't get a fresh authenticate() call (and therefore no fresh
-    # verify_password() timing signal) once it's already over the limit.
-    if login_guard.is_locked_out(payload.username):
+    # Atomically counts this attempt and checks it against the limit in
+    # one step — see login_guard.register_attempt()'s docstring for why
+    # this must be a single atomic call rather than a separate check
+    # followed later by a separate increment (that split had a TOCTOU
+    # race under concurrent requests, live-verified during the Phase 2
+    # hostile review). A rejected attempt never reaches authenticate()
+    # at all, so a locked-out username gets no verify_password() timing
+    # signal either.
+    if not login_guard.register_attempt(payload.username):
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Too many failed login attempts. Try again later.",
@@ -34,7 +39,6 @@ def login(payload: LoginRequest) -> dict[str, Any]:
 
     result = authenticate(payload.username, payload.password)
     if not result:
-        login_guard.record_failure(payload.username)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
 
     role, tenant_id = result

@@ -42,7 +42,6 @@ from fastapi.responses import StreamingResponse
 
 from app.api.actions import handle_action
 from app.api.schemas import ActionRequest, CopilotRequest
-from app.core.data_store import data_store
 from app.core.deps import get_current_user
 from app.services.ai_providers import get_provider
 from app.services.copilot import (
@@ -55,6 +54,7 @@ from app.services.copilot import (
     match_structured_intent,
     resolve_conversation,
 )
+from app.services.copilot.context_builder import cases_for_tenant, transactions_for_tenant
 from app.services.copilot.rate_limit import rate_limited_user
 
 logger = logging.getLogger("sentinel.copilot")
@@ -125,7 +125,22 @@ async def _resolve_action_intent(
                 None,
             )
         action_payload = ActionRequest(case_id=req.context_case_id, target_id="GLOBAL", reason="AI Copilot Action")
-        await handle_action("freeze", action_payload, tenant_id)
+        result = await handle_action("freeze", action_payload, tenant_id)
+        # Phase 2 hostile-review fix (HIGH): this used to discard
+        # handle_action()'s return value entirely and unconditionally
+        # report success — live-verified to claim "Action Executed" even
+        # when the case lookup failed (e.g. a cross-tenant or nonexistent
+        # case_id), which in a system whose whole premise is stopping a
+        # mule withdrawal inside a golden window is a false assurance
+        # that can directly cost real recoverable funds. Never report
+        # success unless the server itself confirms it.
+        if not result.get("ok"):
+            error = result.get("error", "unknown_error")
+            reply = (
+                f"⚠️ **Action Failed:** I could not freeze Case `{req.context_case_id}` "
+                f"({error}). No accounts were frozen — please verify the case ID."
+            )
+            return (reply, None)
         reply = (
             "✅ **Action Executed:** I have applied a **FREEZE** on all accounts associated with "
             f"Case `{req.context_case_id}` to prevent further fund movement."
@@ -139,25 +154,43 @@ async def _resolve_action_intent(
                 None,
             )
         action_payload = ActionRequest(case_id=req.context_case_id, reason="AI Copilot closed")
-        await handle_action("close", action_payload, tenant_id)
+        result = await handle_action("close", action_payload, tenant_id)
+        if not result.get("ok"):
+            error = result.get("error", "unknown_error")
+            reply = (
+                f"⚠️ **Action Failed:** I could not close Case `{req.context_case_id}` "
+                f"({error}). The case was not modified — please verify the case ID."
+            )
+            return (reply, None)
         reply = f"✅ **Action Executed:** Case `{req.context_case_id}` has been **closed** and marked as resolved."
         return (reply, {"type": "CLOSE_CASE", "case_id": req.context_case_id})
 
     return None
 
 
-def _offline_fallback_reply(context_case_id: str | None, message: str) -> str:
+def _offline_fallback_reply(context_case_id: str | None, message: str, tenant_id: str) -> str:
     """High-quality dynamic simulator used whenever no live provider
     answered (missing/invalid key, network error, rate limit, or an
-    unimplemented stub provider selected)."""
+    unimplemented stub provider selected).
+
+    Phase 2 hostile-review fix: this used to read app.core.data_store
+    directly and unscoped — an authenticated user from ANY tenant could
+    get another tenant's case/transaction amounts and account IDs
+    rendered here just by supplying that case_id as context_case_id
+    (live-verified: no admin role or Postgres access needed, only a
+    guessable-ish case_id). Now goes through the same tenant-scoped
+    accessors as everything else in the copilot subsystem — a
+    cross-tenant (or nonexistent) case_id falls through to the generic
+    "no case selected" branches below, exactly like a genuinely unknown
+    case_id always has."""
     case_id = context_case_id or "UNKNOWN"
-    if context_case_id and context_case_id in data_store.get("cases", {}):
-        case = data_store["cases"][context_case_id]
+    tenant_cases = cases_for_tenant(tenant_id)
+    if context_case_id and context_case_id in tenant_cases:
+        case = tenant_cases[context_case_id]
         risk = case.get("risk_level", 50)
         tx_ids = case.get("transactions", [])
-        txs = [
-            data_store.get("transactions", {}).get(t) for t in tx_ids if t in data_store.get("transactions", {})
-        ]
+        tenant_txs = transactions_for_tenant(tenant_id)
+        txs = [tenant_txs.get(t) for t in tx_ids if t in tenant_txs]
         amount = txs[0].get("amount", 0.0) if txs else 0.0
         sender = txs[0].get("sender_account", "N/A") if txs else "N/A"
         receiver = txs[0].get("receiver_account", "N/A") if txs else "N/A"
@@ -234,15 +267,16 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(rate_limited_us
         # like "why was TX-ABC123 flagged?" gets the exact scoring-engine
         # breakdown rather than an LLM's paraphrase of it.
         action_taken = None
-        structured_reply = match_structured_intent(req.message)
+        structured_reply = match_structured_intent(req.message, user["tenant_id"])
         if structured_reply is not None:
             reply = structured_reply
             provider_used = "structured"
         else:
             # Freeform: delegate to the configured AIProvider, fed context
             # built from SENTINEL's own case/transaction/dashboard data
-            # (never generic internet knowledge).
-            context_data = build_for_request(req.context_case_id)
+            # (never generic internet knowledge) — scoped to this
+            # investigator's own tenant.
+            context_data = build_for_request(req.context_case_id, user["tenant_id"])
             provider_success = False
             try:
                 provider = get_provider()
@@ -261,7 +295,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(rate_limited_us
                 provider_success = False
 
             if not provider_success:
-                reply = _offline_fallback_reply(req.context_case_id, req.message)
+                reply = _offline_fallback_reply(req.context_case_id, req.message, user["tenant_id"])
                 provider_used = "offline_fallback"
 
     add_message(conversation_id, "assistant", reply, action=action_taken, provider=provider_used)
@@ -314,13 +348,13 @@ async def copilot_chat_stream(req: CopilotRequest, user: dict = Depends(rate_lim
                 reply_parts.append(reply)
                 yield _emit({"type": "delta", "text": reply})
             else:
-                structured_reply = match_structured_intent(req.message)
+                structured_reply = match_structured_intent(req.message, user["tenant_id"])
                 if structured_reply is not None:
                     provider_used = "structured"
                     reply_parts.append(structured_reply)
                     yield _emit({"type": "delta", "text": structured_reply})
                 else:
-                    context_data = build_for_request(req.context_case_id)
+                    context_data = build_for_request(req.context_case_id, user["tenant_id"])
                     streamed_any = False
                     try:
                         provider = get_provider()
@@ -341,7 +375,7 @@ async def copilot_chat_stream(req: CopilotRequest, user: dict = Depends(rate_lim
                         streamed_any = False
 
                     if not streamed_any:
-                        fallback_reply = _offline_fallback_reply(req.context_case_id, req.message)
+                        fallback_reply = _offline_fallback_reply(req.context_case_id, req.message, user["tenant_id"])
                         provider_used = "offline_fallback"
                         reply_parts.append(fallback_reply)
                         yield _emit({"type": "delta", "text": fallback_reply})

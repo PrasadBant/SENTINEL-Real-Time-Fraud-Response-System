@@ -14,7 +14,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends
 
 from app.api.presenters import build_tx_event, case_payload
-from app.core.constants import AccountStatus, CaseStatus
+from app.core.constants import AccountStatus, CaseStatus, DEFAULT_TENANT_ID
 from app.core.config import WITHDRAWAL_DELAY_SECONDS
 from app.core.data_store import data_store
 from app.core.deps import verify_simulator_key
@@ -74,14 +74,21 @@ async def process_tx(tx_in: Transaction) -> dict[str, Any]:
 
     result = run_pipeline(tx, data_store)
 
+    # Ingestion is single-tenant today (one shared SIMULATOR_API_KEY, no
+    # per-request investigator identity — see app/api/cases.py's module
+    # docstring for this scope boundary) — every transaction/case
+    # broadcast from this endpoint belongs to DEFAULT_TENANT_ID, exactly
+    # like every other pipeline-internal read/write already does
+    # (repository.list_all_cases(), orchestrator.py's cross-replica
+    # fallback, etc).
     transaction = result.get("transaction") or {}
     tx_event = build_tx_event(transaction, default_channel="UPI")
-    await manager.broadcast(tx_event)
+    await manager.broadcast(tx_event, DEFAULT_TENANT_ID)
 
     case = result.get("case")
     if case:
         case_event = {"event": "case_updated", **case_payload(case)}
-        await manager.broadcast(case_event)
+        await manager.broadcast(case_event, DEFAULT_TENANT_ID)
 
         # ── Persist to Postgres (thread-pool, non-blocking) ─────────────
         try:

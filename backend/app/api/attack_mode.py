@@ -15,6 +15,7 @@ from typing import Any
 from fastapi import APIRouter, Depends
 
 from app.api.presenters import build_tx_event, case_payload
+from app.core.constants import DEFAULT_TENANT_ID
 from app.core.data_store import data_store
 from app.core.deps import require_role
 from app.services.orchestrator import run_pipeline
@@ -64,10 +65,15 @@ async def _fire_burst() -> None:
         result = run_pipeline(tx, data_store)
         transaction = result.get("transaction") or {}
         tx_event = build_tx_event(transaction, default_channel="NEFT")
-        await manager.broadcast(tx_event)
+        # Injected straight into the shared ingestion pipeline (same as
+        # POST /transaction) — DEFAULT_TENANT_ID, not the triggering
+        # admin's own tenant_id, for the same reason transactions.py
+        # uses it: this is pipeline-internal traffic, not a per-tenant
+        # investigator action.
+        await manager.broadcast(tx_event, DEFAULT_TENANT_ID)
         case = result.get("case")
         if case:
-            await manager.broadcast({"event": "case_updated", **case_payload(case)})
+            await manager.broadcast({"event": "case_updated", **case_payload(case)}, DEFAULT_TENANT_ID)
         await asyncio.sleep(0.8)
 
 

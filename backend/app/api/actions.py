@@ -204,8 +204,8 @@ async def handle_action(action_name: str, payload: ActionRequest, tenant_id: str
         "timestamp": action_entry.get("timestamp", now_iso()),
     }
 
-    await manager.broadcast(response)
-    await manager.broadcast({"event": "case_updated", **case_payload(case)})
+    await manager.broadcast(response, tenant_id)
+    await manager.broadcast({"event": "case_updated", **case_payload(case)}, tenant_id)
     return response
 
 

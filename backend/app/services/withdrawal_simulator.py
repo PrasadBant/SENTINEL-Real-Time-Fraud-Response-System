@@ -47,7 +47,7 @@ import logging
 from datetime import datetime, timezone
 
 from app.api.presenters import case_payload
-from app.core.constants import AccountStatus
+from app.core.constants import AccountStatus, DEFAULT_TENANT_ID
 from app.core.data_store import data_store
 from app.core.logging_config import CORRELATION_ID
 from app.core.metrics import EC03_JOBS_FIRED_TOTAL
@@ -108,6 +108,11 @@ async def run_withdrawal_job(ctx, case_id: str, suspect_node_id: str, correlatio
             "Withdrawal ABORTED — node %s already %s (investigator acted in time!)",
             suspect_node_id, current_status,
         )
+        # DEFAULT_TENANT_ID: this job's case_id/suspect_node_id come from
+        # data_store["graphs"] — the single ingestion tenant's own data
+        # (see module docstring) — same reasoning as every other
+        # pipeline-internal broadcast (transactions.py, attack_mode.py,
+        # global_graph_analyzer.py).
         await manager.broadcast({
             "event": "withdrawal_prevented",
             "case_id": case_id,
@@ -117,7 +122,7 @@ async def run_withdrawal_job(ctx, case_id: str, suspect_node_id: str, correlatio
                 f"was prevented — node was already {current_status}."
             ),
             "timestamp": _now_iso(),
-        })
+        }, DEFAULT_TENANT_ID)
         return
 
     # ── Execute the withdrawal ────────────────────────────────────────────
@@ -150,7 +155,7 @@ async def run_withdrawal_job(ctx, case_id: str, suspect_node_id: str, correlatio
         # which would surface earlier via withdrawal_queue) should be
         # retryable — a Postgres write failure here shouldn't be.
         try:
-            repository.save_case(case)
+            repository.save_case(case, tenant_id=DEFAULT_TENANT_ID)
         except Exception as _e:
             logger.error("Persistence error: %s", _e)
 
@@ -166,10 +171,10 @@ async def run_withdrawal_job(ctx, case_id: str, suspect_node_id: str, correlatio
                 f"₹{prev_balance:,.2f} drained — recovery window closed."
             ),
             "timestamp": _now_iso(),
-        })
+        }, DEFAULT_TENANT_ID)
 
         # Also push a case_updated event so the UI graph refreshes
         try:
-            await manager.broadcast({"event": "case_updated", **case_payload(case)})
+            await manager.broadcast({"event": "case_updated", **case_payload(case)}, DEFAULT_TENANT_ID)
         except Exception:
             pass  # non-critical — next TX will refresh anyway

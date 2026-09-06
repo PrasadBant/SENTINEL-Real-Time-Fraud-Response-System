@@ -3,11 +3,12 @@ SENTINEL — Copilot Structured Intents
 =========================================
 Deterministic, data-exact answers for questions the LLM shouldn't be
 trusted to compute or transcribe from context on its own — lookups,
-counts, and sums are done here in Python against data_store directly,
-not asked of an LLM that could round a number wrong or hallucinate a
-transaction ID. match_structured_intent() returns a formatted Markdown
-reply for anything it recognizes, or None so copilot.py falls through
-to the freeform LLM path (context_builder.build_for_request()).
+counts, and sums are done here in Python against the tenant-scoped
+accessors in app.services.copilot.context_builder, not asked of an LLM
+that could round a number wrong or hallucinate a transaction ID.
+match_structured_intent() returns a formatted Markdown reply for
+anything it recognizes, or None so copilot.py falls through to the
+freeform LLM path (context_builder.build_for_request()).
 
 Domain note: SENTINEL is bank-transfer/mule-chain fraud (sender/
 receiver accounts, channels, hop chains) — there is no merchant/
@@ -18,6 +19,18 @@ decision this phase was built under).
 This module intentionally does NOT handle the admin-gated freeze/close
 action intents — those stay in copilot.py, unchanged, with their own
 role check. Everything here is read-only.
+
+Phase 2 hostile-review fix (CRITICAL): every function below now takes
+tenant_id and reads exclusively through
+context_builder.cases_for_tenant()/transactions_for_tenant() — never
+app.core.data_store directly. Previously every function here read
+data_store unfiltered, so any authenticated user could get the copilot
+to summarize/list/search/aggregate ANY tenant's data (live-verified
+during the hostile review: "show high-risk cases", "explain case
+<id>", "show transactions over X", "highest risk sender" all leaked
+cross-tenant). Routing everything through those two accessors means
+there's exactly one place tenant filtering happens, not one per
+function that could individually be gotten wrong or forgotten later.
 """
 
 from __future__ import annotations
@@ -25,8 +38,13 @@ from __future__ import annotations
 import re
 
 from app.core.constants import CaseStatus
-from app.core.data_store import data_store
-from app.services.copilot.context_builder import case_context, dashboard_context, transaction_context
+from app.services.copilot.context_builder import (
+    cases_for_tenant,
+    case_context,
+    dashboard_context,
+    transaction_context,
+    transactions_for_tenant,
+)
 from app.services.copilot.knowledge import (
     find_general_concept,
     find_pattern,
@@ -86,12 +104,12 @@ def _find_account_id(message: str) -> str | None:
     return m.group(0).upper() if m else None
 
 
-def _explain_transaction(tx_id: str) -> str:
-    context = transaction_context(tx_id)
+def _explain_transaction(tx_id: str, tenant_id: str) -> str:
+    context = transaction_context(tx_id, tenant_id)
     if context.startswith("No transaction"):
         return context
 
-    tx = data_store.get("transactions", {}).get(tx_id, {})
+    tx = transactions_for_tenant(tenant_id).get(tx_id, {})
     fired = {f["name"] for f in tx.get("risk_factors", []) if f.get("contribution", 0) > 0}
     matched = patterns_for_signals(fired)
     pattern_block = ""
@@ -102,15 +120,15 @@ def _explain_transaction(tx_id: str) -> str:
     return f"**Transaction Analysis — `{tx_id}`**\n\n{context}{pattern_block}"
 
 
-def _summarize_case(case_id: str) -> str:
-    context = case_context(case_id)
+def _summarize_case(case_id: str, tenant_id: str) -> str:
+    context = case_context(case_id, tenant_id)
     if context.startswith("No case"):
         return context
     return f"**Case Summary — `{case_id}`**\n\n{context}"
 
 
-def _list_high_risk_cases() -> str:
-    cases = [c for c in data_store.get("cases", {}).values() if c.get("status") == CaseStatus.HIGH_RISK]
+def _list_high_risk_cases(tenant_id: str) -> str:
+    cases = [c for c in cases_for_tenant(tenant_id).values() if c.get("status") == CaseStatus.HIGH_RISK]
     if not cases:
         return "There are currently no open HIGH_RISK cases."
     cases.sort(key=lambda c: c.get("urgency_score", 0), reverse=True)
@@ -126,10 +144,10 @@ def _list_high_risk_cases() -> str:
     return "\n".join(lines)
 
 
-def _recommend_next() -> str:
+def _recommend_next(tenant_id: str) -> str:
     active = [
         c
-        for c in data_store.get("cases", {}).values()
+        for c in cases_for_tenant(tenant_id).values()
         if c.get("status") in (CaseStatus.NEW, CaseStatus.HIGH_RISK)
     ]
     if not active:
@@ -141,7 +159,8 @@ def _recommend_next() -> str:
     # showing the same four generic steps regardless of what kind of
     # fraud this looks like (see app.services.copilot.knowledge).
     tx_ids = top.get("transactions", [])
-    txs = [data_store.get("transactions", {}).get(t) for t in tx_ids if t in data_store.get("transactions", {})]
+    tenant_txs = transactions_for_tenant(tenant_id)
+    txs = [tenant_txs.get(t) for t in tx_ids if t in tenant_txs]
     fired_signals = {
         f["name"] for tx in txs for f in (tx or {}).get("risk_factors", []) if f.get("contribution", 0) > 0
     }
@@ -177,13 +196,13 @@ def _recommend_next() -> str:
     )
 
 
-def _dashboard_stats_answer() -> str:
-    return f"**Current Dashboard Statistics:**\n\n{dashboard_context()}"
+def _dashboard_stats_answer(tenant_id: str) -> str:
+    return f"**Current Dashboard Statistics:**\n\n{dashboard_context(tenant_id)}"
 
 
-def _highest_risk_account(role: str) -> str:
+def _highest_risk_account(role: str, tenant_id: str) -> str:
     """role: 'sender_account' or 'receiver_account'."""
-    txs = list(data_store.get("transactions", {}).values())
+    txs = list(transactions_for_tenant(tenant_id).values())
     agg: dict[str, dict] = {}
     for t in txs:
         acc = t.get(role)
@@ -208,14 +227,15 @@ def _highest_risk_account(role: str) -> str:
 def _explain_fraud_knowledge(message: str) -> str | None:
     """Deterministic 'what is X / how does X work' answers from the fraud
     knowledge base (see app.services.copilot.knowledge) — None if message
-    doesn't name a recognized pattern or concept."""
+    doesn't name a recognized pattern or concept. Static reference
+    content, not tenant data — no tenant_id needed."""
     pattern = find_pattern(message)
     if pattern is not None:
         return format_pattern_reply(pattern)
     return find_general_concept(message)
 
 
-def _search_transactions(message: str) -> str | None:
+def _search_transactions(message: str, tenant_id: str) -> str | None:
     msg_lower = message.lower()
     if not any(v in msg_lower for v in _SEARCH_VERBS):
         return None  # not phrased as a search — let the LLM path handle it
@@ -228,7 +248,7 @@ def _search_transactions(message: str) -> str | None:
     if not (channel or account or min_amount):
         return None  # a search verb alone isn't enough — no actual filter given
 
-    txs = list(data_store.get("transactions", {}).values())
+    txs = list(transactions_for_tenant(tenant_id).values())
     if channel:
         txs = [t for t in txs if t.get("channel") == channel]
     if account:
@@ -262,11 +282,15 @@ def _search_transactions(message: str) -> str | None:
     return "\n".join(lines)
 
 
-def match_structured_intent(message: str) -> str | None:
+def match_structured_intent(message: str, tenant_id: str) -> str | None:
     """
     Returns a deterministic Markdown reply for a recognized structured
     intent, or None if the message doesn't match anything here (in which
     case copilot.py falls through to the freeform LLM path).
+
+    tenant_id scopes every data-touching branch below to the requesting
+    investigator's own tenant (Phase 2 hostile-review fix) — see the
+    module docstring.
 
     Order matters: specific ID lookups first (most unambiguous), then
     fraud-knowledge questions (specific named patterns/concepts), then
@@ -277,29 +301,29 @@ def match_structured_intent(message: str) -> str | None:
 
     tx_id = _find_tx_id(message)
     if tx_id:
-        return _explain_transaction(tx_id)
+        return _explain_transaction(tx_id, tenant_id)
 
     case_id = _find_case_id(message)
     if case_id:
-        return _summarize_case(case_id)
+        return _summarize_case(case_id, tenant_id)
 
     knowledge_reply = _explain_fraud_knowledge(message)
     if knowledge_reply is not None:
         return knowledge_reply
 
     if any(p in msg_lower for p in _SENDER_RISK_PHRASES):
-        return _highest_risk_account("sender_account")
+        return _highest_risk_account("sender_account", tenant_id)
 
     if any(p in msg_lower for p in _RECEIVER_RISK_PHRASES):
-        return _highest_risk_account("receiver_account")
+        return _highest_risk_account("receiver_account", tenant_id)
 
     if any(p in msg_lower for p in _HIGH_RISK_LIST_PHRASES):
-        return _list_high_risk_cases()
+        return _list_high_risk_cases(tenant_id)
 
     if any(p in msg_lower for p in _NEXT_STEP_PHRASES):
-        return _recommend_next()
+        return _recommend_next(tenant_id)
 
     if any(p in msg_lower for p in _DASHBOARD_PHRASES):
-        return _dashboard_stats_answer()
+        return _dashboard_stats_answer(tenant_id)
 
-    return _search_transactions(message)
+    return _search_transactions(message, tenant_id)
