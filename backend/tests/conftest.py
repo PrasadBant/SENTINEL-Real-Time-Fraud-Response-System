@@ -30,6 +30,16 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 _TEST_DB_PATH = os.path.join(tempfile.gettempdir(), f"sentinel_test_{uuid.uuid4().hex}.db")
 os.environ["DATABASE_URL"] = os.getenv("TEST_DATABASE_URL", f"sqlite:///{_TEST_DB_PATH}")
 
+# Same "must happen before `import main`" reasoning: app.core.users now
+# raises at import time if ADMIN_PASSWORD/VIEWER_PASSWORD aren't set (it
+# no longer falls back to admin123/viewer123). setdefault (not a hard
+# overwrite) so a real deployment's env still wins if these somehow leak
+# into that environment's process.
+os.environ.setdefault("ADMIN_USERNAME", "admin")
+os.environ.setdefault("ADMIN_PASSWORD", "admin123")
+os.environ.setdefault("VIEWER_USERNAME", "viewer")
+os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
+
 from fastapi.testclient import TestClient
 
 import main
