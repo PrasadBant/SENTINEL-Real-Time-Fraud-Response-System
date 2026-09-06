@@ -23,6 +23,28 @@ services:
     # app/core/repository.py. Its own durability is Postgres's problem
     # (WAL + this named volume), not something compose needs to manage.
 
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel_redis
+    # AOF persistence matters specifically because Phase 1's durability
+    # goal is "the EC-03 withdrawal schedule survives a restart" — that
+    # requires Redis itself to persist across a `docker compose down &&
+    # up`, not just an API-container-only restart. Redis is still
+    # cache/queue here, never a second source of truth: velocity_cache/
+    # accounts are fully rebuildable from Postgres (see
+    # repository.load_all()), and a lost EC-03 schedule just means a
+    # missed simulated countdown, not lost financial data.
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   api:
     build: ./backend
     container_name: sentinel_api
@@ -30,6 +52,7 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql+psycopg://sentinel:sentinel@postgres:5432/sentinel
+      - REDIS_URL=redis://redis:6379/0
       - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in a repo-root .env — see .env.example}
       - VIEWER_USERNAME=${VIEWER_USERNAME:-viewer}
@@ -43,6 +66,8 @@ services:
       - HF_API_KEY=${HF_API_KEY:-}
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     restart: unless-stopped
     # No wait/retry logic for the Postgres connection beyond compose's
@@ -77,4 +102,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   # neo4j_data:

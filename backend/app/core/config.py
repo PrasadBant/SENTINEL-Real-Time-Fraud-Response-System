@@ -14,7 +14,16 @@ MEDIUM_THRESHOLD = 40
 # --- SYSTEM CONFIG ---
 DECAY_FACTOR = 0.85
 GOLDEN_WINDOW_MINUTES = 20
-WITHDRAWAL_DELAY_SECONDS = 40
+# Was a bare hardcoded constant; every other value below it in this file
+# is env-overridable, so this one-line fix just closes that inconsistency
+# (Phase 1, landed alongside REDIS_URL below — not otherwise related).
+WITHDRAWAL_DELAY_SECONDS = int(os.getenv("WITHDRAWAL_DELAY_SECONDS", "40"))
+
+# --- REDIS (Phase 1: shared velocity/account state, WS pub/sub fanout,
+# EC-03 job scheduling — see app/core/redis_client.py,
+# app/services/orchestrator.py, app/websocket/connection_manager.py,
+# app/services/withdrawal_queue.py) ---
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
 # --- AUTH ---
 # JWT signing key. Falls back to a random key generated at process start if

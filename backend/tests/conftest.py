@@ -13,6 +13,12 @@ synthetic usernames into it. It now runs against a throwaway SQLite file
 per session instead (see the DATABASE_URL override below) — set
 TEST_DATABASE_URL to point it at something else (e.g. a Postgres test
 instance in CI).
+
+Same "container-free by default" posture for Redis: unless TEST_REDIS_URL
+is set, app.core.redis_client's accessors are swapped for fakeredis
+in-memory instances below, so velocity-cache/account/WS-pub-sub/EC-03
+code paths run without a real Redis. See tests/test_redis_integration.py
+for the narrow opt-in suite that runs against a real one instead.
 """
 
 import os
@@ -39,6 +45,28 @@ os.environ.setdefault("ADMIN_USERNAME", "admin")
 os.environ.setdefault("ADMIN_PASSWORD", "admin123")
 os.environ.setdefault("VIEWER_USERNAME", "viewer")
 os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
+
+# Redis: same escape hatch shape as TEST_DATABASE_URL above. If a real
+# Redis instance is supplied, just point REDIS_URL at it and let
+# app.core.redis_client connect for real (this is also how
+# tests/test_redis_integration.py's TEST_REDIS_URL is meant to be used
+# for a full-suite run). Otherwise, substitute fakeredis instances by
+# replacing get_redis()/get_async_redis() themselves — not their return
+# values — since app code calls these via the `redis_client` module
+# reference (e.g. `redis_client.get_redis()`), never via a
+# `from ... import get_redis` binding, specifically so this kind of
+# module-level monkeypatch reaches every call site.
+from app.core import redis_client  # noqa: E402
+
+if "TEST_REDIS_URL" in os.environ:
+    os.environ["REDIS_URL"] = os.environ["TEST_REDIS_URL"]
+else:
+    import fakeredis  # noqa: E402
+
+    _fake_sync_redis = fakeredis.FakeRedis(decode_responses=True)
+    _fake_async_redis = fakeredis.FakeAsyncRedis(decode_responses=True)
+    redis_client.get_redis = lambda: _fake_sync_redis
+    redis_client.get_async_redis = lambda: _fake_async_redis
 
 from fastapi.testclient import TestClient
 
