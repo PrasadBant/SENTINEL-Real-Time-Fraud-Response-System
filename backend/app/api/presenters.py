@@ -7,12 +7,16 @@ every router that returns transaction or case data, and by the
 WebSocket broadcast payloads.
 """
 
+import logging
 from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
 from app.core.constants import AccountStatus, ActionStatus, CaseStatus
 from app.core.data_store import data_store
+from app.core.repository import repository
+
+logger = logging.getLogger("sentinel.presenters")
 
 
 def now_iso() -> str:
@@ -99,13 +103,36 @@ def normalize_action_log(case: dict[str, Any]) -> list[dict[str, Any]]:
 
 def case_payload(case: dict[str, Any]) -> dict[str, Any]:
     case_id = case.get("case_id", "")
+    # graph nodes/edges are NOT fetched from Postgres — graph state isn't
+    # persisted or Redis-shared anywhere today (a pre-existing, documented
+    # gap; real graph persistence is Phase 5's job), so this stays a
+    # best-effort, this-replica-only view: empty if this process never
+    # built the graph for `case_id` itself (e.g. a different replica
+    # created the case). Everything else in this payload (status, chain,
+    # risk_level, actionLog, and — as of the fallback below — the
+    # transactions list) is fully replica-safe.
     graph = data_store.get("graphs", {}).get(case_id, {"nodes": [], "edges": []})
     nodes = normalize_nodes(graph.get("nodes", []))
     edges = normalize_edges(graph.get("edges", []))
-    # Fetch full transaction objects linked to this case
+    # Fetch full transaction objects linked to this case — fall back to
+    # Postgres for any tx_id this process hasn't personally handled
+    # (hostile-review fix: previously silently dropped from the list).
+    # Only ever queries for tx_ids actually missing locally, so the
+    # common case (a case this replica already knows about) costs
+    # nothing extra.
     tx_ids = case.get("transactions", [])
     tx_store = data_store.get("transactions", {})
-    transactions = [tx_store[tid] for tid in tx_ids if tid in tx_store]
+    transactions = []
+    for tid in tx_ids:
+        tx = tx_store.get(tid)
+        if tx is None:
+            try:
+                tx = repository.get_transaction(tid)
+            except Exception as e:
+                logger.warning("Transaction hydration degraded for %s: %s", tid, e)
+                tx = None
+        if tx is not None:
+            transactions.append(tx)
 
     return {
         "case_id": case_id,

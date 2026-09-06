@@ -16,6 +16,24 @@ _BRIDGE_ALERT_RESET_CYCLES = 240  # ~1 hour at 15s/cycle
 _BRIDGE_ALERT_MAX_SIZE = 5000
 
 async def run_global_graph_analyzer(manager, store: dict):
+    """Proactive bridge-node detector — builds a NetworkX graph from
+    store["transactions"] every 15s and flags high-betweenness-centrality
+    nodes.
+
+    Deliberately NOT made cross-replica-consistent by this fix pass:
+    store["transactions"] here is this process's own local cache, so
+    under multiple API replicas each one's analyzer only sees the subset
+    of transactions IT has personally processed, and each runs its own
+    independent 15s cycle (redundant work, and each may alert on a bridge
+    node the others already alerted on, or miss one only visible in
+    another replica's transaction set). This is an accepted, documented
+    gap, not an oversight: it degrades the proactive-monitoring FEATURE
+    (fewer/duplicate detections) rather than corrupting data or crashing
+    anything, and a real fix means either querying Postgres for the full
+    transaction set every cycle (expensive, redundant across replicas) or
+    electing a single-instance-wide leader for this job — both are
+    meaningfully bigger architectural changes than this fix pass's scope
+    (see the build plan's explicit "no microservices/new infra" bound)."""
     logger.info("Background analyzer started (15s loop)")
     cycle = 0
     while True:

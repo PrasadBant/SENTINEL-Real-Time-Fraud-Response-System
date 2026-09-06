@@ -34,8 +34,39 @@ logger = logging.getLogger("sentinel.actions")
 router = APIRouter()
 
 
-def _record_action(case_id: str, action_type: str, target_id: str, status: str, reason: str | None = None) -> dict[str, Any]:
+def _get_or_hydrate_case(case_id: str) -> dict | None:
+    """Look up a case locally first; if missing, fall back to Postgres
+    (the durable source of truth) and cache the hit into data_store so
+    later lookups in this process are local. Hostile-review fix: without
+    this, an investigator's freeze/close/monitor action against a case
+    another API replica created would 404 with "case_not_found" even
+    though the case genuinely exists — which replica happens to serve a
+    given request is an accident of load balancing, not something an
+    investigator should have to know or care about.
+
+    Note the limit of what this fixes: it restores case-level status/
+    actions-taken consistency across replicas. It does NOT make a freeze's
+    node-level effect (data_store["graphs"][case_id]["nodes"]) visible to
+    other replicas — graph state isn't persisted or Redis-shared at all
+    today (a pre-existing, documented gap; real graph persistence is
+    Phase 5's job). A freeze against a case hydrated from Postgres this
+    way will correctly update the case's status and audit trail, but may
+    freeze zero nodes if this replica never built that case's graph."""
     case = data_store.get("cases", {}).get(case_id)
+    if case is not None:
+        return case
+    try:
+        case = repository.get_case(case_id)
+    except Exception as e:
+        logger.warning("Postgres case lookup degraded for %s: %s", case_id, e)
+        return None
+    if case is not None:
+        data_store.setdefault("cases", {})[case_id] = case
+    return case
+
+
+def _record_action(case_id: str, action_type: str, target_id: str, status: str, reason: str | None = None) -> dict[str, Any]:
+    case = _get_or_hydrate_case(case_id)
     if not case:
         return {}
     entry = {
@@ -70,11 +101,29 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
         elif action_type == ActionTypes.CLOSE_FP:
             case["status"] = CaseStatus.CLOSED_FP
 
+    # Persist the case's updated status/actions_taken to Postgres. This
+    # was a pre-existing gap, exposed rather than introduced by the
+    # hostile-review fix: GET /cases (app/api/cases.py) now reads from
+    # Postgres for cross-replica correctness, and its action log
+    # (app/api/presenters.py's normalize_action_log) reads
+    # case["actions_taken"] from the CASE payload, not a separate query —
+    # so a status change or a new action-log entry that only ever lived
+    # in this process's local data_store dict would otherwise appear to
+    # silently revert/disappear once viewed through the Postgres-backed
+    # endpoint. save_action() above only persists the audit-log row in
+    # its own table; this call is what makes the case's own view of its
+    # status and action history durable and visible everywhere, not just
+    # in the process that happened to handle this specific action.
+    try:
+        repository.save_case(case)
+    except Exception as _pe:
+        logger.warning("Case write error: %s", _pe)
+
     return entry
 
 
 async def handle_action(action_name: str, payload: ActionRequest) -> dict[str, Any]:
-    case = data_store.get("cases", {}).get(payload.case_id)
+    case = _get_or_hydrate_case(payload.case_id)
     target_id = payload.account_id or payload.target_id or "GLOBAL"
     if not case:
         return {

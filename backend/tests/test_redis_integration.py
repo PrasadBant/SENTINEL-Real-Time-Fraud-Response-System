@@ -108,6 +108,114 @@ def test_cross_client_pubsub_fanout(real_redis_url):
     assert received == ["hello-from-replica-a"]
 
 
+def test_connection_manager_listener_reconnects_after_disconnect(real_redis_url, monkeypatch):
+    """Fix 3 (hostile-review blocker): ConnectionManager.listen() must
+    survive a dropped Redis connection and keep delivering messages
+    afterward, not die permanently. Reproduces the exact failure mode
+    found during the hostile review (a live Redis restart permanently
+    killed the listener, with zero recovery) by force-killing the
+    listener's underlying connection via CLIENT KILL from a separate
+    admin connection — more reliable to automate here than actually
+    restarting a Redis server mid-test, and it exercises the identical
+    redis-py ConnectionError path a real restart does (confirmed
+    separately, by hand, against an actual `docker restart`).
+
+    Exercises the REAL app.websocket.connection_manager code (a fresh
+    ConnectionManager instance, not the module singleton, to avoid
+    interfering with any other listener the session-scoped `client`
+    fixture may have already started on the shared channel) — this is a
+    regression test of the actual fix, not a reimplementation of it.
+
+    IMPORTANT test-isolation note (found the hard way): when this whole
+    suite runs with TEST_REDIS_URL set, conftest.py does NOT substitute
+    fakeredis for anything — the session-scoped `client` fixture's own
+    app.websocket.connection_manager.manager singleton is ALSO subscribed
+    to the same real Redis server, on TestClient's own background
+    thread/event loop, for the rest of the session. An earlier version of
+    this test grabbed every `CLIENT LIST TYPE pubsub` address and killed
+    all of them — which also killed that other, unrelated listener, and
+    then (because monkeypatching `redis_client.get_async_redis` is a
+    global module-attribute patch) handed it this test's `real_async_client`
+    on its reconnect, corrupting it across threads/event loops and
+    producing a flaky, misleading failure that had nothing to do with the
+    reconnect logic under test. Fixed by diffing CLIENT LIST before/after
+    starting test_manager's own listener and killing only the address that
+    diff introduces — leaving any other real subscriber (like the app's
+    own singleton) completely alone.
+    """
+    import redis.asyncio as aioredis
+    from app.core import redis_client
+    from app.websocket.connection_manager import CHANNEL, ConnectionManager
+
+    real_async_client = aioredis.Redis.from_url(real_redis_url, decode_responses=True)
+    monkeypatch.setattr(redis_client, "get_async_redis", lambda: real_async_client)
+
+    test_manager = ConnectionManager()
+
+    class _FakeWS:
+        def __init__(self):
+            self.received = []
+
+        async def send_json(self, msg):
+            self.received.append(msg)
+
+    fake_ws = _FakeWS()
+    test_manager.active_connections.append(fake_ws)
+
+    def _pubsub_addrs(client_list: str) -> set[str]:
+        addrs = set()
+        for line in client_list.strip().split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            addr = next((f.split("=", 1)[1] for f in line.split(" ") if f.startswith("addr=")), None)
+            if addr:
+                addrs.add(addr)
+        return addrs
+
+    async def _run():
+        admin = aioredis.Redis.from_url(real_redis_url, decode_responses=True)
+        before = _pubsub_addrs(await admin.execute_command("CLIENT", "LIST", "TYPE", "pubsub"))
+
+        listener_task = asyncio.create_task(test_manager.listen())
+        await asyncio.sleep(0.3)  # let the subscribe register server-side
+
+        await test_manager.broadcast({"event": "before-kill"})
+        await asyncio.sleep(0.3)
+
+        after = _pubsub_addrs(await admin.execute_command("CLIENT", "LIST", "TYPE", "pubsub"))
+        new_addrs = after - before
+        killed = 0
+        for addr in new_addrs:
+            try:
+                await admin.execute_command("CLIENT", "KILL", "ADDR", addr)
+                killed += 1
+            except Exception:
+                pass
+        await admin.aclose()
+        assert killed > 0, (
+            "expected to identify and force-kill exactly this test's own "
+            f"pubsub connection(s); before={before} after={after}"
+        )
+
+        await asyncio.sleep(3)  # give the reconnect loop's backoff time to reconnect+resubscribe
+
+        await test_manager.broadcast({"event": "after-kill"})
+        await asyncio.sleep(1)
+
+        listener_task.cancel()
+        try:
+            await listener_task
+        except asyncio.CancelledError:
+            pass
+
+    asyncio.run(_run())
+
+    events = [m.get("event") for m in fake_ws.received]
+    assert "before-kill" in events, f"never received the pre-kill broadcast; received: {events}"
+    assert "after-kill" in events, f"listener did not recover after disconnect; received: {events}"
+
+
 def test_schedule_dedup_by_job_id(real_redis_url, ec03_enabled, monkeypatch):
     """Arq's own _job_id dedup: a second schedule() call with the same
     key while the first is still pending must be rejected, atomically —

@@ -47,9 +47,23 @@ services:
 
   api:
     build: ./backend
-    container_name: sentinel_api
+    # No container_name and no fixed host port here (unlike postgres/
+    # redis, which stay singletons): this service is meant to scale —
+    # `docker compose up -d --scale api=N`. A `container_name` forces a
+    # single, fixed container identity, which docker-compose refuses to
+    # reconcile with more than one replica (confirmed directly: `--scale
+    # api=2` errors outright with a fixed container_name and/or a fixed
+    # host port, since two replicas can't both claim the same name or
+    # bind the same host port). Exposing "8000" (container port only,
+    # no host mapping) lets Docker assign each replica its own ephemeral
+    # host port — `docker compose port api 8000` (or `docker ps`) shows
+    # which host port a given replica landed on. A real multi-replica
+    # deployment would put a load balancer in front of these instead of
+    # relying on ad hoc host ports; that's out of scope here (see the
+    # build plan's explicit scope cuts — no Kubernetes/reverse-proxy
+    # infra added for this).
     ports:
-      - "8000:8000"
+      - "8000"
     environment:
       - DATABASE_URL=postgresql+psycopg://sentinel:sentinel@postgres:5432/sentinel
       - REDIS_URL=redis://redis:6379/0

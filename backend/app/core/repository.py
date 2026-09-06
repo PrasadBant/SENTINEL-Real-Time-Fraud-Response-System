@@ -25,8 +25,16 @@ from sqlalchemy.exc import IntegrityError
 from app.core.constants import ActionStatus, CaseStatus, DEFAULT_TENANT_ID
 from app.core.database import SessionLocal
 from app.core.db_models import ActionRecord, CaseRecord, TransactionRecord
-from app.services import orchestrator
 from app.utils.json_codec import from_json as _from_json, to_json as _to_json
+
+# NOTE: app.services.orchestrator is imported lazily, inside load_all()
+# below, not here at module level. orchestrator.py needs to import THIS
+# module (to fall back to Postgres for cross-replica case lookups — see
+# the hostile-review fix in orchestrator.py's case-resolution code) —
+# a top-level `repository -> orchestrator -> repository` cycle would
+# make one of the two modules fail to import. Deferring this one import
+# to call time (by which point both modules are fully loaded) breaks
+# the cycle without changing behavior.
 
 logger = logging.getLogger("sentinel.repository")
 
@@ -102,6 +110,33 @@ class Repository:
         finally:
             db.close()
 
+    def get_transaction(self, tx_id: str) -> dict | None:
+        """Return the persisted transaction payload for a given tx_id, or
+        None. Used as the cross-replica fallback when a case's transaction
+        list (app/api/presenters.py's case_payload()) references a tx_id
+        this process never personally scored — e.g. it was processed by a
+        different API replica."""
+        if not tx_id:
+            return None
+        db = SessionLocal()
+        try:
+            rec = db.query(TransactionRecord).filter_by(tx_id=tx_id).first()
+            return _from_json(rec.payload) if rec else None
+        finally:
+            db.close()
+
+    def list_transactions(self) -> list[dict]:
+        """Return every persisted transaction payload. Used where a read
+        must be correct across all API replicas regardless of which one
+        actually processed each transaction (GET /export's CSV audit log)
+        — data_store["transactions"] alone only reflects whatever this one
+        process has personally handled since it booted."""
+        db = SessionLocal()
+        try:
+            return [p for rec in db.query(TransactionRecord).all() if (p := _from_json(rec.payload))]
+        finally:
+            db.close()
+
     # ── Cases ────────────────────────────────────────────────────────────
 
     def save_case(self, case: dict, tenant_id: str = DEFAULT_TENANT_ID) -> None:
@@ -151,6 +186,20 @@ class Repository:
         finally:
             db.close()
 
+    def list_cases(self) -> list[dict]:
+        """Return every persisted case payload. This is what makes GET
+        /cases (and case-chain matching in app/services/orchestrator.py,
+        and case lookups in app/api/actions.py) correct across multiple
+        API replicas: data_store["cases"] alone only holds whatever this
+        one process has personally created or been told about since it
+        booted, so a case another replica created would otherwise be
+        invisible here."""
+        db = SessionLocal()
+        try:
+            return [p for rec in db.query(CaseRecord).all() if (p := _from_json(rec.payload))]
+        finally:
+            db.close()
+
     # ── Actions ──────────────────────────────────────────────────────────
 
     def save_action(self, action: dict, tenant_id: str = DEFAULT_TENANT_ID) -> None:
@@ -195,51 +244,96 @@ class Repository:
         live traffic uses, instead of a second, separately-maintained
         rebuild implementation.
 
+        Transaction and case restoration are independent steps, and each
+        record within them is independently guarded (see
+        _restore_transactions/_restore_cases below): a Redis outage (or
+        one corrupt record) must not silently abort restoration of
+        everything else — a startup-time Redis hiccup used to leave
+        data_store completely empty (0 transactions AND 0 cases restored,
+        logged only as a single generic "load_all failed") because the
+        whole method shared one try/except around both loops. Now
+        record_velocity()/save_account() also degrade gracefully on their
+        own (see orchestrator.py) — this per-record isolation is a second,
+        independent layer of defense, not a substitute for that fix.
+
         Note: app.core.data_store["graphs"] is NOT restored here — graph
         state (including frozen/withdrawn node status) isn't persisted
         anywhere today. That's a pre-existing gap (real graph persistence
         is Phase 5's job), not something this repository introduces."""
         db = SessionLocal()
         try:
-            # ── Restore transactions & rebuild velocity/account caches ──
-            tx_count = 0
-
-            for rec in db.query(TransactionRecord).all():
-                payload = _from_json(rec.payload)
-                if payload:
-                    tx_id = payload.get("tx_id") or rec.tx_id
-                    store.setdefault("transactions", {})[tx_id] = payload
-                    tx_count += 1
-
-                    sender_id = payload.get("sender_account")
-                    if sender_id:
-                        ts_str = payload.get("timestamp", "")
-                        amount = float(payload.get("amount", 0.0))
-                        receiver = payload.get("receiver_account")
-                        try:
-                            dt = _dt.fromisoformat(ts_str.replace("Z", "+00:00"))
-                            ts = dt.timestamp()
-                        except Exception:
-                            ts = time.time()
-
-                        velocity = orchestrator.record_velocity(sender_id, receiver, amount, tx_id, timestamp=ts)
-                        orchestrator.save_account(sender_id, amount, velocity)
-
-            # ── Restore cases ────────────────────────────────────────────
-            case_count = 0
-            for rec in db.query(CaseRecord).all():
-                payload = _from_json(rec.payload)
-                if payload:
-                    case_id = payload.get("case_id") or rec.case_id
-                    store.setdefault("cases", {})[case_id] = payload
-                    case_count += 1
-
+            tx_count = self._restore_transactions(db, store)
+            case_count = self._restore_cases(db, store)
             logger.info("Restored %s transactions, %s cases from DB [OK]", tx_count, case_count)
-
         except Exception as e:
+            # Belt-and-suspenders: _restore_transactions/_restore_cases
+            # already guard every record individually, so reaching here
+            # means something failed outside either loop (e.g. the query
+            # itself). Still don't let it take the other one down with it.
             logger.error("load_all failed: %s", e)
         finally:
             db.close()
+
+    def _restore_transactions(self, db, store: dict) -> int:
+        """Restore every persisted transaction into store["transactions"]
+        and replay it through orchestrator's Redis-backed velocity/account
+        helpers. Each record is isolated in its own try/except: one bad
+        payload or one Redis error must not stop the rest of the
+        transactions (or the separate case restore that follows) from
+        loading — record_velocity()/save_account() already degrade
+        gracefully on a Redis failure rather than raising (see
+        orchestrator.py), so this per-record guard mainly protects against
+        an unexpected/future failure mode, not the common one."""
+        # Deferred import — see the module-level comment near the top of
+        # this file explaining why this can't be a top-level import.
+        from app.services import orchestrator
+
+        tx_count = 0
+        for rec in db.query(TransactionRecord).all():
+            try:
+                payload = _from_json(rec.payload)
+                if not payload:
+                    continue
+                tx_id = payload.get("tx_id") or rec.tx_id
+                store.setdefault("transactions", {})[tx_id] = payload
+                tx_count += 1
+
+                sender_id = payload.get("sender_account")
+                if sender_id:
+                    ts_str = payload.get("timestamp", "")
+                    amount = float(payload.get("amount", 0.0))
+                    receiver = payload.get("receiver_account")
+                    try:
+                        dt = _dt.fromisoformat(ts_str.replace("Z", "+00:00"))
+                        ts = dt.timestamp()
+                    except Exception:
+                        ts = time.time()
+
+                    velocity = orchestrator.record_velocity(sender_id, receiver, amount, tx_id, timestamp=ts)
+                    orchestrator.save_account(sender_id, amount, velocity)
+            except Exception as e:
+                logger.warning("Failed to restore transaction %s: %s", getattr(rec, "tx_id", "?"), e)
+                continue
+        return tx_count
+
+    def _restore_cases(self, db, store: dict) -> int:
+        """Restore every persisted case into store["cases"], independently
+        of transaction restoration above — runs (and completes) even if
+        _restore_transactions failed entirely, and one bad case record
+        doesn't stop the rest."""
+        case_count = 0
+        for rec in db.query(CaseRecord).all():
+            try:
+                payload = _from_json(rec.payload)
+                if not payload:
+                    continue
+                case_id = payload.get("case_id") or rec.case_id
+                store.setdefault("cases", {})[case_id] = payload
+                case_count += 1
+            except Exception as e:
+                logger.warning("Failed to restore case %s: %s", getattr(rec, "case_id", "?"), e)
+                continue
+        return case_count
 
 
 # Single shared instance — see the class docstring for why one is enough.

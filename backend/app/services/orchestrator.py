@@ -5,6 +5,7 @@ import time
 from app.core.config import HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD
 from app.core.constants import CaseStatus
 from app.core import redis_client
+from app.core.repository import repository
 from app.engines.scoring_engine import score_transaction
 from app.engines.case_manager import process_scored_tx
 from app.engines.graph_engine import add_node, add_edge, get_graph
@@ -14,6 +15,52 @@ from app.services.ml_risk_engine import predict_ml_score, feature_names
 from app.utils.json_codec import from_json, to_json
 
 logger = logging.getLogger("sentinel.orchestrator")
+
+
+def _find_matching_case(cases, sender_id: str, receiver_id: str) -> dict | None:
+    """The exact case-chain-matching predicate run_pipeline has always
+    used, factored out so it can be applied identically to a local scan
+    and a Postgres-sourced one (see _find_matching_case_via_postgres)
+    without the two silently drifting apart."""
+    return next((c for c in cases
+                 if (c["origin_account"] == sender_id or sender_id in c["chain"] or receiver_id in c["chain"])
+                 and c["status"] in [CaseStatus.NEW, CaseStatus.HIGH_RISK]
+                 and len(c["chain"]) < c.get("max_nodes", 5)), None)
+
+
+def _hydrate_case_from_postgres(case_id: str, store: dict) -> dict | None:
+    """Look up a single case by id in Postgres and, if found, cache it
+    into store["cases"] so this process doesn't need to repeat the
+    Postgres round-trip on the next transaction that references it."""
+    try:
+        case = repository.get_case(case_id)
+    except Exception as e:
+        logger.warning("Postgres case lookup degraded for %s: %s", case_id, e)
+        return None
+    if case is not None:
+        store.setdefault("cases", {})[case_id] = case
+    return case
+
+
+def _find_matching_case_via_postgres(sender_id: str, receiver_id: str, store: dict) -> dict | None:
+    """Local cache missed — this replica may simply not have seen a case
+    another replica already created for this sender/receiver chain.
+    Pulls every case from Postgres, caches all of them locally (so
+    subsequent transactions in the same chain hit the fast local path),
+    and re-runs the same matching predicate. Bounded to cases only (not
+    transactions) — a fallback path, not the hot path, and case volume in
+    a fraud system is orders of magnitude lower than transaction volume."""
+    try:
+        all_cases = repository.list_cases()
+    except Exception as e:
+        logger.warning("Postgres case scan degraded for %s/%s: %s", sender_id, receiver_id, e)
+        return None
+    cache = store.setdefault("cases", {})
+    for c in all_cases:
+        cid = c.get("case_id")
+        if cid and cid not in cache:
+            cache[cid] = c
+    return _find_matching_case(cache.values(), sender_id, receiver_id)
 
 
 def _velocity_key(sender_id: str) -> str:
@@ -41,32 +88,64 @@ def record_velocity(sender_id: str, receiver_id: str, amount: float, tx_id: str,
     entries with identical amount/receiver/timestamp (test fixtures often
     share a fixed timestamp literal) would otherwise collide and silently
     merge into one entry in a plain amount/receiver/timestamp member.
+
+    Degrades gracefully if Redis is unreachable — hostile-review finding:
+    this used to have no error handling at all, so a Redis outage turned
+    every POST /transaction into a 500 even though the transaction itself
+    scored and persisted to Postgres fine. On failure, returns a
+    conservative "treat this as an isolated, first-time transaction"
+    result (velocity 1, no cross-referencing) rather than raising —
+    scoring continues with degraded (not wrong-direction) velocity
+    signals instead of not happening at all. Logged at WARNING so the
+    degradation is visible without needing a debugger.
     """
-    r = redis_client.get_redis()
     now_ts = time.time()
     ts = now_ts if timestamp is None else timestamp
     key = _velocity_key(sender_id)
 
-    r.zremrangebyscore(key, "-inf", now_ts - 86400)
-    entry = {"tx_id": tx_id, "timestamp": ts, "amount": amount, "receiver": receiver_id}
-    r.zadd(key, {to_json(entry): ts})
-    r.expire(key, 90000)  # ~25h safety margin — today's dict never expires a quiet sender
+    try:
+        r = redis_client.get_redis()
+        r.zremrangebyscore(key, "-inf", now_ts - 86400)
+        entry = {"tx_id": tx_id, "timestamp": ts, "amount": amount, "receiver": receiver_id}
+        r.zadd(key, {to_json(entry): ts})
+        r.expire(key, 90000)  # ~25h safety margin — today's dict never expires a quiet sender
 
-    v_cache_1h = []
-    unique_receivers_24h = set()
-    for member, score in r.zrange(key, 0, -1, withscores=True):
-        e = from_json(member)
-        if not e:
-            continue
-        if now_ts - score <= 3600:
-            v_cache_1h.append(e)
-        if now_ts - score <= 86400:
-            unique_receivers_24h.add(e.get("receiver"))
+        v_cache_1h = []
+        unique_receivers_24h = set()
+        for member, score in r.zrange(key, 0, -1, withscores=True):
+            e = from_json(member)
+            if not e:
+                continue
+            if now_ts - score <= 3600:
+                v_cache_1h.append(e)
+            if now_ts - score <= 86400:
+                unique_receivers_24h.add(e.get("receiver"))
 
+        return {
+            "tx_velocity": len(v_cache_1h),
+            "amount_1h": sum(e.get("amount", 0.0) for e in v_cache_1h),
+            "receivers_24h": len(unique_receivers_24h),
+        }
+    except Exception as e:
+        logger.warning("record_velocity degraded for %s (Redis unavailable: %s) — scoring this transaction as isolated", sender_id, e)
+        return {"tx_velocity": 1, "amount_1h": amount, "receivers_24h": 1}
+
+
+def _default_account(account_id: str, amount: float, velocity: dict) -> dict:
+    """The "brand new account" shape both save_account() and its Redis-
+    unavailable fallback below produce — factored out so the degraded
+    path can't silently drift from the normal one."""
     return {
-        "tx_velocity": len(v_cache_1h),
-        "amount_1h": sum(e.get("amount", 0.0) for e in v_cache_1h),
-        "receivers_24h": len(unique_receivers_24h),
+        "account_id": account_id,
+        "total_historical_amount": amount,
+        "historical_tx_count": 1,
+        "avg_monthly_tx_amount": amount,
+        "current_balance_sim": round(random.uniform(50000, 250000), 2),
+        "status": "active",
+        "is_new_receiver": True,  # first time seen
+        "tx_velocity": velocity["tx_velocity"],
+        "amount_1h": velocity["amount_1h"],
+        "receivers_24h": velocity["receivers_24h"],
     }
 
 
@@ -77,41 +156,53 @@ def get_account(account_id: str) -> dict | None:
     a fresh sparse dict built at read time, on every call, never written
     back — a pre-existing quirk (receiver accounts before Phase 1 were
     never actually saved into store["accounts"] either), preserved as-is
-    rather than silently changed by this migration."""
-    raw = redis_client.get_redis().get(_account_key(account_id))
-    return from_json(raw) if raw else None
+    rather than silently changed by this migration.
+
+    Degrades to None (== "not found", the same value a genuinely missing
+    account produces) if Redis is unreachable — the caller's own "not
+    found" fallback already handles that case correctly, so no separate
+    degraded branch is needed here."""
+    try:
+        raw = redis_client.get_redis().get(_account_key(account_id))
+        return from_json(raw) if raw else None
+    except Exception as e:
+        logger.warning("get_account degraded for %s (Redis unavailable: %s) — treating as not-found", account_id, e)
+        return None
 
 
 def save_account(account_id: str, amount: float, velocity: dict) -> dict:
     """Create-or-update the sender-side account record in Redis and
     return it. Called once per transaction for the sender (always
-    persisted — unlike get_account's receiver-side read path above)."""
-    r = redis_client.get_redis()
+    persisted — unlike get_account's receiver-side read path above).
+
+    Degrades gracefully if Redis is unreachable: returns a freshly-built
+    account dict (same shape as a brand-new account) WITHOUT persisting
+    it, so scoring can proceed with a complete, well-shaped account
+    object instead of raising. The account's historical totals won't
+    reflect reality for this one transaction if Redis was down — an
+    accepted, logged trade-off; the alternative is failing the request
+    entirely for a transaction that Postgres would otherwise process and
+    persist correctly.
+    """
     key = _account_key(account_id)
-    account = from_json(r.get(key)) or None
-    if not account:
-        account = {
-            "account_id": account_id,
-            "total_historical_amount": amount,
-            "historical_tx_count": 1,
-            "avg_monthly_tx_amount": amount,
-            "current_balance_sim": round(random.uniform(50000, 250000), 2),
-            "status": "active",
-            "is_new_receiver": True,  # first time seen
-            "tx_velocity": velocity["tx_velocity"],
-            "amount_1h": velocity["amount_1h"],
-            "receivers_24h": velocity["receivers_24h"],
-        }
-    else:
-        account["total_historical_amount"] = account.get("total_historical_amount", 0.0) + amount
-        account["historical_tx_count"] = account.get("historical_tx_count", 0) + 1
-        account["avg_monthly_tx_amount"] = account["total_historical_amount"] / account["historical_tx_count"]
-        account["is_new_receiver"] = False
-        account["tx_velocity"] = velocity["tx_velocity"]
-        account["amount_1h"] = velocity["amount_1h"]
-        account["receivers_24h"] = velocity["receivers_24h"]
-    r.set(key, to_json(account))
-    return account
+    try:
+        r = redis_client.get_redis()
+        account = from_json(r.get(key)) or None
+        if not account:
+            account = _default_account(account_id, amount, velocity)
+        else:
+            account["total_historical_amount"] = account.get("total_historical_amount", 0.0) + amount
+            account["historical_tx_count"] = account.get("historical_tx_count", 0) + 1
+            account["avg_monthly_tx_amount"] = account["total_historical_amount"] / account["historical_tx_count"]
+            account["is_new_receiver"] = False
+            account["tx_velocity"] = velocity["tx_velocity"]
+            account["amount_1h"] = velocity["amount_1h"]
+            account["receivers_24h"] = velocity["receivers_24h"]
+        r.set(key, to_json(account))
+        return account
+    except Exception as e:
+        logger.warning("save_account degraded for %s (Redis unavailable: %s) — using an unpersisted fallback account", account_id, e)
+        return _default_account(account_id, amount, velocity)
 
 
 def run_pipeline(tx: dict, store: dict) -> dict:
@@ -153,18 +244,50 @@ def run_pipeline(tx: dict, store: dict) -> dict:
     tx["simulator_meta"]["receivers_24h"] = receivers_24h
     tx["simulator_meta"]["amount_1h"] = amount_1h
         
-    # 1b. Try to find an existing active case to inherit origin_score
+    # 1b. Try to find an existing active case to inherit origin_score.
+    #
+    # Falls back to Postgres (the durable source of truth) when not found
+    # in this process's local cache, and hydrates any hit back into
+    # store["cases"] — necessary once more than one API replica exists.
+    # Two concrete failure modes this fixes (hostile-review finding):
+    #   1. A later hop in a chain is explicitly tagged with a case_id
+    #      (e.g. by the simulator) that a DIFFERENT replica created.
+    #      Without this fallback, case_manager.py's store["cases"][case_id]
+    #      lookup KeyErrors — an unhandled 500 for a perfectly legitimate
+    #      continuation transaction.
+    #   2. A fresh transaction with no case_id, whose sender/receiver
+    #      already belongs to a case another replica created, would
+    #      silently fork into a duplicate case instead of joining the one
+    #      that already exists — same root cause, quieter symptom.
+    # Postgres lookups here are guarded the same way the Redis calls
+    # above are: a Postgres hiccup during this *fallback* degrades to
+    # "no match found" (the exact pre-fix behavior) rather than raising,
+    # so a flaky fallback lookup can't turn into a new failure mode of
+    # its own.
     case_id = tx.get("case_id")
     case = None
     if case_id:
         case = store.get("cases", {}).get(case_id)
+        if case is None:
+            case = _hydrate_case_from_postgres(case_id, store)
+        if case is None:
+            # Given case_id resolves nowhere — neither locally nor via
+            # Postgres (a genuinely bogus/stale id, or a Postgres outage
+            # during the fallback above). case_manager.py unconditionally
+            # does store["cases"][case_id] whenever tx["case_id"] is
+            # truthy, with no existence check of its own — leaving a
+            # phantom case_id set here would KeyError there. Clearing it
+            # lets case_manager.py fall through to its normal "no case_id"
+            # path and start a fresh case instead, which is the correct,
+            # safe behavior for an id that can't be resolved either way.
+            tx.pop("case_id", None)
+            case_id = None
     else:
         # Fallback: Find case where sender or receiver is already in a chain
         receiver_id = tx.get("receiver_account")
-        case = next((c for c in store.get("cases", {}).values() 
-                     if (c["origin_account"] == sender_id or sender_id in c["chain"] or receiver_id in c["chain"]) 
-                     and c["status"] in [CaseStatus.NEW, CaseStatus.HIGH_RISK]
-                     and len(c["chain"]) < c.get("max_nodes", 5)), None)
+        case = _find_matching_case(store.get("cases", {}).values(), sender_id, receiver_id)
+        if case is None:
+            case = _find_matching_case_via_postgres(sender_id, receiver_id, store)
         if case:
             tx["case_id"] = case["case_id"]
 

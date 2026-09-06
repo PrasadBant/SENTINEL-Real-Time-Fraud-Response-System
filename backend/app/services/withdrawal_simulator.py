@@ -25,6 +25,22 @@ see that state at all, which would make the fire-time guard below always
 miss — i.e. always execute the withdrawal even if the node was frozen in
 time. Embedding sidesteps that; the job function is otherwise unchanged
 from the pre-Arq schedule_withdrawal it replaces.
+
+Residual gap once the API is actually scaled to multiple replicas (the
+docker-compose api container_name fix makes this newly possible): each
+replica embeds its OWN worker, and Arq's atomic dequeue means ANY
+replica's worker may end up firing a job another replica originally
+scheduled. "Embedded in the same process as the API" only guarantees
+"the same process that's *running* this job", not "the same process
+that scheduled it" — so the fire-time guard below can still miss (return
+a no-op, or in the worst case execute a withdrawal a different replica's
+graph would have shown as frozen) if the job is picked up by a replica
+that never built this case's graph. This is the same fundamental
+graph-not-shared limitation as the single-instance case, just newly
+reachable across replicas instead of only across a restart — closing it
+for real means either sharing graph/node state (Phase 5) or routing a
+job back to its originating replica specifically, both explicitly out of
+scope for this fix pass.
 """
 
 import logging
