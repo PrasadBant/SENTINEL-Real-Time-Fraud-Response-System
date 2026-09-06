@@ -1,5 +1,16 @@
 fastapi
 uvicorn
+# Bare `uvicorn` has no WebSocket protocol implementation of its own — it
+# needs websockets or wsproto installed to serve /ws at all (app/api/
+# ws_routes.py). Without it uvicorn silently 404s every WS handshake.
+# Found via Phase 1's real-container WS-fanout verification: TestClient
+# (used by the whole pytest suite) exercises WS routes through FastAPI's
+# in-process ASGI transport, which doesn't need this — so the test suite
+# passing was never proof the *deployed* container could serve /ws at
+# all. It happened to work when run directly on a dev machine that
+# already had `websockets` installed some other way; the Docker image
+# (built from a clean requirements.txt) never had it.
+websockets
 pydantic
 httpx
 pyjwt
