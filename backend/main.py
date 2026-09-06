@@ -29,6 +29,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api import actions, attack_mode, auth, cases, copilot, health, transactions, ws_routes
+from app.core.config import EC03_QUEUE_ENABLED, REDIS_URL
 from app.core.data_store import data_store
 from app.core.database import run_migrations
 from app.core.repository import repository
@@ -53,10 +54,44 @@ async def lifespan(_app: FastAPI):
     from app.services.global_graph_analyzer import run_global_graph_analyzer
     analyzer_task = asyncio.create_task(run_global_graph_analyzer(manager, data_store))
 
+    # Embedded EC-03 job worker (see app/services/withdrawal_queue.py /
+    # withdrawal_simulator.py for why this runs in-process rather than as
+    # a separate container). Gated by the same EC03_QUEUE_ENABLED flag
+    # withdrawal_queue.py's schedule()/cancel() check, so tests (which
+    # set it false) never spin this up against a Redis that isn't there.
+    worker_task = None
+    if EC03_QUEUE_ENABLED:
+        from arq.connections import RedisSettings
+        from arq.worker import Worker
+        from app.services.withdrawal_simulator import run_withdrawal_job
+
+        # handle_signals=False: Worker's default (True) installs its own
+        # SIGINT/SIGTERM handlers via the event loop, which would fight
+        # with uvicorn's own shutdown handling in this same process on
+        # Linux (the real deployment target) — arq's own signal-handler
+        # code degrades harmlessly on Windows (catches the platform's
+        # NotImplementedError), so this only matters there, but Linux is
+        # what matters for correctness.
+        worker = Worker(
+            functions=[run_withdrawal_job],
+            redis_settings=RedisSettings.from_dsn(REDIS_URL),
+            allow_abort_jobs=True,
+            max_tries=3,
+            handle_signals=False,
+        )
+        worker_task = asyncio.create_task(worker.async_run())
+
     yield
 
     analyzer_task.cancel()
     listener_task.cancel()
+    if worker_task is not None:
+        worker_task.cancel()
+        # Deliberately NOT calling worker.close(): verified by direct
+        # testing that it unconditionally references signal.SIGUSR1
+        # (arq/worker.py), which doesn't exist on Windows, and would
+        # crash shutdown here. Skipping it leaks the worker's Redis
+        # connection pool briefly — harmless, the process is exiting.
 
 
 app = FastAPI(title="SENTINEL - Real-Time Fraud Response System", lifespan=lifespan)
