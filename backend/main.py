@@ -29,6 +29,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api import actions, attack_mode, auth, cases, copilot, health, transactions, ws_routes
+from app.core import metrics
 from app.core.config import EC03_QUEUE_ENABLED, REDIS_URL
 from app.core.data_store import data_store
 from app.core.database import run_migrations
@@ -43,6 +44,12 @@ async def lifespan(_app: FastAPI):
     """Bring the schema up to date (Alembic) and restore in-memory state
     from the database on startup."""
     run_migrations()
+    # Phase 2: bootstrap the DB-backed admin/viewer accounts from
+    # ADMIN_USERNAME/PASSWORD + VIEWER_USERNAME/PASSWORD if they don't
+    # already exist — see repository.seed_default_users()'s docstring for
+    # why this is idempotent-by-design rather than a one-time migration
+    # data load.
+    repository.seed_default_users()
     repository.load_all(data_store)
 
     # Redis pub/sub fanout listener (see app/websocket/connection_manager.py)
@@ -129,8 +136,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def _metrics_middleware(request: Request, call_next):
+    """Phase 2: records request count/latency for GET /metrics. Uses
+    request.url.path (not route.path) as the label — with no path-param
+    routes in this API today (case/tx ids travel in the body, not the
+    URL), this doesn't create a label-cardinality blowup; worth
+    revisiting if that ever changes."""
+    with metrics.HTTP_REQUEST_DURATION_SECONDS.labels(request.method, request.url.path).time():
+        response = await call_next(request)
+    metrics.HTTP_REQUESTS_TOTAL.labels(request.method, request.url.path, response.status_code).inc()
+    return response
+
+
 # ── Routes ──────────────────────────────────────────────────────────────────
 app.include_router(health.router)
+app.include_router(metrics.router)
 app.include_router(auth.router)
 app.include_router(transactions.router)
 app.include_router(cases.router)

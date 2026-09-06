@@ -8,6 +8,7 @@ sequence of parsed events rather than real-time incremental delivery.
 
 import json
 
+from app.core.constants import DEFAULT_TENANT_ID
 from app.core.security import create_access_token
 from conftest import TX_HEADERS, make_tx
 
@@ -125,7 +126,7 @@ def test_stream_message_validation_still_applies(client, admin_headers):
 def test_stream_rate_limit_applies(client):
     from app.services.copilot.rate_limit import MAX_REQUESTS_PER_WINDOW
 
-    token = create_access_token(subject="rate-limit-stream-subject", role="viewer")
+    token = create_access_token(subject="rate-limit-stream-subject", role="viewer", tenant_id=DEFAULT_TENANT_ID)
     headers = {"Authorization": f"Bearer {token}"}
 
     for i in range(MAX_REQUESTS_PER_WINDOW):

@@ -18,13 +18,13 @@ mechanism, not a redesign of what gets stored.
 
 import logging
 import time
-from datetime import datetime as _dt
+from datetime import datetime as _dt, timezone as _tz
 
 from sqlalchemy.exc import IntegrityError
 
 from app.core.constants import ActionStatus, CaseStatus, DEFAULT_TENANT_ID
 from app.core.database import SessionLocal
-from app.core.db_models import ActionRecord, CaseRecord, TransactionRecord
+from app.core.db_models import ActionRecord, CaseRecord, TransactionRecord, UserRecord
 from app.utils.json_codec import from_json as _from_json, to_json as _to_json
 
 # NOTE: app.services.orchestrator is imported lazily, inside load_all()
@@ -125,15 +125,31 @@ class Repository:
         finally:
             db.close()
 
-    def list_transactions(self) -> list[dict]:
-        """Return every persisted transaction payload. Used where a read
-        must be correct across all API replicas regardless of which one
-        actually processed each transaction (GET /export's CSV audit log)
-        — data_store["transactions"] alone only reflects whatever this one
-        process has personally handled since it booted."""
+    def list_all_transactions(self) -> list[dict]:
+        """Return every persisted transaction payload, across every tenant.
+        Pipeline-internal use only (repository.load_all()'s startup
+        restore) — never reachable from a user-supplied request, so it's
+        deliberately not tenant-filtered. User-facing reads must use
+        list_transactions(tenant_id) below instead."""
         db = SessionLocal()
         try:
             return [p for rec in db.query(TransactionRecord).all() if (p := _from_json(rec.payload))]
+        finally:
+            db.close()
+
+    def list_transactions(self, tenant_id: str) -> list[dict]:
+        """Return every persisted transaction payload belonging to one
+        tenant. Phase 2 object-level authorization: this is what makes
+        GET /export's CSV audit log (app/api/cases.py) show only the
+        requesting investigator's own tenant's data, not every tenant's —
+        tenant_id is required (no default) so a call site can't
+        accidentally fall back to "everyone's data" by omission."""
+        db = SessionLocal()
+        try:
+            return [
+                p for rec in db.query(TransactionRecord).filter_by(tenant_id=tenant_id).all()
+                if (p := _from_json(rec.payload))
+            ]
         finally:
             db.close()
 
@@ -176,7 +192,15 @@ class Repository:
             db.close()
 
     def get_case(self, case_id: str) -> dict | None:
-        """Return the persisted case payload for a given case_id, or None."""
+        """Return the persisted case payload for a given case_id, or None
+        — unscoped by tenant. Pipeline-internal use only (e.g.
+        app/services/orchestrator.py's cross-replica case-chain fallback,
+        app/api/transactions.py's idempotent-replay path): both operate
+        on the single ingestion tenant's own data and are never driven by
+        a user-supplied case_id, so there's no object-level-authorization
+        concern here. A case_id an authenticated investigator supplies
+        (e.g. app/api/actions.py's action handlers) must use
+        get_case_for_tenant below instead — see its docstring for why."""
         if not case_id:
             return None
         db = SessionLocal()
@@ -186,19 +210,146 @@ class Repository:
         finally:
             db.close()
 
-    def list_cases(self) -> list[dict]:
-        """Return every persisted case payload. This is what makes GET
-        /cases (and case-chain matching in app/services/orchestrator.py,
-        and case lookups in app/api/actions.py) correct across multiple
-        API replicas: data_store["cases"] alone only holds whatever this
-        one process has personally created or been told about since it
-        booted, so a case another replica created would otherwise be
-        invisible here."""
+    def get_case_for_tenant(self, case_id: str, tenant_id: str) -> dict | None:
+        """Same as get_case, but also requires the case to belong to
+        tenant_id — returns None (not a distinguishable "wrong tenant"
+        error) if the case exists but belongs to someone else, so
+        existence isn't leaked. This is the actual IDOR fix (Phase 2):
+        case_id is a guessable-ish `CASE-XXXXXXXX` string, not a
+        high-entropy UUID, and every investigator action (freeze, close,
+        ...) takes one directly from the request body — without this,
+        any authenticated admin could act on any tenant's case just by
+        supplying its id. Use this, not get_case, for any lookup driven
+        by a value an authenticated user supplied."""
+        if not case_id:
+            return None
+        db = SessionLocal()
+        try:
+            rec = db.query(CaseRecord).filter_by(case_id=case_id, tenant_id=tenant_id).first()
+            return _from_json(rec.payload) if rec else None
+        finally:
+            db.close()
+
+    def list_all_cases(self) -> list[dict]:
+        """Return every persisted case payload, across every tenant. This
+        is what makes case-chain matching in app/services/orchestrator.py
+        correct across multiple API replicas: data_store["cases"] alone
+        only holds whatever this one process has personally created or
+        been told about since it booted, so a case another replica
+        created would otherwise be invisible here. Pipeline-internal use
+        only — never reachable from a user-supplied request (matching is
+        keyed off sender/receiver account, not anything the requester
+        picks), so it's deliberately not tenant-filtered. User-facing
+        reads must use list_cases(tenant_id) below instead."""
         db = SessionLocal()
         try:
             return [p for rec in db.query(CaseRecord).all() if (p := _from_json(rec.payload))]
         finally:
             db.close()
+
+    def list_cases(self, tenant_id: str) -> list[dict]:
+        """Return every persisted case payload belonging to one tenant.
+        Phase 2 object-level authorization: this is what makes GET /cases
+        (app/api/cases.py) show only the requesting investigator's own
+        tenant's cases, not every tenant's — tenant_id is required (no
+        default) so a call site can't accidentally fall back to
+        "everyone's data" by omission."""
+        db = SessionLocal()
+        try:
+            return [
+                p for rec in db.query(CaseRecord).filter_by(tenant_id=tenant_id).all()
+                if (p := _from_json(rec.payload))
+            ]
+        finally:
+            db.close()
+
+    # ── Users (Phase 2) ─────────────────────────────────────────────────
+
+    def get_user_by_username(self, username: str) -> dict | None:
+        """Return {"username", "tenant_id", "password_hash", "role"} for a
+        login account, or None. Used by app/core/users.py::authenticate()
+        on every login attempt."""
+        if not username:
+            return None
+        db = SessionLocal()
+        try:
+            rec = db.query(UserRecord).filter_by(username=username).first()
+            if not rec:
+                return None
+            return {
+                "username": rec.username,
+                "tenant_id": rec.tenant_id,
+                "password_hash": rec.password_hash,
+                "role": rec.role,
+            }
+        finally:
+            db.close()
+
+    def create_user(self, username: str, password_hash: str, role: str, tenant_id: str = DEFAULT_TENANT_ID) -> bool:
+        """Insert a new login account. Idempotent by design, not just by
+        accident: returns False (logged, not raised) if the username
+        already exists, rather than erroring — this is what lets
+        seed_default_users() below call it unconditionally on every boot
+        without needing its own "does this already exist" check first."""
+        db = SessionLocal()
+        try:
+            if db.query(UserRecord).filter_by(username=username).first():
+                return False
+            db.add(UserRecord(username=username, tenant_id=tenant_id, password_hash=password_hash, role=role))
+            db.commit()
+            return True
+        except IntegrityError:
+            # Race: two processes (e.g. two API replicas booting
+            # simultaneously) both saw "doesn't exist" and both tried to
+            # insert it. Whichever loses the unique-constraint race just
+            # doesn't create a duplicate — not an error, same idempotent
+            # intent as the check above, just covering the TOCTOU gap.
+            db.rollback()
+            return False
+        except Exception as e:
+            db.rollback()
+            logger.error("create_user failed for %s: %s", username, e)
+            return False
+        finally:
+            db.close()
+
+    def touch_last_login(self, username: str) -> None:
+        """Best-effort — a failure here must never block a successful
+        login."""
+        db = SessionLocal()
+        try:
+            rec = db.query(UserRecord).filter_by(username=username).first()
+            if rec:
+                rec.last_login = _dt.now(_tz.utc)
+                db.commit()
+        except Exception as e:
+            db.rollback()
+            logger.warning("touch_last_login failed for %s: %s", username, e)
+        finally:
+            db.close()
+
+    def seed_default_users(self) -> None:
+        """Bootstrap the admin/viewer accounts from ADMIN_USERNAME/PASSWORD
+        + VIEWER_USERNAME/PASSWORD env vars (app.core.users' existing
+        fail-closed checks already guarantee these are set) — called once
+        from main.py's lifespan, right after run_migrations(). A no-op
+        past the first boot: create_user() above is idempotent, so this
+        only ever creates the two rows once and does nothing on every
+        subsequent restart, deliberately NOT re-hashing/overwriting on
+        every boot — the DB row, not the env var, is the durable source
+        of truth for a login account's password from here on."""
+        # Deferred import: app.core.users imports THIS module indirectly
+        # via app.core.security only, no cycle today, but kept deferred
+        # to match this file's existing lazy-import convention for
+        # cross-layer imports (see the module-level comment near the top
+        # of this file re: the orchestrator import).
+        from app.core.security import hash_password
+        from app.core.users import ADMIN_USERNAME, ADMIN_PASSWORD, VIEWER_USERNAME, VIEWER_PASSWORD
+
+        if self.create_user(ADMIN_USERNAME, hash_password(ADMIN_PASSWORD), "admin"):
+            logger.info("Seeded default admin user %s", ADMIN_USERNAME)
+        if self.create_user(VIEWER_USERNAME, hash_password(VIEWER_PASSWORD), "viewer"):
+            logger.info("Seeded default viewer user %s", VIEWER_USERNAME)
 
     # ── Actions ──────────────────────────────────────────────────────────
 

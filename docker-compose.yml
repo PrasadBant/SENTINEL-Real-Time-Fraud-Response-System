@@ -71,7 +71,13 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in a repo-root .env — see .env.example}
       - VIEWER_USERNAME=${VIEWER_USERNAME:-viewer}
       - VIEWER_PASSWORD=${VIEWER_PASSWORD:?Set VIEWER_PASSWORD in a repo-root .env — see .env.example}
-      - SECRET_KEY=${SECRET_KEY:-}
+      # Phase 2: SECRET_KEY is now fail-closed (app/core/config.py raises
+      # at import time if unset) — was previously ${SECRET_KEY:-}, which
+      # would boot the container with an ephemeral per-process key and
+      # was already silently wrong the moment more than one replica
+      # exists (see that module's docstring). Required, same as the two
+      # passwords below.
+      - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in a repo-root .env — see .env.example}
       - SIMULATOR_API_KEY=${SIMULATOR_API_KEY:-sentinel-dev-simulator-key}
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173}
       - AI_PROVIDER=${AI_PROVIDER:-}
@@ -90,6 +96,16 @@ services:
     # and the container exits; `restart: unless-stopped` handles the
     # retry, deliberately not custom code (see the Phase 0 build plan's
     # explicit scope cuts).
+    # Phase 2: /health now actually checks Postgres/Redis connectivity
+    # (see app/api/health.py) instead of always returning 200 — this
+    # healthcheck is what makes that meaningful at the container level
+    # too, matching the pattern already used for postgres/redis above.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   # Unused today — no code path imports a neo4j driver; graph state is
   # plain in-memory dicts (app/engines/graph_engine.py). Revisited in

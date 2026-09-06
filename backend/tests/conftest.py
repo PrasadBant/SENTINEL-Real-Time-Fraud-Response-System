@@ -46,6 +46,13 @@ os.environ.setdefault("ADMIN_PASSWORD", "admin123")
 os.environ.setdefault("VIEWER_USERNAME", "viewer")
 os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
 
+# Same reasoning (Phase 2): app.core.config now raises at import time if
+# SECRET_KEY isn't set (no more ephemeral-random-key fallback — see that
+# module's docstring). Not a secret that needs to vary per test run;
+# fixed so JWTs stay decodable within a single test session no matter
+# which module happens to import app.core.config first.
+os.environ.setdefault("SECRET_KEY", "test-secret-key-not-for-production-use")
+
 # app/services/withdrawal_queue.py talks to Arq's own Redis pool
 # directly, which fakeredis can't stand in for — without this, every
 # HIGH_RISK-case test would hit Arq's real connection-retry backoff
@@ -74,11 +81,10 @@ if "TEST_REDIS_URL" in os.environ:
 
 # Also before any app.core.config import (see the comment above): main.py
 # normally calls this first, before importing anything that transitively
-# imports app.core.config (whose SECRET_KEY-fallback warning fires at
-# import time) — but here `import redis_client` on the very next line
-# does exactly that, ahead of `import main` below, so call it here too
-# rather than let that one line fall back to unconfigured plain-text
-# logging during tests.
+# imports app.core.config — but here `import redis_client` on the very
+# next line does exactly that, ahead of `import main` below, so call it
+# here too rather than let that import fall back to unconfigured
+# plain-text logging during tests.
 from app.core.logging_config import configure_logging  # noqa: E402
 configure_logging()
 

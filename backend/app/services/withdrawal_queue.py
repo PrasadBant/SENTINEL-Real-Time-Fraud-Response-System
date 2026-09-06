@@ -31,6 +31,7 @@ from arq.connections import RedisSettings
 from arq.jobs import Job
 
 from app.core.config import EC03_QUEUE_ENABLED, REDIS_URL
+from app.core.metrics import EC03_JOBS_FAILED_TOTAL, EC03_JOBS_SCHEDULED_TOTAL
 
 logger = logging.getLogger("sentinel.ec03")
 
@@ -64,9 +65,12 @@ async def schedule(key: str, case_id: str, suspect_node_id: str, delay_seconds: 
             _job_id=key,
             _defer_by=delay_seconds,
         )
+        if job is not None:
+            EC03_JOBS_SCHEDULED_TOTAL.inc()
         return job is not None
     except Exception as e:
         logger.warning("schedule() failed for %s: %s", key, e)
+        EC03_JOBS_FAILED_TOTAL.inc()
         return False
 
 

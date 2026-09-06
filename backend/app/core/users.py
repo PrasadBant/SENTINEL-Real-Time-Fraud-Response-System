@@ -1,18 +1,26 @@
 """
-SENTINEL — Demo User Store
-=============================
-A hackathon-scale, fixed two-account model (admin / viewer) matching the
-two roles the frontend already gates its UI on. Credentials must be
-supplied via ADMIN_PASSWORD/VIEWER_PASSWORD — the app refuses to start
-without them, rather than falling back to a guessable default (the old
-admin123/viewer123 pair the frontend used to hardcode client-side, before
-this was hashed and checked server-side). Override the usernames too via
-env vars if you like; this is intentionally not a full user database.
+SENTINEL — User Store
+========================
+Phase 2: login accounts are now a real (if minimal) DB-backed table
+(app.core.db_models.UserRecord) instead of an in-memory dict rebuilt from
+env vars on every process start. ADMIN_USERNAME/PASSWORD and
+VIEWER_USERNAME/PASSWORD remain how the two default accounts are
+*bootstrapped* (see app.core.repository.seed_default_users(), called
+once from main.py's lifespan) — but from then on the DB row is the
+durable source of truth, not these constants: a restart no longer
+silently re-derives credentials from whatever the env vars currently
+say, and (unlike the old model) more accounts/tenants can exist beyond
+these first two, provisioned directly in the DB.
+
+Credentials must still be supplied via ADMIN_PASSWORD/VIEWER_PASSWORD —
+the app refuses to start without them, rather than falling back to a
+guessable default (the old admin123/viewer123 pair the frontend used to
+hardcode client-side, before this was hashed and checked server-side).
 """
 
 import os
 
-from app.core.security import hash_password, verify_password
+from app.core.security import verify_password
 
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
@@ -37,17 +45,24 @@ if not VIEWER_PASSWORD:
         "start with a default/guessable viewer password. See .env.example."
     )
 
-_USERS: dict[str, dict[str, str]] = {
-    ADMIN_USERNAME: {"password_hash": hash_password(ADMIN_PASSWORD), "role": "admin"},
-    VIEWER_USERNAME: {"password_hash": hash_password(VIEWER_PASSWORD), "role": "viewer"},
-}
 
+def authenticate(username: str, password: str) -> tuple[str, str] | None:
+    """Returns (role, tenant_id) if the credentials are valid, else None.
 
-def authenticate(username: str, password: str) -> str | None:
-    """Returns the user's role if the credentials are valid, else None."""
-    user = _USERS.get(username)
+    Deferred import of the repository singleton (not a module-level
+    import): app.core.repository imports app.core.users back (inside
+    seed_default_users(), itself deferred for the same reason) to read
+    these ADMIN_USERNAME/PASSWORD constants — a top-level
+    `users -> repository -> users` cycle would make one of the two fail
+    to import. Deferring this one breaks the cycle without changing
+    behavior, matching repository.py's own documented pattern for its
+    orchestrator import."""
+    from app.core.repository import repository
+
+    user = repository.get_user_by_username(username)
     if not user:
         return None
     if not verify_password(password, user["password_hash"]):
         return None
-    return user["role"]
+    repository.touch_last_login(username)
+    return user["role"], user["tenant_id"]

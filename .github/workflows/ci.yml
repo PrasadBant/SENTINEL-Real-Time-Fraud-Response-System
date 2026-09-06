@@ -31,6 +31,30 @@ jobs:
       - name: Run pytest
         run: pytest -v
 
+      - name: Dependency vulnerability scan (pip-audit)
+        # Phase 2 (Security & Observability, minimal track). Fails the
+        # job on a known vulnerability in any pinned dependency — no
+        # extra config needed, pip-audit's default exit code is nonzero
+        # on a finding. Scans the exact pinned versions in
+        # requirements.txt, same environment pytest just ran against.
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt
+
+  secret-scan:
+    # Separate job (no Python setup needed) so it runs in parallel with
+    # backend-tests/frontend-build rather than adding to either's
+    # critical path.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # gitleaks scans full history, not just the current commit
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   frontend-build:
     runs-on: ubuntu-latest
     defaults:

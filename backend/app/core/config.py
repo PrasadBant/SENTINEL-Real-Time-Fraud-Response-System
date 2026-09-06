@@ -1,8 +1,4 @@
-import logging
 import os
-import secrets as _secrets
-
-logger = logging.getLogger("sentinel.config")
 
 # --- RISK WEIGHTS (Normalized to sum = 1.0) ---
 W_NEW_RECEIVER = 0.35
@@ -44,20 +40,34 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 EC03_QUEUE_ENABLED = os.getenv("EC03_QUEUE_ENABLED", "true").lower() == "true"
 
 # --- AUTH ---
-# JWT signing key. Falls back to a random key generated at process start if
-# unset — fine for a single dev session, but tokens won't survive a restart
-# and won't be valid across multiple worker processes. Set SECRET_KEY in
-# .env for anything beyond local demo use.
+# JWT signing key. Fail closed, not open (Phase 2): this used to fall
+# back to a random key generated at process start with only a warning —
+# tolerable for a single dev session, but now that the API actually
+# scales to multiple replicas (Phase 1), an ephemeral per-process key
+# would be silently broken in production: each replica would sign/verify
+# with a DIFFERENT random key, so a token minted by replica A would be
+# rejected by replica B, and every token would be invalidated on every
+# restart regardless. Same fail-closed posture and wording style as
+# ADMIN_PASSWORD/VIEWER_PASSWORD in app/core/users.py.
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
-    SECRET_KEY = _secrets.token_hex(32)
-    logger.warning(
-        "SECRET_KEY not set — using an ephemeral key generated at startup. "
-        "Existing login tokens will be invalidated on every restart. "
-        "Set SECRET_KEY in backend/.env for stable sessions."
+    raise RuntimeError(
+        "SECRET_KEY environment variable must be set — refusing to start "
+        "with an ephemeral, per-process key (it would silently break auth "
+        "the moment more than one API replica exists, and invalidate every "
+        "session on every restart). Generate one with: "
+        "python -c \"import secrets; print(secrets.token_hex(32))\" "
+        "— see .env.example."
     )
 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "480"))  # 8h shift
+
+# --- LOGIN LOCKOUT (Phase 2: app/services/login_guard.py) ---
+# Redis-backed, not per-process — the API scales to multiple replicas
+# since Phase 1, and an in-memory counter would let an attacker bypass
+# lockout just by hitting a different replica.
+LOGIN_MAX_ATTEMPTS = int(os.getenv("LOGIN_MAX_ATTEMPTS", "5"))
+LOGIN_LOCKOUT_SECONDS = int(os.getenv("LOGIN_LOCKOUT_SECONDS", "900"))  # 15 min
 
 # Static key checked on POST /transaction — ingestion is a machine-to-machine
 # feed (the simulator script), not a logged-in user, so it uses a simple

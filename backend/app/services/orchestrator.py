@@ -51,7 +51,7 @@ def _find_matching_case_via_postgres(sender_id: str, receiver_id: str, store: di
     transactions) — a fallback path, not the hot path, and case volume in
     a fraud system is orders of magnitude lower than transaction volume."""
     try:
-        all_cases = repository.list_cases()
+        all_cases = repository.list_all_cases()
     except Exception as e:
         logger.warning("Postgres case scan degraded for %s/%s: %s", sender_id, receiver_id, e)
         return None

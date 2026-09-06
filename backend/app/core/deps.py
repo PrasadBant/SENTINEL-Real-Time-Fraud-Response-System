@@ -26,7 +26,7 @@ async def get_current_user(
     payload = decode_access_token(credentials.credentials)
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
-    return {"username": payload.get("sub"), "role": payload.get("role")}
+    return {"username": payload.get("sub"), "role": payload.get("role"), "tenant_id": payload.get("tenant_id")}
 
 
 def require_role(*roles: str):
@@ -50,7 +50,7 @@ async def get_ws_user(token: str = Query(...)) -> dict:
     payload = decode_access_token(token)
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
-    return {"username": payload.get("sub"), "role": payload.get("role")}
+    return {"username": payload.get("sub"), "role": payload.get("role"), "tenant_id": payload.get("tenant_id")}
 
 
 async def verify_simulator_key(request: Request) -> None:

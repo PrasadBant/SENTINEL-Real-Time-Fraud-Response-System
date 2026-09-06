@@ -18,6 +18,13 @@ per-replica gap (graph state isn't persisted or Redis-shared today; real
 graph persistence is Phase 5's job), but case existence/status/risk
 level/actions-taken are now always consistent regardless of which
 replica answers the request.
+
+Both are also tenant-scoped (Phase 2 object-level authorization): every
+read here is filtered to the requesting investigator's own tenant_id
+(from their JWT — see app.core.deps.get_current_user), via
+repository.list_cases(tenant_id)/list_transactions(tenant_id), so one
+tenant's investigator can never see another tenant's cases or
+transactions through these endpoints.
 """
 
 import csv
@@ -32,6 +39,7 @@ from fastapi.responses import StreamingResponse
 from app.api.presenters import case_payload
 from app.core.config import HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD
 from app.core.constants import ActionStatus
+from app.core.constants import DEFAULT_TENANT_ID
 from app.core.data_store import data_store
 from app.core.deps import get_current_user
 from app.core.repository import repository
@@ -41,29 +49,35 @@ logger = logging.getLogger("sentinel.cases")
 router = APIRouter()
 
 
-def _list_cases_replica_safe() -> list[dict]:
-    """Postgres-backed case list — falls back to this replica's local
-    cache only if Postgres itself is briefly unreachable, so a transient
-    DB hiccup degrades to "this replica's own view" rather than a 500."""
+def _list_cases_replica_safe(tenant_id: str) -> list[dict]:
+    """Postgres-backed, tenant-scoped case list — falls back to this
+    replica's local cache only if Postgres itself is briefly unreachable,
+    so a transient DB hiccup degrades to "this replica's own view" rather
+    than a 500. The local-cache fallback is filtered by tenant_id too:
+    every in-memory case dict implicitly belongs to DEFAULT_TENANT_ID
+    today (ingestion is single-tenant — see the Phase 2 build plan's
+    scope note in app/services/orchestrator.py), so `.get("tenant_id",
+    DEFAULT_TENANT_ID)` is correct now and forward-compatible if
+    ingestion ever becomes genuinely multi-tenant later."""
     try:
-        return repository.list_cases()
+        return repository.list_cases(tenant_id)
     except Exception as e:
         logger.warning("list_cases degraded (Postgres unavailable: %s) — falling back to local cache", e)
-        return list(data_store.get("cases", {}).values())
+        return [c for c in data_store.get("cases", {}).values() if c.get("tenant_id", DEFAULT_TENANT_ID) == tenant_id]
 
 
-def _list_transactions_replica_safe() -> list[dict]:
+def _list_transactions_replica_safe(tenant_id: str) -> list[dict]:
     """Same fallback shape as _list_cases_replica_safe, for transactions."""
     try:
-        return repository.list_transactions()
+        return repository.list_transactions(tenant_id)
     except Exception as e:
         logger.warning("list_transactions degraded (Postgres unavailable: %s) — falling back to local cache", e)
-        return list(data_store.get("transactions", {}).values())
+        return [t for t in data_store.get("transactions", {}).values() if t.get("tenant_id", DEFAULT_TENANT_ID) == tenant_id]
 
 
 @router.get("/cases")
 def get_cases(user: dict = Depends(get_current_user)) -> list[dict[str, Any]]:
-    return [case_payload(case) for case in _list_cases_replica_safe()]
+    return [case_payload(case) for case in _list_cases_replica_safe(user["tenant_id"])]
 
 
 @router.get("/export/sentinel_audit.csv")
@@ -87,7 +101,7 @@ def export_csv(user: dict = Depends(get_current_user)):
         'Amount (INR)', 'Risk Score', 'Risk Level', 'Case ID'
     ])
 
-    for tx in _list_transactions_replica_safe():
+    for tx in _list_transactions_replica_safe(user["tenant_id"]):
         score = float(tx.get("risk_score", 0))
         level = (
             "HIGH_RISK" if score >= HIGH_RISK_THRESHOLD
@@ -108,7 +122,7 @@ def export_csv(user: dict = Depends(get_current_user)):
 
     # ── Section 2: Investigative Actions ─────────────────────────────────────
     all_actions = []
-    for case in _list_cases_replica_safe():
+    for case in _list_cases_replica_safe(user["tenant_id"]):
         all_actions.extend(case.get("actions_taken", []))
 
     if all_actions:

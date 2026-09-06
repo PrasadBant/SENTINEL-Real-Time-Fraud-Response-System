@@ -50,6 +50,7 @@ from app.api.presenters import case_payload
 from app.core.constants import AccountStatus
 from app.core.data_store import data_store
 from app.core.logging_config import CORRELATION_ID
+from app.core.metrics import EC03_JOBS_FIRED_TOTAL
 from app.core.repository import repository
 from app.engines.recovery_engine import recalculate
 from app.websocket.connection_manager import manager
@@ -123,6 +124,7 @@ async def run_withdrawal_job(ctx, case_id: str, suspect_node_id: str, correlatio
     prev_balance = float(target_node.get("balance", 0.0))
     target_node["status"]  = AccountStatus.WITHDRAWN
     target_node["balance"] = 0.0
+    EC03_JOBS_FIRED_TOTAL.inc()
 
     logger.warning(
         "Mule withdrawal executed! Node=%s Case=%s Lost=₹%s",

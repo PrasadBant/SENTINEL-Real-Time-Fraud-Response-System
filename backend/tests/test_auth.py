@@ -34,7 +34,13 @@ def test_login_unknown_user_rejected(client):
 def test_auth_me_returns_role(client, admin_headers):
     r = client.get("/auth/me", headers=admin_headers)
     assert r.status_code == 200
-    assert r.json() == {"username": "admin", "role": "admin"}
+    # tenant_id added in Phase 2 (object-level authorization) — every
+    # login account is now DB-backed and stamped with one; see
+    # app.core.constants.DEFAULT_TENANT_ID (all demo accounts share it).
+    body = r.json()
+    assert body["username"] == "admin"
+    assert body["role"] == "admin"
+    assert body["tenant_id"]
 
 
 def test_protected_route_requires_token(client):

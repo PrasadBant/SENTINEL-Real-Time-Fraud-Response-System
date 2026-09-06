@@ -18,6 +18,12 @@ app/services/copilot/history.py, not the write-through data_store
 pattern above):
   - copilot_conversations  (one row per chat thread, owned by a user)
   - copilot_messages       (one row per turn in a conversation)
+
+Auth (Phase 2 — see app/core/users.py):
+  - users  (one row per login account, DB-backed instead of the old
+    two-hardcoded-accounts model; still bootstrapped from
+    ADMIN_USERNAME/PASSWORD + VIEWER_USERNAME/PASSWORD env vars on first
+    boot, but the DB row is the durable source of truth from then on)
 """
 
 from datetime import datetime, timezone
@@ -149,3 +155,22 @@ class CopilotMessageRecord(Base):
 
     def __repr__(self):
         return f"<Message {self.message_id} role={self.role}>"
+
+
+class UserRecord(Base):
+    __tablename__ = "users"
+
+    # Username as the primary key, not a separate id column: this app has
+    # no rename-account flow, and every other table already references
+    # users by username-as-string informally (e.g. copilot_conversations
+    # above) — adding a surrogate id would just be an extra join for no
+    # present benefit.
+    username     = Column(String, primary_key=True, index=True)
+    tenant_id    = Column(String, nullable=False, default=DEFAULT_TENANT_ID, index=True)
+    password_hash = Column(String, nullable=False)
+    role         = Column(String, nullable=False)
+    created_at   = Column(DateTime, default=_now)
+    last_login   = Column(DateTime, nullable=True)
+
+    def __repr__(self):
+        return f"<User {self.username} role={self.role} tenant={self.tenant_id}>"

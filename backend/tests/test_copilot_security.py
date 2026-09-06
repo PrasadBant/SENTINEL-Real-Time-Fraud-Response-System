@@ -3,6 +3,7 @@ AI Copilot Phase D: security hardening — input validation and the
 per-user rate limiter on POST /api/copilot/chat.
 """
 
+from app.core.constants import DEFAULT_TENANT_ID
 from app.core.security import create_access_token
 
 
@@ -11,7 +12,7 @@ def _headers_for(username: str, role: str = "viewer") -> dict:
     (admin/viewer are shared across the whole session-scoped client
     fixture and already accumulate many copilot calls elsewhere) — keeps
     rate-limit tests isolated from unrelated tests' quota usage."""
-    token = create_access_token(subject=username, role=role)
+    token = create_access_token(subject=username, role=role, tenant_id=DEFAULT_TENANT_ID)
     return {"Authorization": f"Bearer {token}"}
 
 

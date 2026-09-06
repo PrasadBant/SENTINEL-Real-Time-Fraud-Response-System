@@ -63,6 +63,9 @@ xgboost==3.3.0
 joblib
 numpy
 
+# --- Observability (Phase 2 — app/core/metrics.py) ---
+prometheus-client>=0.20,<0.21
+
 # --- Testing ---
 pytest
 # In-memory drop-in mock of the redis-py client API — lets the default

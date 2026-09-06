@@ -37,9 +37,12 @@ def verify_password(password: str, hashed: str) -> bool:
     return hmac.compare_digest(candidate.hex(), digest_hex)
 
 
-def create_access_token(subject: str, role: str, expires_minutes: int | None = None) -> str:
+def create_access_token(subject: str, role: str, tenant_id: str, expires_minutes: int | None = None) -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=expires_minutes or ACCESS_TOKEN_EXPIRE_MINUTES)
-    payload = {"sub": subject, "role": role, "exp": expire}
+    # tenant_id (Phase 2) is what app/api/cases.py and app/api/actions.py
+    # scope every domain read/action to — see app.core.repository's
+    # list_cases(tenant_id)/get_case_for_tenant(case_id, tenant_id).
+    payload = {"sub": subject, "role": role, "tenant_id": tenant_id, "exp": expire}
     return jwt.encode(payload, SECRET_KEY, algorithm=_ALGORITHM)
 
 

@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.presenters import case_payload, now_iso
 from app.api.schemas import ActionRequest
-from app.core.constants import AccountStatus, ActionStatus, ActionTypes, CaseStatus
+from app.core.constants import AccountStatus, ActionStatus, ActionTypes, CaseStatus, DEFAULT_TENANT_ID
 from app.core.data_store import data_store
 from app.core.deps import require_role
 from app.core.repository import repository
@@ -34,7 +34,7 @@ logger = logging.getLogger("sentinel.actions")
 router = APIRouter()
 
 
-def _get_or_hydrate_case(case_id: str) -> dict | None:
+def _get_or_hydrate_case(case_id: str, tenant_id: str) -> dict | None:
     """Look up a case locally first; if missing, fall back to Postgres
     (the durable source of truth) and cache the hit into data_store so
     later lookups in this process are local. Hostile-review fix: without
@@ -43,6 +43,17 @@ def _get_or_hydrate_case(case_id: str) -> dict | None:
     though the case genuinely exists — which replica happens to serve a
     given request is an accident of load balancing, not something an
     investigator should have to know or care about.
+
+    Phase 2 object-level authorization: also enforces tenant_id, on BOTH
+    branches. A local-cache hit is NOT enough on its own — data_store
+    is a flat, unpartitioned process cache keyed only by case_id, so
+    without the explicit tenant check below, a case this replica happens
+    to already have in memory (e.g. it personally handled that tenant's
+    ingestion) would bypass tenant checking entirely the moment it's
+    cached, even though the Postgres fallback path (get_case_for_tenant)
+    is correctly scoped. Treating a wrong-tenant hit as "not found" (not
+    a distinguishable error) keeps this consistent with
+    get_case_for_tenant's own existence-hiding behavior.
 
     Note the limit of what this fixes: it restores case-level status/
     actions-taken consistency across replicas. It does NOT make a freeze's
@@ -54,9 +65,11 @@ def _get_or_hydrate_case(case_id: str) -> dict | None:
     freeze zero nodes if this replica never built that case's graph."""
     case = data_store.get("cases", {}).get(case_id)
     if case is not None:
+        if case.get("tenant_id", DEFAULT_TENANT_ID) != tenant_id:
+            return None
         return case
     try:
-        case = repository.get_case(case_id)
+        case = repository.get_case_for_tenant(case_id, tenant_id)
     except Exception as e:
         logger.warning("Postgres case lookup degraded for %s: %s", case_id, e)
         return None
@@ -65,8 +78,8 @@ def _get_or_hydrate_case(case_id: str) -> dict | None:
     return case
 
 
-def _record_action(case_id: str, action_type: str, target_id: str, status: str, reason: str | None = None) -> dict[str, Any]:
-    case = _get_or_hydrate_case(case_id)
+def _record_action(case_id: str, action_type: str, target_id: str, status: str, reason: str | None, tenant_id: str) -> dict[str, Any]:
+    case = _get_or_hydrate_case(case_id, tenant_id)
     if not case:
         return {}
     entry = {
@@ -86,7 +99,7 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
     # via run_in_executor at the call site for heavy traffic; here we keep inline for
     # simplicity since action writes are rare compared to TX ingestion)
     try:
-        repository.save_action(entry)
+        repository.save_action(entry, tenant_id=tenant_id)
     except Exception as _pe:
         logger.warning("Action write error: %s", _pe)
 
@@ -115,15 +128,15 @@ def _record_action(case_id: str, action_type: str, target_id: str, status: str, 
     # status and action history durable and visible everywhere, not just
     # in the process that happened to handle this specific action.
     try:
-        repository.save_case(case)
+        repository.save_case(case, tenant_id=tenant_id)
     except Exception as _pe:
         logger.warning("Case write error: %s", _pe)
 
     return entry
 
 
-async def handle_action(action_name: str, payload: ActionRequest) -> dict[str, Any]:
-    case = _get_or_hydrate_case(payload.case_id)
+async def handle_action(action_name: str, payload: ActionRequest, tenant_id: str) -> dict[str, Any]:
+    case = _get_or_hydrate_case(payload.case_id, tenant_id)
     target_id = payload.account_id or payload.target_id or "GLOBAL"
     if not case:
         return {
@@ -179,7 +192,7 @@ async def handle_action(action_name: str, payload: ActionRequest) -> dict[str, A
         api_response = mock_police_alert(payload.case_id, {"reason": payload.reason or "Escalation requested"})
 
     status = api_response.get("status", "FAILED")
-    action_entry = _record_action(payload.case_id, action_name.upper(), target_id, status, payload.reason)
+    action_entry = _record_action(payload.case_id, action_name.upper(), target_id, status, payload.reason, tenant_id)
     response = {
         "ok": status == "SUCCESS",
         "event": "action_taken",
@@ -204,29 +217,29 @@ _require_admin = require_role("admin")
 
 @router.post("/action/freeze")
 async def freeze_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
-    return await handle_action("freeze", payload)
+    return await handle_action("freeze", payload, user["tenant_id"])
 
 
 @router.post("/action/flag")
 async def flag_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
-    return await handle_action("flag", payload)
+    return await handle_action("flag", payload, user["tenant_id"])
 
 
 @router.post("/action/alert")
 async def alert_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
-    return await handle_action("alert", payload)
+    return await handle_action("alert", payload, user["tenant_id"])
 
 
 @router.post("/action/monitor")
 async def monitor_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
-    return await handle_action("monitor", payload)
+    return await handle_action("monitor", payload, user["tenant_id"])
 
 
 @router.post("/action/close")
 async def close_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
-    return await handle_action("close", payload)
+    return await handle_action("close", payload, user["tenant_id"])
 
 
 @router.post("/action/close_fp")
 async def close_fp_action(payload: ActionRequest, user: dict = Depends(_require_admin)) -> dict[str, Any]:
-    return await handle_action("close_fp", payload)
+    return await handle_action("close_fp", payload, user["tenant_id"])

@@ -96,7 +96,7 @@ _SYSTEM_PROMPT = (
 
 
 async def _resolve_action_intent(
-    req: CopilotRequest, is_admin: bool, user_msg: str
+    req: CopilotRequest, is_admin: bool, user_msg: str, tenant_id: str
 ) -> tuple[str, dict[str, Any] | None] | None:
     """
     Admin-gated freeze/close chat intents. Returns (reply, action_taken)
@@ -125,7 +125,7 @@ async def _resolve_action_intent(
                 None,
             )
         action_payload = ActionRequest(case_id=req.context_case_id, target_id="GLOBAL", reason="AI Copilot Action")
-        await handle_action("freeze", action_payload)
+        await handle_action("freeze", action_payload, tenant_id)
         reply = (
             "✅ **Action Executed:** I have applied a **FREEZE** on all accounts associated with "
             f"Case `{req.context_case_id}` to prevent further fund movement."
@@ -139,7 +139,7 @@ async def _resolve_action_intent(
                 None,
             )
         action_payload = ActionRequest(case_id=req.context_case_id, reason="AI Copilot closed")
-        await handle_action("close", action_payload)
+        await handle_action("close", action_payload, tenant_id)
         reply = f"✅ **Action Executed:** Case `{req.context_case_id}` has been **closed** and marked as resolved."
         return (reply, {"type": "CLOSE_CASE", "case_id": req.context_case_id})
 
@@ -222,7 +222,7 @@ async def copilot_chat(req: CopilotRequest, user: dict = Depends(rate_limited_us
     user_msg = req.message.lower()
     is_admin = user.get("role") == "admin"
 
-    action_result = await _resolve_action_intent(req, is_admin, user_msg)
+    action_result = await _resolve_action_intent(req, is_admin, user_msg, user["tenant_id"])
     if action_result is not None:
         reply, action_taken = action_result
         provider_used = "action"
@@ -307,7 +307,7 @@ async def copilot_chat_stream(req: CopilotRequest, user: dict = Depends(rate_lim
         reply_parts: list[str] = []
 
         try:
-            action_result = await _resolve_action_intent(req, is_admin, user_msg)
+            action_result = await _resolve_action_intent(req, is_admin, user_msg, user["tenant_id"])
             if action_result is not None:
                 reply, action_taken = action_result
                 provider_used = "action"
