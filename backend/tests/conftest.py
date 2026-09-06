@@ -46,21 +46,27 @@ os.environ.setdefault("ADMIN_PASSWORD", "admin123")
 os.environ.setdefault("VIEWER_USERNAME", "viewer")
 os.environ.setdefault("VIEWER_PASSWORD", "viewer123")
 
-# Redis: same escape hatch shape as TEST_DATABASE_URL above. If a real
-# Redis instance is supplied, just point REDIS_URL at it and let
+# Redis: same escape hatch shape as TEST_DATABASE_URL above, and same
+# "must happen before the first import that reads it" reasoning —
+# app.core.config reads REDIS_URL at import time (a plain module-level
+# `os.getenv(...)` call), and app.core.redis_client imports that name
+# from config at ITS OWN import time, so setting this env var any later
+# than the `import redis_client` below would be a no-op. If a real Redis
+# instance is supplied via TEST_REDIS_URL, point REDIS_URL at it and let
 # app.core.redis_client connect for real (this is also how
-# tests/test_redis_integration.py's TEST_REDIS_URL is meant to be used
-# for a full-suite run). Otherwise, substitute fakeredis instances by
-# replacing get_redis()/get_async_redis() themselves — not their return
-# values — since app code calls these via the `redis_client` module
-# reference (e.g. `redis_client.get_redis()`), never via a
-# `from ... import get_redis` binding, specifically so this kind of
-# module-level monkeypatch reaches every call site.
-from app.core import redis_client  # noqa: E402
-
+# tests/test_redis_integration.py is meant to be run for a full-suite
+# pass). Otherwise, substitute fakeredis instances by replacing
+# get_redis()/get_async_redis() themselves — not their return values —
+# since app code calls these via the `redis_client` module reference
+# (e.g. `redis_client.get_redis()`), never via a `from ... import
+# get_redis` binding, specifically so this kind of module-level
+# monkeypatch reaches every call site.
 if "TEST_REDIS_URL" in os.environ:
     os.environ["REDIS_URL"] = os.environ["TEST_REDIS_URL"]
-else:
+
+from app.core import redis_client  # noqa: E402
+
+if "TEST_REDIS_URL" not in os.environ:
     import fakeredis  # noqa: E402
 
     _fake_sync_redis = fakeredis.FakeRedis(decode_responses=True)

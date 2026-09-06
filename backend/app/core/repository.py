@@ -16,7 +16,6 @@ _do_save_*/load_all_into_store — this is a swap of the storage
 mechanism, not a redesign of what gets stored.
 """
 
-import json
 import time
 from datetime import datetime as _dt
 
@@ -25,25 +24,8 @@ from sqlalchemy.exc import IntegrityError
 from app.core.constants import ActionStatus, CaseStatus, DEFAULT_TENANT_ID
 from app.core.database import SessionLocal
 from app.core.db_models import ActionRecord, CaseRecord, TransactionRecord
-
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
-def _to_json(obj: dict) -> str:
-    """Safely serialize a dict to JSON string, skipping non-serialisable values."""
-    try:
-        return json.dumps(obj, default=str)
-    except Exception:
-        return "{}"
-
-
-def _from_json(raw: str | None) -> dict:
-    if not raw:
-        return {}
-    try:
-        return json.loads(raw)
-    except Exception:
-        return {}
+from app.services import orchestrator
+from app.utils.json_codec import from_json as _from_json, to_json as _to_json
 
 
 class Repository:
@@ -202,11 +184,13 @@ class Repository:
 
     def load_all(self, store: dict) -> None:
         """On startup: read every persisted transaction/case from Postgres
-        and populate the in-memory data_store so the engines' in-process
-        working cache (velocity_cache, accounts, cases, transactions) is
-        fully restored — same restore semantics as the old
-        persistence.load_all_into_store(), just reading from the
-        repository's backing DB instead of SQLite specifically.
+        and populate the in-memory data_store's cases/transactions, and
+        Redis's velocity_cache/accounts (see app/services/orchestrator.py)
+        — same restore semantics as the old persistence.load_all_into_store(),
+        just reading from the repository's backing DB and replaying through
+        the exact same orchestrator.record_velocity()/save_account() helpers
+        live traffic uses, instead of a second, separately-maintained
+        rebuild implementation.
 
         Note: app.core.data_store["graphs"] is NOT restored here — graph
         state (including frozen/withdrawn node status) isn't persisted
@@ -216,8 +200,6 @@ class Repository:
         try:
             # ── Restore transactions & rebuild velocity/account caches ──
             tx_count = 0
-            v_cache = store.setdefault("velocity_cache", {})
-            accounts = store.setdefault("accounts", {})
 
             for rec in db.query(TransactionRecord).all():
                 payload = _from_json(rec.payload)
@@ -237,18 +219,8 @@ class Repository:
                         except Exception:
                             ts = time.time()
 
-                        cache_list = v_cache.setdefault(sender_id, [])
-                        cache_list.append({"timestamp": ts, "amount": amount, "receiver": receiver})
-
-                        acc = accounts.setdefault(sender_id, {
-                            "account_id": sender_id,
-                            "status": "active",
-                            "total_historical_amount": 0.0,
-                            "historical_tx_count": 0,
-                            "is_new_receiver": False,  # if it's in history, it's not new generally
-                        })
-                        acc["total_historical_amount"] += amount
-                        acc["historical_tx_count"] += 1
+                        velocity = orchestrator.record_velocity(sender_id, receiver, amount, tx_id, timestamp=ts)
+                        orchestrator.save_account(sender_id, amount, velocity)
 
             # ── Restore cases ────────────────────────────────────────────
             case_count = 0

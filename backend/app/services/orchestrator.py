@@ -1,90 +1,148 @@
 import random
+import time
+
 from app.core.config import HIGH_RISK_THRESHOLD, MEDIUM_THRESHOLD
 from app.core.constants import CaseStatus
+from app.core import redis_client
 from app.engines.scoring_engine import score_transaction
 from app.engines.case_manager import process_scored_tx
 from app.engines.graph_engine import add_node, add_edge, get_graph
 from app.engines.recovery_engine import recalculate
 from app.services.reasoning_engine import generate_reasoning
 from app.services.ml_risk_engine import predict_ml_score, feature_names
+from app.utils.json_codec import from_json, to_json
 
-def run_pipeline(tx: dict, store: dict) -> dict:
+
+def _velocity_key(sender_id: str) -> str:
+    return f"sentinel:vcache:{sender_id}"
+
+
+def _account_key(account_id: str) -> str:
+    return f"sentinel:account:{account_id}"
+
+
+def record_velocity(sender_id: str, receiver_id: str, amount: float, tx_id: str, timestamp: float | None = None) -> dict:
+    """Append a velocity-cache entry for `sender_id` to Redis (a ZSET,
+    score = timestamp) and return the derived 1h/24h metrics used by
+    scoring. `timestamp` defaults to "now" for live traffic;
+    app.core.repository.load_all()'s startup replay passes each
+    transaction's own historical timestamp instead, so replayed history
+    lands at the point in the window it actually occurred at rather than
+    "now" — entries older than the 24h window are pruned immediately on
+    replay rather than sitting inertly in memory forever (today's
+    in-memory dict never expunges them; this is a small, deliberate
+    improvement, not an observable scoring change, since anything outside
+    the window was already excluded from every velocity calculation).
+
+    The ZSET member includes tx_id specifically for uniqueness: two
+    entries with identical amount/receiver/timestamp (test fixtures often
+    share a fixed timestamp literal) would otherwise collide and silently
+    merge into one entry in a plain amount/receiver/timestamp member.
     """
-    Main integration pipeline processing a single transaction
-    through all core SENTINEL engines sequentially.
-    """
-    
-    # FIX 4: Safe Graph Initialization
-    if "graphs" not in store:
-        store["graphs"] = {}
-        
-    # FIX 3: Safe Account Fallback & Persistence
-    import time
+    r = redis_client.get_redis()
     now_ts = time.time()
-    if "velocity_cache" not in store:
-        store["velocity_cache"] = {}
-        
-    sender_id = tx.get("sender_account")
-    receiver_id = tx.get("receiver_account")
-    amount = float(tx.get("amount", 0.0))
-    
-    # --- Stateful Velocity Streaming (Phase 3) ---
-    v_cache = store["velocity_cache"].setdefault(sender_id, [])
-    # Filter 1-hour window for velocity count and 24-hour window for unique receivers
+    ts = now_ts if timestamp is None else timestamp
+    key = _velocity_key(sender_id)
+
+    r.zremrangebyscore(key, "-inf", now_ts - 86400)
+    entry = {"tx_id": tx_id, "timestamp": ts, "amount": amount, "receiver": receiver_id}
+    r.zadd(key, {to_json(entry): ts})
+    r.expire(key, 90000)  # ~25h safety margin — today's dict never expires a quiet sender
+
     v_cache_1h = []
     unique_receivers_24h = set()
-    
-    for entry in v_cache:
-        # Backward compatibility for old timestamp-only arrays
-        if isinstance(entry, (float, int)):
-            entry = {"timestamp": entry, "amount": 0.0, "receiver": "UNKNOWN"}
-            
-        if now_ts - entry["timestamp"] <= 3600:
-            v_cache_1h.append(entry)
-        if now_ts - entry["timestamp"] <= 86400:
-            unique_receivers_24h.add(entry["receiver"])
-            
-    # Add current transaction
-    new_entry = {"timestamp": now_ts, "amount": amount, "receiver": receiver_id}
-    v_cache_1h.append(new_entry)
-    unique_receivers_24h.add(receiver_id)
-    
-    # Prune overall cache to 24h max to save memory
-    v_cache = [e for e in v_cache if isinstance(e, dict) and now_ts - e["timestamp"] <= 86400]
-    v_cache.append(new_entry)
-    store["velocity_cache"][sender_id] = v_cache
-    
-    real_velocity = len(v_cache_1h)
-    amount_1h = sum(e["amount"] for e in v_cache_1h)
-    receivers_24h = len(unique_receivers_24h)
-    
-    if "accounts" not in store:
-        store["accounts"] = {}
-    
-    account = store["accounts"].get(sender_id)
+    for member, score in r.zrange(key, 0, -1, withscores=True):
+        e = from_json(member)
+        if not e:
+            continue
+        if now_ts - score <= 3600:
+            v_cache_1h.append(e)
+        if now_ts - score <= 86400:
+            unique_receivers_24h.add(e.get("receiver"))
+
+    return {
+        "tx_velocity": len(v_cache_1h),
+        "amount_1h": sum(e.get("amount", 0.0) for e in v_cache_1h),
+        "receivers_24h": len(unique_receivers_24h),
+    }
+
+
+def get_account(account_id: str) -> dict | None:
+    """Read-only account lookup — does NOT create/persist a missing
+    account. Mirrors run_pipeline's pre-existing receiver-account lookup
+    behavior exactly (see below): a receiver with no account record gets
+    a fresh sparse dict built at read time, on every call, never written
+    back — a pre-existing quirk (receiver accounts before Phase 1 were
+    never actually saved into store["accounts"] either), preserved as-is
+    rather than silently changed by this migration."""
+    raw = redis_client.get_redis().get(_account_key(account_id))
+    return from_json(raw) if raw else None
+
+
+def save_account(account_id: str, amount: float, velocity: dict) -> dict:
+    """Create-or-update the sender-side account record in Redis and
+    return it. Called once per transaction for the sender (always
+    persisted — unlike get_account's receiver-side read path above)."""
+    r = redis_client.get_redis()
+    key = _account_key(account_id)
+    account = from_json(r.get(key)) or None
     if not account:
         account = {
-            "account_id": sender_id,
+            "account_id": account_id,
             "total_historical_amount": amount,
             "historical_tx_count": 1,
             "avg_monthly_tx_amount": amount,
             "current_balance_sim": round(random.uniform(50000, 250000), 2),
             "status": "active",
-            "is_new_receiver": True, # First time seen
-            "tx_velocity": real_velocity,
-            "amount_1h": amount_1h,
-            "receivers_24h": receivers_24h
+            "is_new_receiver": True,  # first time seen
+            "tx_velocity": velocity["tx_velocity"],
+            "amount_1h": velocity["amount_1h"],
+            "receivers_24h": velocity["receivers_24h"],
         }
-        store["accounts"][sender_id] = account
     else:
         account["total_historical_amount"] = account.get("total_historical_amount", 0.0) + amount
         account["historical_tx_count"] = account.get("historical_tx_count", 0) + 1
         account["avg_monthly_tx_amount"] = account["total_historical_amount"] / account["historical_tx_count"]
         account["is_new_receiver"] = False
-        account["tx_velocity"] = real_velocity
-        account["amount_1h"] = amount_1h
-        account["receivers_24h"] = receivers_24h
-        
+        account["tx_velocity"] = velocity["tx_velocity"]
+        account["amount_1h"] = velocity["amount_1h"]
+        account["receivers_24h"] = velocity["receivers_24h"]
+    r.set(key, to_json(account))
+    return account
+
+
+def run_pipeline(tx: dict, store: dict) -> dict:
+    """
+    Main integration pipeline processing a single transaction
+    through all core SENTINEL engines sequentially.
+
+    Stays a plain synchronous function, called unawaited from the async
+    POST /transaction handler, by deliberate Phase 1 design (see the
+    build plan) — the velocity/account Redis calls below are therefore
+    blocking I/O on the request's event-loop thread. Accepted trade-off:
+    Redis is co-located and sub-millisecond, and a real async rewrite of
+    the whole pipeline (this function plus case_manager/graph_engine/
+    recovery_engine) is a larger, separate project than this phase. If
+    this ever becomes a measured bottleneck, that's the fix — not
+    sprinkling asyncio.to_thread piecemeal around individual calls here.
+    """
+
+    # FIX 4: Safe Graph Initialization
+    if "graphs" not in store:
+        store["graphs"] = {}
+
+    sender_id = tx.get("sender_account")
+    receiver_id = tx.get("receiver_account")
+    amount = float(tx.get("amount", 0.0))
+
+    # --- Stateful Velocity Streaming (now Redis-backed, see record_velocity) ---
+    velocity = record_velocity(sender_id, receiver_id, amount, tx.get("tx_id"))
+    real_velocity = velocity["tx_velocity"]
+    amount_1h = velocity["amount_1h"]
+    receivers_24h = velocity["receivers_24h"]
+
+    account = save_account(sender_id, amount, velocity)
+
     # Expose to simulator_meta for downstream scoring hooks
     if "simulator_meta" not in tx:
         tx["simulator_meta"] = {}
@@ -262,7 +320,7 @@ def run_pipeline(tx: dict, store: dict) -> dict:
         
         # FIX 2: RECEIVER FALLBACK (RECOVERY FIX)
         receiver_id = tx.get("receiver_account")
-        receiver_account = store.get("accounts", {}).get(receiver_id)
+        receiver_account = get_account(receiver_id)
         if not receiver_account:
             amount = float(tx.get("amount", 0.0))
             receiver_account = {
